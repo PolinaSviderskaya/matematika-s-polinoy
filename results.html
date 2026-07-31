@@ -91,8 +91,6 @@
         .result-card .answer-item .status { font-weight: 600; font-size: 0.85rem; }
         .result-card .answer-item .status.correct { color: #27ae60; }
         .result-card .answer-item .status.wrong { color: #c0392b; }
-        .result-card .file-download { background: #8D0B0D; color: #fff; border: none; padding: 0.3rem 0.8rem; border-radius: 40px; font-weight: 600; font-size: 0.75rem; cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; }
-        .result-card .file-download:hover { background: #a93226; transform: scale(1.05); }
 
         .empty-results { text-align: center; padding: 4rem 2rem; color: #999; }
         .empty-results i { font-size: 3rem; color: #FBC5D9; display: block; margin-bottom: 0.8rem; }
@@ -108,26 +106,6 @@
         .btn-clear:hover { background: #a93226; }
 
         .footer { text-align: center; padding: 2rem; color: #666; font-size: 0.85rem; border-top: 2px solid #FBC5D9; margin-top: 1rem; background: rgba(255, 255, 255, 0.5); }
-
-        .image-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            cursor: zoom-out;
-            padding: 2rem;
-        }
-        .image-overlay.show { display: flex; }
-        .image-overlay img { max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); animation: zoomIn 0.3s ease; cursor: default; }
-        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .image-overlay .close-btn { position: fixed; top: 20px; right: 30px; font-size: 2.5rem; color: #fff; cursor: pointer; z-index: 10000; transition: 0.2s; background: none; border: none; font-family: 'Inter', sans-serif; }
-        .image-overlay .close-btn:hover { transform: rotate(90deg); color: #FBC5D9; }
 
         .modal-overlay {
             display: none;
@@ -226,73 +204,20 @@
         &copy; 2026 Математика с Полиной · Сделано с ❤️
     </div>
 
-    <div class="image-overlay" id="imageOverlay" onclick="closeImage()">
-        <button class="close-btn" onclick="closeImage()">✕</button>
-        <img id="enlargedImage" src="" alt="Увеличенное изображение" />
-    </div>
-
     <script>
         const ADMIN_PASSWORD = 'polina2026';
         let isAdmin = false;
 
-        // ===== КОНФИГУРАЦИЯ =====
-        const GITHUB_CONFIG = {
-            owner: 'PolinaSviderskaya',
-            repo: 'matematika-s-polinoy',
-            resultsPath: 'data/results.json'
-        };
-
-        // ===== ТОКЕН ВВОДИТСЯ ВРУЧНУЮ (ОДИН РАЗ) =====
-        function getGitHubToken() {
-            let token = localStorage.getItem('github_token');
-            if (!token) {
-                token = prompt('🔑 Введите ваш GitHub токен для просмотра результатов:');
-                if (token) {
-                    localStorage.setItem('github_token', token);
-                }
-            }
-            return token;
-        }
-
-        // ===== ЗАГРУЗКА РЕЗУЛЬТАТОВ ИЗ GITHUB =====
-        async function loadResultsFromGitHub() {
-            const { owner, repo, resultsPath } = GITHUB_CONFIG;
-            const token = getGitHubToken();
-
-            if (!token) {
-                alert('❌ Токен не введён!');
-                return [];
-            }
-
+        function loadResultsFromLocal() {
+            const saved = localStorage.getItem('polina_student_results');
+            if (!saved) return [];
             try {
-                const response = await fetch(
-                    `https://api.github.com/repos/${owner}/${repo}/contents/${resultsPath}`,
-                    {
-                        headers: {
-                            'Authorization': `token ${token}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    }
-                );
-
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        return [];
-                    }
-                    throw new Error(`Ошибка загрузки: ${response.status}`);
-                }
-
-                const data = await response.json();
-                const content = decodeURIComponent(escape(atob(data.content)));
-                return JSON.parse(content);
-            } catch (error) {
-                console.error('Ошибка загрузки результатов:', error);
-                alert('❌ Ошибка загрузки: ' + error.message);
+                return JSON.parse(saved);
+            } catch (e) {
                 return [];
             }
         }
 
-        // ===== ПРОВЕРКА АДМИНА =====
         function checkAdminStatus() {
             const saved = localStorage.getItem('polina_admin');
             if (saved === 'true') {
@@ -359,8 +284,7 @@
             }
         }
 
-        // ===== ОТОБРАЗИТЬ РЕЗУЛЬТАТЫ =====
-        async function renderResults() {
+        function renderResults() {
             const container = document.getElementById('resultsContainer');
 
             if (!isAdmin) {
@@ -368,7 +292,7 @@
                 return;
             }
 
-            const allResults = await loadResultsFromGitHub();
+            const allResults = loadResultsFromLocal();
 
             if (allResults.length === 0) {
                 container.innerHTML = `
@@ -499,21 +423,6 @@
             localStorage.removeItem('polina_student_results');
             renderResults();
         }
-
-        function openImage(src) {
-            document.getElementById('enlargedImage').src = src;
-            document.getElementById('imageOverlay').classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeImage() {
-            document.getElementById('imageOverlay').classList.remove('show');
-            document.body.style.overflow = 'auto';
-        }
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeImage();
-        });
 
         window.addEventListener('DOMContentLoaded', function() {
             checkAdminStatus();

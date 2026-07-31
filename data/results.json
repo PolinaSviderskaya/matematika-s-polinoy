@@ -1,1 +1,24 @@
-[]
+[
+  {
+    "studentName": "п",
+    "testName": "Мой новый тест",
+    "testTopic": "Математика",
+    "testClass": "",
+    "date": "2026-07-31T08:26:50.670Z",
+    "correctCount": 1,
+    "totalQuestions": 1,
+    "score": 100,
+    "answers": [
+      {
+        "questionText": "1",
+        "type": "multiple",
+        "userAnswer": [
+          0
+        ],
+        "correctAnswer": "2",
+        "isCorrect": true
+      }
+    ],
+    "files": []
+  }
+]

@@ -1,86 +1,16 @@
 [
   {
-    "name": "Мой новый тест5",
+    "name": "Пример теста",
     "topic": "Математика",
-    "class": "",
+    "class": "7",
     "questions": [
       {
-        "text": "5",
-        "type": "single",
-        "topic": "Математика",
-        "class": "",
-        "options": [
-          "5",
-          "5"
-        ],
-        "correctIndices": [
-          0
-        ]
+        "text": "Сколько будет 2 + 2?",
+        "options": ["3", "4", "5", "6"],
+        "correctIndices": [1],
+        "type": "single"
       }
     ],
-    "created": 1785488372852
-  },
-  {
-    "name": "Мой новый тест4",
-    "topic": "Математика",
-    "class": "",
-    "questions": [
-      {
-        "text": "5",
-        "type": "single",
-        "topic": "Математика",
-        "class": "",
-        "options": [
-          "4",
-          "4"
-        ],
-        "correctIndices": [
-          0
-        ]
-      }
-    ],
-    "created": 1785488345108
-  },
-  {
-    "name": "Мой новый тест3",
-    "topic": "Математика",
-    "class": "",
-    "questions": [
-      {
-        "text": "3",
-        "type": "single",
-        "topic": "Математика",
-        "class": "",
-        "options": [
-          "3",
-          "3"
-        ],
-        "correctIndices": [
-          0
-        ]
-      }
-    ],
-    "created": 1785486815764
-  },
-  {
-    "name": "Мой новый тест6",
-    "topic": "Математика",
-    "class": "",
-    "questions": [
-      {
-        "text": "6",
-        "type": "single",
-        "topic": "Математика",
-        "class": "",
-        "options": [
-          "6",
-          "6"
-        ],
-        "correctIndices": [
-          0
-        ]
-      }
-    ],
-    "created": 1785489722964
+    "created": 1700000000000
   }
 ]

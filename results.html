@@ -16,6 +16,7 @@
             color: #000000;
             min-height: 100vh;
         }
+
         .navbar {
             background: #ffffff;
             padding: 1rem 2.5rem;
@@ -495,6 +496,7 @@
     </style>
 </head>
 <body>
+
     <nav class="navbar">
         <div class="nav-left">
             <img src="images/avatar.png" alt="Полина" class="nav-avatar" />
@@ -551,6 +553,9 @@
     </div>
 
     <script>
+        const ADMIN_PASSWORD = 'polina2026';
+        let isAdmin = false;
+
         // ===== КОНФИГУРАЦИЯ GITHUB =====
         const GITHUB_CONFIG = {
             owner: 'PolinaSviderskaya',
@@ -558,6 +563,7 @@
             resultsPath: 'data/results.json'
         };
 
+        // ===== ПОЛУЧИТЬ ТОКЕН (ОДИН РАЗ) =====
         function getGitHubToken() {
             let token = localStorage.getItem('github_token');
             if (!token) {
@@ -569,10 +575,7 @@
             return token;
         }
 
-        const ADMIN_PASSWORD = 'polina2026';
-        let isAdmin = false;
-
-        // ===== ЗАГРУЗКА РЕЗУЛЬТАТОВ ИЗ GITHUB (С ИСПРАВЛЕННОЙ КОДИРОВКОЙ) =====
+        // ===== ЗАГРУЗКА РЕЗУЛЬТАТОВ ИЗ GITHUB =====
         async function loadResultsFromGitHub() {
             const { owner, repo, resultsPath } = GITHUB_CONFIG;
             const token = getGitHubToken();
@@ -601,15 +604,16 @@
                 }
 
                 const data = await response.json();
-                // 🔥 ИСПРАВЛЕННОЕ ДЕКОДИРОВАНИЕ:
                 const content = decodeURIComponent(escape(atob(data.content)));
                 return JSON.parse(content);
             } catch (error) {
                 console.error('Ошибка загрузки результатов:', error);
+                alert('❌ Ошибка загрузки: ' + error.message);
                 return [];
             }
         }
 
+        // ===== ПРОВЕРКА АДМИНА =====
         function checkAdminStatus() {
             const saved = localStorage.getItem('polina_admin');
             if (saved === 'true') {
@@ -676,6 +680,7 @@
             }
         }
 
+        // ===== ОТОБРАЗИТЬ РЕЗУЛЬТАТЫ =====
         async function renderResults() {
             const container = document.getElementById('resultsContainer');
 

@@ -1,0 +1,49 @@
+[
+  {
+    "name": "Уравнения 7 класс",
+    "topic": "Алгебра",
+    "class": "7",
+    "questions": [
+      {
+        "text": "Решите уравнение: 3x + 5 = 20",
+        "options": ["x = 5", "x = 7", "x = 3", "x = 10"],
+        "correctIndices": [0],
+        "type": "single"
+      },
+      {
+        "text": "Решите уравнение: 2x - 3 = 11",
+        "options": ["x = 7", "x = 5", "x = 8", "x = 6"],
+        "correctIndices": [0],
+        "type": "single"
+      }
+    ],
+    "created": 1700000000000
+  },
+  {
+    "name": "Треугольники 8 класс",
+    "topic": "Геометрия",
+    "class": "8",
+    "questions": [
+      {
+        "text": "Сумма углов треугольника равна...",
+        "options": ["90°", "180°", "360°", "270°"],
+        "correctIndices": [1],
+        "type": "single"
+      }
+    ],
+    "created": 1690000000000
+  },
+  {
+    "name": "Подготовка к ОГЭ",
+    "topic": "ОГЭ",
+    "class": "9",
+    "questions": [
+      {
+        "text": "Решите задачу: ...",
+        "type": "open",
+        "correctAnswer": "42"
+      }
+    ],
+    "created": 1680000000000
+  }
+]

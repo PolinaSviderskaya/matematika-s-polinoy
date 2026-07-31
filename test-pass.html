@@ -16,7 +16,6 @@
             color: #000000;
             min-height: 100vh;
         }
-
         .navbar {
             background: #ffffff;
             padding: 1rem 2.5rem;
@@ -447,7 +446,6 @@
     </style>
 </head>
 <body>
-
     <nav class="navbar">
         <div class="nav-left">
             <img src="images/avatar.png" alt="Полина" class="nav-avatar" />
@@ -509,14 +507,13 @@
     </div>
 
     <script>
-        // ===== КОНФИГУРАЦИЯ GITHUB (БЕЗ ТОКЕНА!) =====
+        // ===== КОНФИГУРАЦИЯ GITHUB =====
         const GITHUB_CONFIG = {
-            owner: 'PolinaSviderskaya',        // Ваше имя пользователя GitHub
-            repo: 'matematika-s-polinoy',      // Название репозитория
-            resultsPath: 'data/results.json'   // Путь к файлу с результатами
+            owner: 'PolinaSviderskaya',
+            repo: 'matematika-s-polinoy',
+            resultsPath: 'data/results.json'
         };
 
-        // ===== ПОЛУЧИТЬ ТОКЕН ИЗ БРАУЗЕРА ИЛИ ЗАПРОСИТЬ =====
         function getGitHubToken() {
             let token = localStorage.getItem('github_token');
             if (!token) {
@@ -528,11 +525,7 @@
             return token;
         }
 
-        let testData = null;
-        let studentName = '';
-        let userAnswers = {};
-
-        // ===== ФУНКЦИЯ ДЛЯ СОХРАНЕНИЯ В GITHUB =====
+        // ===== СОХРАНЕНИЕ В GITHUB (С ИСПРАВЛЕННОЙ КОДИРОВКОЙ) =====
         async function saveResultsToGitHub(resultsData) {
             const { owner, repo, resultsPath } = GITHUB_CONFIG;
             const token = getGitHubToken();
@@ -542,7 +535,6 @@
                 return false;
             }
 
-            // 1. Получаем текущий файл
             let existingResults = [];
             let sha = null;
             try {
@@ -558,6 +550,7 @@
 
                 if (getResponse.ok) {
                     const data = await getResponse.json();
+                    // 🔥 ИСПРАВЛЕННОЕ ДЕКОДИРОВАНИЕ:
                     const content = decodeURIComponent(escape(atob(data.content)));
                     existingResults = JSON.parse(content);
                     sha = data.sha;
@@ -566,10 +559,8 @@
                 console.log('Файл результатов ещё не создан, создаём новый');
             }
 
-            // 2. Добавляем новый результат
             existingResults.push(resultsData);
 
-            // 3. Сохраняем обратно в GitHub
             const updatedContent = JSON.stringify(existingResults, null, 2);
             const encodedContent = btoa(unescape(encodeURIComponent(updatedContent)));
 
@@ -601,7 +592,10 @@
             return true;
         }
 
-        // ===== ЗАГРУЗКА ТЕСТА =====
+        let testData = null;
+        let studentName = '';
+        let userAnswers = {};
+
         window.addEventListener('DOMContentLoaded', function() {
             const saved = localStorage.getItem('current_test');
             if (!saved) {
@@ -626,7 +620,6 @@
             }
         });
 
-        // ===== НАЧАТЬ ТЕСТ =====
         function startTest() {
             const input = document.getElementById('studentNameInput');
             studentName = input.value.trim();
@@ -644,7 +637,6 @@
             renderQuestions();
         }
 
-        // ===== ОТОБРАЗИТЬ ВОПРОСЫ =====
         function renderQuestions() {
             const container = document.getElementById('questionsContainer');
             const typeLabels = {
@@ -697,7 +689,6 @@
             container.innerHTML = html;
         }
 
-        // ===== СОХРАНЕНИЕ ОТВЕТОВ =====
         function saveAnswer(index, type) {
             if (type === 'single' || type === 'multiple') {
                 const options = document.querySelectorAll(`#options-${index} input`);
@@ -727,7 +718,6 @@
             }
         }
 
-        // ===== ПРОВЕРКА ТЕСТА =====
         function submitTest() {
             testData.questions.forEach((q, index) => {
                 if (q.type === 'single' || q.type === 'multiple') {
@@ -804,7 +794,6 @@
                 });
             });
 
-            // ===== СОХРАНЯЕМ В GITHUB =====
             const studentResult = {
                 studentName: studentName,
                 testName: testData.name || 'Без названия',
@@ -834,7 +823,6 @@
                 }).filter(f => f !== null)
             };
 
-            // Сохраняем в GitHub
             saveResultsToGitHub(studentResult)
                 .then(() => {
                     document.getElementById('saveSuccess').textContent = '✅ Результат сохранён в облаке!';
@@ -851,7 +839,6 @@
             showResults(results, correctCount, totalQuestions);
         }
 
-        // ===== ПОКАЗАТЬ РЕЗУЛЬТАТЫ =====
         function showResults(results, correctCount, totalQuestions) {
             const score = Math.round((correctCount / totalQuestions) * 100);
 
@@ -951,7 +938,6 @@
             document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        // ===== ФУНКЦИИ ДЛЯ УВЕЛИЧЕНИЯ КАРТИНОК =====
         function openImage(src) {
             document.getElementById('enlargedImage').src = src;
             document.getElementById('imageOverlay').classList.add('show');
@@ -967,6 +953,5 @@
             if (e.key === 'Escape') closeImage();
         });
     </script>
-
 </body>
 </html>

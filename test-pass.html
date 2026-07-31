@@ -558,7 +558,7 @@
 
                 if (getResponse.ok) {
                     const data = await getResponse.json();
-                    const content = atob(data.content);
+                    const content = decodeURIComponent(escape(atob(data.content)));
                     existingResults = JSON.parse(content);
                     sha = data.sha;
                 }

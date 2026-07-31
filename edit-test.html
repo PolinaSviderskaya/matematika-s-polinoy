@@ -92,7 +92,6 @@
             margin-top: 0.3rem;
         }
 
-        /* ===== ОБЩИЕ ПОЛЯ ===== */
         .edit-meta {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -122,7 +121,6 @@
             border-color: #8D0B0D;
         }
 
-        /* ===== ВОПРОСЫ ===== */
         .edit-question {
             background: #ffffff;
             border-radius: 24px;
@@ -180,7 +178,6 @@
             margin-bottom: 0.5rem;
         }
 
-        /* ===== КАРТИНКА ===== */
         .edit-question .image-section {
             margin: 0.5rem 0 0.8rem;
             padding: 0.8rem;
@@ -231,7 +228,6 @@
             background: #a93226;
         }
 
-        /* ===== ВАРИАНТЫ ===== */
         .edit-question .option-row {
             display: flex;
             align-items: center;
@@ -392,7 +388,7 @@
     <script>
         let editTestData = null;
         let editTestIndex = null;
-        let tempImageData = {}; // временное хранилище для новых картинок
+        let tempImageData = {};
 
         window.addEventListener('DOMContentLoaded', function() {
             const container = document.getElementById('editContainer');
@@ -442,7 +438,6 @@
                 </div>
             `;
 
-            // ===== ОБЩИЕ ПОЛЯ =====
             html += `
                 <div class="edit-meta">
                     <div>
@@ -474,7 +469,6 @@
                 </div>
             `;
 
-            // ===== ВОПРОСЫ =====
             if (!editTestData.questions || editTestData.questions.length === 0) {
                 html += `<div style="text-align:center; padding:2rem; background:#fff; border-radius:24px; border:1px solid #e8e0dc; color:#999;">В этом тесте нет вопросов</div>`;
             } else {
@@ -489,7 +483,6 @@
                     html += `<div class="q-type">Тип: ${typeLabels[q.type] || 'Один ответ'}</div>`;
                     html += `<textarea class="q-text-edit" rows="2">${(q.text || '').replace(/"/g, '&quot;')}</textarea>`;
 
-                    // ===== КАРТИНКА =====
                     const hasImage = q.image || tempImageData[index];
                     const imageSrc = tempImageData[index] || q.image || '';
                     html += `
@@ -505,7 +498,6 @@
                         </div>
                     `;
 
-                    // ===== ВАРИАНТЫ =====
                     if (q.type === 'single' || q.type === 'multiple') {
                         html += `<div class="options-edit" id="options-${index}">`;
                         if (q.options && q.options.length > 0) {
@@ -541,6 +533,7 @@
                 });
             }
 
+            // КНОПКА СОХРАНЕНИЯ — ВСЕГДА ВИДНА!
             html += `
                 <div class="actions">
                     <button class="btn-primary" onclick="saveChanges()">
@@ -555,7 +548,6 @@
             container.innerHTML = html;
         }
 
-        // ===== ЗАГРУЗКА КАРТИНКИ =====
         function uploadImage(index, input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -567,7 +559,6 @@
             }
         }
 
-        // ===== УДАЛЕНИЕ КАРТИНКИ =====
         function removeImage(index) {
             if (confirm('Удалить картинку?')) {
                 delete tempImageData[index];
@@ -578,14 +569,12 @@
             }
         }
 
-        // ===== УДАЛИТЬ ВОПРОС =====
         function deleteQuestion(index) {
             if (!confirm('Удалить этот вопрос?')) return;
             editTestData.questions.splice(index, 1);
             renderEditor();
         }
 
-        // ===== ДОБАВИТЬ ВАРИАНТ =====
         function addOption(qIndex) {
             const q = editTestData.questions[qIndex];
             if (!q.options) q.options = [];
@@ -594,7 +583,6 @@
             renderEditor();
         }
 
-        // ===== УДАЛИТЬ ВАРИАНТ =====
         function deleteOption(qIndex, optIndex) {
             const q = editTestData.questions[qIndex];
             if (q.options.length <= 2) {
@@ -606,7 +594,6 @@
             renderEditor();
         }
 
-        // ===== ПЕРЕКЛЮЧИТЬ ПРАВИЛЬНЫЙ ОТВЕТ =====
         function toggleCorrect(qIndex, optIndex) {
             const q = editTestData.questions[qIndex];
             if (q.type === 'single') {
@@ -622,29 +609,23 @@
             renderEditor();
         }
 
-        // ===== СОХРАНИТЬ ИЗМЕНЕНИЯ =====
         function saveChanges() {
-            // Сохраняем общие поля
             editTestData.name = document.getElementById('editTestName').value.trim() || 'Без названия';
             editTestData.topic = document.getElementById('editTopic').value;
             editTestData.class = document.getElementById('editClass').value;
 
-            // Сохраняем вопросы
             const questionBlocks = document.querySelectorAll('.edit-question');
             questionBlocks.forEach((block, idx) => {
                 const q = editTestData.questions[idx];
                 if (!q) return;
 
-                // Текст вопроса
                 const textArea = block.querySelector('.q-text-edit');
                 if (textArea) q.text = textArea.value;
 
-                // Картинка (если загружена новая)
                 if (tempImageData[idx]) {
                     q.image = tempImageData[idx];
                 }
 
-                // Варианты
                 if (q.type === 'single' || q.type === 'multiple') {
                     const optInputs = block.querySelectorAll('.opt-input');
                     const newOptions = [];
@@ -656,7 +637,6 @@
                 }
             });
 
-            // Сохраняем в localStorage
             const allTests = JSON.parse(localStorage.getItem('polina_tests') || '[]');
             allTests.sort((a, b) => (b.created || 0) - (a.created || 0));
 

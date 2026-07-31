@@ -200,25 +200,48 @@
 
     <script>
         // ===== КОНФИГУРАЦИЯ GITHUB =====
-        const GITHUB_TOKEN = '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';
-        
         const GITHUB_CONFIG = {
             owner: 'PolinaSviderskaya',
             repo: 'matematika-s-polinoy',
             resultsPath: 'data/results.json'
         };
 
+        // ===== ПОЛУЧИТЬ ТОКЕН (ТОЛЬКО ДЛЯ УЧИТЕЛЯ) =====
+        function getGitHubToken() {
+            let token = localStorage.getItem('github_token');
+            if (!token) {
+                token = prompt('🔑 Введите ваш GitHub токен для просмотра результатов:');
+                if (token) {
+                    localStorage.setItem('github_token', token);
+                }
+            }
+            return token;
+        }
+
         const ADMIN_PASSWORD = 'polina2026';
         let isAdmin = false;
+
+        // ===== ЗАГРУЗКА ЛОКАЛЬНЫХ РЕЗУЛЬТАТОВ =====
+        function loadLocalResults() {
+            const saved = localStorage.getItem('polina_student_results');
+            if (!saved) return [];
+            try {
+                return JSON.parse(saved);
+            } catch (e) {
+                return [];
+            }
+        }
 
         // ===== ЗАГРУЗКА РЕЗУЛЬТАТОВ ИЗ GITHUB =====
         async function loadResultsFromGitHub() {
             const { owner, repo, resultsPath } = GITHUB_CONFIG;
-            const token = GITHUB_TOKEN;
+            const token = getGitHubToken();
+
+            if (!token) {
+                return [];
+            }
 
             try {
-                console.log('🔍 Загрузка результатов из GitHub...');
-                
                 const response = await fetch(
                     `https://api.github.com/repos/${owner}/${repo}/contents/${resultsPath}`,
                     {
@@ -229,24 +252,18 @@
                     }
                 );
 
-                console.log('📥 Ответ GitHub (GET):', response.status);
-
                 if (!response.ok) {
                     if (response.status === 404) {
-                        console.log('📁 Файл результатов не найден');
                         return [];
                     }
                     throw new Error(`Ошибка загрузки: ${response.status}`);
                 }
 
                 const data = await response.json();
-                console.log('📄 Данные получены, декодируем...');
                 const content = decodeURIComponent(escape(atob(data.content)));
-                const results = JSON.parse(content);
-                console.log('📊 Загружено результатов:', results.length);
-                return results;
+                return JSON.parse(content);
             } catch (error) {
-                console.error('❌ Ошибка загрузки результатов:', error);
+                console.error('Ошибка загрузки результатов из GitHub:', error);
                 return [];
             }
         }
@@ -318,7 +335,7 @@
             }
         }
 
-        // ===== ОТОБРАЗИТЬ РЕЗУЛЬТАТЫ =====
+        // ===== ОТОБРАЗИТЬ РЕЗУЛЬТАТЫ (ОБЪЕДИНЁННЫЕ) =====
         async function renderResults() {
             const container = document.getElementById('resultsContainer');
 
@@ -327,7 +344,16 @@
                 return;
             }
 
-            const allResults = await loadResultsFromGitHub();
+            // 1. Загружаем результаты из GitHub
+            const githubResults = await loadResultsFromGitHub();
+            // 2. Загружаем локальные результаты
+            const localResults = loadLocalResults();
+
+            // 3. Объединяем (убираем дубликаты по дате)
+            const allResults = [...githubResults, ...localResults];
+
+            // Сортируем по дате (новые сверху)
+            allResults.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             if (allResults.length === 0) {
                 container.innerHTML = `
@@ -339,8 +365,6 @@
                 `;
                 return;
             }
-
-            allResults.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             const totalStudents = allResults.length;
             const avgScore = Math.round(allResults.reduce((sum, r) => sum + r.score, 0) / totalStudents);

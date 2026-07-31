@@ -1053,55 +1053,27 @@
         }
 
         // ===== СОХРАНИТЬ ТЕСТ В GITHUB =====
-        async function saveTest() {
-            if (questions.length === 0) {
-                alert('Добавьте хотя бы один вопрос!');
-                return;
-            }
-
-            const name = document.getElementById('testName').value.trim() || 'Без названия';
-            const newTest = {
-                name: name,
-                topic: document.getElementById('topicSelect').value,
-                class: document.getElementById('classSelect').value,
-                questions: questions,
-                created: Date.now()
-            };
-
-            // Загружаем существующие тесты из GitHub
-            const token = getGitHubToken();
-            if (!token) return;
-
-            let existingTests = [];
-            try {
-                const response = await fetch(
-                    `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.testsPath}`,
-                    {
-                        headers: {
-                            'Authorization': `token ${token}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    }
-                );
-                if (response.ok) {
-                    const data = await response.json();
-                    const content = atob(data.content);
-                    existingTests = JSON.parse(content);
-                }
-            } catch (e) {
-                console.log('Файл тестов ещё не создан');
-            }
-
-            existingTests.push(newTest);
-            const saved = await saveTestsToGitHub(existingTests);
-
-            if (saved) {
-                alert(`✅ Тест «${name}» сохранён в облаке! (${questions.length} вопросов)`);
-                questions = [];
-                renderPreview();
-                document.getElementById('testName').value = '';
+        // Загружаем существующие тесты из GitHub
+let existingTests = [];
+try {
+    const response = await fetch(
+        `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.testsPath}`,
+        {
+            headers: {
+                'Authorization': `token ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
             }
         }
+    );
+    if (response.ok) {
+        const data = await response.json();
+        // 🔥 ГЛАВНОЕ ИЗМЕНЕНИЕ ЗДЕСЬ:
+        const content = decodeURIComponent(escape(atob(data.content)));
+        existingTests = JSON.parse(content);
+    }
+} catch (e) {
+    console.log('Файл тестов ещё не создан');
+}
 
         function clearTest() {
             if (questions.length === 0) return;

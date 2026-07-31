@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Редактирование теста · Математика с Полиной</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F1EBE9;
+            color: #000000;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: #ffffff;
+            padding: 1rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border-bottom: 3px solid #FBC5D9;
+        }
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .nav-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #FBC5D9;
+        }
+        .nav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #8D0B0D;
+        }
+        .nav-title span { font-weight: 400; color: #555; }
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        .nav-menu a {
+            text-decoration: none;
+            color: #000000;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.5rem 0.2rem;
+            border-bottom: 3px solid transparent;
+            transition: 0.25s;
+        }
+        .nav-menu a:hover {
+            border-bottom-color: #8D0B0D;
+            color: #8D0B0D;
+        }
+        .nav-menu a i { margin-right: 6px; }
+
+        .edit-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1.5rem 3rem;
+        }
+
+        .edit-header {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 2rem;
+            box-shadow: 0 8px 0 #d0c8c4, 0 12px 28px rgba(0,0,0,0.06);
+            border: 1px solid #e8e0dc;
+            margin-bottom: 2rem;
+        }
+        .edit-header h1 {
+            font-family: 'Playfair Display', serif;
+            color: #8D0B0D;
+            font-size: 2rem;
+        }
+        .edit-header .sub {
+            color: #666;
+            margin-top: 0.3rem;
+        }
+
+        .edit-question {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 1.8rem;
+            box-shadow: 0 4px 0 #d0c8c4, 0 8px 20px rgba(0,0,0,0.04);
+            border: 1px solid #e8e0dc;
+            margin-bottom: 1.5rem;
+        }
+        .edit-question .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .edit-question .q-number {
+            font-weight: 600;
+            color: #8D0B0D;
+        }
+        .edit-question .delete-q {
+            background: #c0392b;
+            color: #fff;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        .edit-question .delete-q:hover {
+            background: #a93226;
+        }
+        .edit-question textarea,
+        .edit-question input[type="text"] {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: 16px;
+            border: 2px solid #e0d8d4;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            background: #faf8f7;
+            margin-bottom: 0.6rem;
+        }
+        .edit-question textarea:focus,
+        .edit-question input[type="text"]:focus {
+            outline: none;
+            border-color: #8D0B0D;
+        }
+        .edit-question .option-row {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.4rem;
+        }
+        .edit-question .option-row input[type="text"] {
+            margin-bottom: 0;
+            flex: 1;
+        }
+        .edit-question .option-row .correct-mark {
+            background: #8D0B0D;
+            color: #fff;
+            border: none;
+            padding: 0.3rem 0.6rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .edit-question .option-row .correct-mark.active {
+            background: #27ae60;
+        }
+        .edit-question .option-row .del-opt {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .edit-question .option-row .del-opt:hover {
+            color: #c0392b;
+        }
+        .edit-question .add-opt-btn {
+            background: #FBC5D9;
+            border: none;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.3rem;
+        }
+        .edit-question .add-opt-btn:hover {
+            background: #f5b2cc;
+        }
+        .edit-question .q-type {
+            font-size: 0.8rem;
+            color: #999;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #8D0B0D;
+            color: #FFFFFF;
+            border: none;
+            padding: 0.8rem 2.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.25s;
+            box-shadow: 0 8px 20px rgba(141,11,13,0.2);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(141,11,13,0.35);
+        }
+        .btn-secondary {
+            background: #FBC5D9;
+            color: #000;
+            border: none;
+            padding: 0.8rem 2.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.25s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-secondary:hover {
+            background: #f5b2cc;
+            transform: translateY(-3px);
+        }
+        .actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-size: 0.85rem;
+            border-top: 2px solid #FBC5D9;
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .error-container {
+            text-align: center;
+            padding: 3rem;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 8px 0 #d0c8c4, 0 12px 28px rgba(0,0,0,0.06);
+            border: 1px solid #e8e0dc;
+        }
+        .error-container i {
+            font-size: 3rem;
+            color: #8D0B0D;
+        }
+        .error-container h2 {
+            margin: 1rem 0;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 0.8rem; padding: 1rem; }
+            .nav-menu { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="images/avatar.png" alt="Полина" class="nav-avatar" />
+            <span class="nav-title">Математика <span>с Полиной</span></span>
+        </div>
+        <div class="nav-menu">
+            <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+            <a href="tests.html"><i class="fas fa-tasks"></i> Тесты</a>
+            <a href="contacts.html"><i class="fas fa-envelope"></i> Контакты</a>
+        </div>
+    </nav>
+
+    <div class="edit-container" id="editContainer">
+        <!-- Загружается динамически -->
+    </div>
+
+    <div class="footer">
+        &copy; 2026 Математика с Полиной · Сделано с ❤️
+    </div>
+
+    <script>
+        let editTestData = null;
+        let editTestIndex = null;
+
+        window.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('editContainer');
+            const saved = localStorage.getItem('edit_test');
+            const index = localStorage.getItem('edit_test_index');
+
+            if (!saved) {
+                container.innerHTML = `
+                    <div class="error-container">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <h2>Тест не найден</h2>
+                        <p style="color:#777; margin-bottom:1.5rem;">Возможно, тест был удалён</p>
+                        <a href="tests.html" class="btn-primary">Вернуться к тестам</a>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                editTestData = JSON.parse(saved);
+                editTestIndex = index ? parseInt(index) : null;
+                renderEditor();
+            } catch (e) {
+                container.innerHTML = `
+                    <div class="error-container">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <h2>Ошибка загрузки теста</h2>
+                        <a href="tests.html" class="btn-primary">Вернуться к тестам</a>
+                    </div>
+                `;
+            }
+        });
+
+        function renderEditor() {
+            const container = document.getElementById('editContainer');
+            const typeLabels = {
+                'single': 'Один ответ',
+                'multiple': 'Несколько ответов',
+                'open': 'Открытый ответ',
+                'file': 'Ответ файлом'
+            };
+
+            let html = `
+                <div class="edit-header">
+                    <h1>✏️ Редактирование: ${editTestData.name || 'Без названия'}</h1>
+                    <div class="sub">
+                        ${editTestData.topic || 'Общее'} · ${editTestData.class ? editTestData.class + ' класс' : 'Класс не указан'}
+                        · ${editTestData.questions ? editTestData.questions.length : 0} вопросов
+                    </div>
+                </div>
+            `;
+
+            if (!editTestData.questions || editTestData.questions.length === 0) {
+                html += `<div style="text-align:center; padding:2rem; background:#fff; border-radius:24px; border:1px solid #e8e0dc;">В этом тесте нет вопросов</div>`;
+            } else {
+                editTestData.questions.forEach((q, index) => {
+                    html += `<div class="edit-question" data-index="${index}">`;
+                    html += `<div class="q-header">
+                        <span class="q-number">Вопрос ${index + 1}</span>
+                        <button class="delete-q" onclick="deleteQuestion(${index})">
+                            <i class="fas fa-trash-alt"></i> Удалить
+                        </button>
+                    </div>`;
+                    html += `<div class="q-type">Тип: ${typeLabels[q.type] || 'Один ответ'}</div>`;
+                    html += `<textarea class="q-text-edit" rows="2">${q.text || ''}</textarea>`;
+
+                    if (q.type === 'single' || q.type === 'multiple') {
+                        html += `<div class="options-edit" id="options-${index}">`;
+                        if (q.options && q.options.length > 0) {
+                            q.options.forEach((opt, optIndex) => {
+                                const isCorrect = q.correctIndices && q.correctIndices.includes(optIndex);
+                                html += `
+                                    <div class="option-row">
+                                        <input type="text" class="opt-input" value="${opt.replace(/"/g, '&quot;')}" />
+                                        <button class="correct-mark ${isCorrect ? 'active' : ''}" onclick="toggleCorrect(this, ${index}, ${optIndex})">
+                                            ${isCorrect ? '✓ Правильный' : '✔ Сделать правильным'}
+                                        </button>
+                                        <button class="del-opt" onclick="deleteOption(this, ${index}, ${optIndex})">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                `;
+                            });
+                        }
+                        html += `<button class="add-opt-btn" onclick="addOption(${index})">+ Добавить вариант</button>`;
+                        html += `</div>`;
+                    } else if (q.type === 'open') {
+                        html += `<div style="margin-top:0.5rem;">
+                            <label style="font-weight:600; font-size:0.85rem; display:block; margin-bottom:0.3rem;">Правильный ответ:</label>
+                            <input type="text" class="open-answer-edit" value="${q.correctAnswer || ''}" />
+                        </div>`;
+                    } else if (q.type === 'file') {
+                        html += `<div style="margin-top:0.5rem; color:#999; font-size:0.85rem;">
+                            <i class="fas fa-file-pdf"></i> Ученик прикрепляет PDF-файл
+                        </div>`;
+                    }
+
+                    html += `</div>`;
+                });
+            }
+
+            html += `
+                <div class="actions">
+                    <button class="btn-primary" onclick="saveChanges()">
+                        <i class="fas fa-save"></i> Сохранить изменения
+                    </button>
+                    <a href="tests.html" class="btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Отмена
+                    </a>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function deleteQuestion(index) {
+            if (!confirm('Удалить этот вопрос?')) return;
+            editTestData.questions.splice(index, 1);
+            renderEditor();
+        }
+
+        function addOption(qIndex) {
+            const q = editTestData.questions[qIndex];
+            if (!q.options) q.options = [];
+            q.options.push('Новый вариант');
+            if (!q.correctIndices) q.correctIndices = [];
+            renderEditor();
+        }
+
+        function deleteOption(btn, qIndex, optIndex) {
+            const q = editTestData.questions[qIndex];
+            if (q.options.length <= 2) {
+                alert('Должно быть минимум 2 варианта');
+                return;
+            }
+            q.options.splice(optIndex, 1);
+            q.correctIndices = q.correctIndices.filter(i => i !== optIndex).map(i => i > optIndex ? i - 1 : i);
+            renderEditor();
+        }
+
+        function toggleCorrect(btn, qIndex, optIndex) {
+            const q = editTestData.questions[qIndex];
+            if (q.type === 'single') {
+                q.correctIndices = [optIndex];
+            } else {
+                const idx = q.correctIndices.indexOf(optIndex);
+                if (idx === -1) {
+                    q.correctIndices.push(optIndex);
+                } else {
+                    q.correctIndices.splice(idx, 1);
+                }
+            }
+            renderEditor();
+        }
+
+        function saveChanges() {
+            const questionBlocks = document.querySelectorAll('.edit-question');
+            questionBlocks.forEach((block, idx) => {
+                const q = editTestData.questions[idx];
+                if (!q) return;
+                
+                const textArea = block.querySelector('.q-text-edit');
+                if (textArea) q.text = textArea.value;
+
+                if (q.type === 'single' || q.type === 'multiple') {
+                    const optInputs = block.querySelectorAll('.opt-input');
+                    const newOptions = [];
+                    optInputs.forEach(input => newOptions.push(input.value));
+                    q.options = newOptions;
+                } else if (q.type === 'open') {
+                    const openInput = block.querySelector('.open-answer-edit');
+                    if (openInput) q.correctAnswer = openInput.value;
+                }
+            });
+
+            const allTests = JSON.parse(localStorage.getItem('polina_tests') || '[]');
+            
+            // Ищем тест по индексу
+            if (editTestIndex !== null && editTestIndex < allTests.length) {
+                allTests[editTestIndex] = editTestData;
+                localStorage.setItem('polina_tests', JSON.stringify(allTests));
+                localStorage.removeItem('edit_test');
+                localStorage.removeItem('edit_test_index');
+                alert('✅ Тест успешно обновлён!');
+                window.location.href = 'tests.html';
+            } else {
+                alert('Ошибка: тест не найден в списке');
+            }
+        }
+    </script>
+
+</body>
+</html>

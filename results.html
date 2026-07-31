@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Результаты учеников · Математика с Полиной</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F1EBE9;
+            color: #000000;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #ffffff;
+            padding: 1rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border-bottom: 3px solid #FBC5D9;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .nav-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #FBC5D9;
+            box-shadow: 0 4px 12px rgba(141,11,13,0.15);
+        }
+        .nav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #8D0B0D;
+            letter-spacing: -0.02em;
+        }
+        .nav-title span { font-weight: 400; color: #555; }
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-menu a {
+            text-decoration: none;
+            color: #000000;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.5rem 0.2rem;
+            border-bottom: 3px solid transparent;
+            transition: 0.25s;
+        }
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            border-bottom-color: #8D0B0D;
+            color: #8D0B0D;
+        }
+        .nav-menu a i { margin-right: 6px; }
+
+        /* ===== АДМИН-ПАНЕЛЬ ===== */
+        .admin-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .admin-btn {
+            background: #8D0B0D;
+            color: #FFFFFF;
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .admin-btn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+        .admin-btn.logout {
+            background: #555;
+        }
+        .admin-btn.logout:hover {
+            background: #333;
+        }
+        .admin-status {
+            font-size: 0.75rem;
+            color: #27ae60;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* ===== СТРАНИЦА ===== */
+        .page-header {
+            padding: 2rem 4rem 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            color: #8D0B0D;
+        }
+        .page-header h1 i { margin-right: 10px; }
+
+        .results-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem 3rem;
+        }
+
+        /* ===== ДОСТУП ЗАКРЫТ ===== */
+        .access-denied {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 8px 0 #d0c8c4, 0 12px 28px rgba(0,0,0,0.06);
+            border: 1px solid #e8e0dc;
+            max-width: 500px;
+            margin: 2rem auto;
+        }
+        .access-denied i {
+            font-size: 4rem;
+            color: #8D0B0D;
+        }
+        .access-denied h2 {
+            font-family: 'Playfair Display', serif;
+            color: #8D0B0D;
+            margin: 1rem 0 0.5rem;
+        }
+        .access-denied p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+        .access-denied .btn-primary {
+            background: #8D0B0D;
+            color: #FFFFFF;
+            border: none;
+            padding: 0.8rem 2.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.25s;
+            box-shadow: 0 8px 20px rgba(141,11,13,0.2);
+        }
+        .access-denied .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(141,11,13,0.35);
+        }
+
+        /* ===== СТАТИСТИКА ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 0 #d0c8c4, 0 8px 20px rgba(0,0,0,0.04);
+            border: 1px solid #e8e0dc;
+        }
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #8D0B0D;
+            font-family: 'Playfair Display', serif;
+        }
+        .stat-card .label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* ===== РЕЗУЛЬТАТЫ ===== */
+        .result-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 0 #d0c8c4, 0 8px 20px rgba(0,0,0,0.04);
+            border: 1px solid #e8e0dc;
+            margin-bottom: 1.5rem;
+        }
+        .result-card .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .result-card .student-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #8D0B0D;
+        }
+        .result-card .student-name i {
+            margin-right: 0.4rem;
+        }
+        .result-card .score-badge {
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .result-card .score-badge.perfect { background: #d4edda; color: #155724; }
+        .result-card .score-badge.good { background: #cce5ff; color: #004085; }
+        .result-card .score-badge.medium { background: #fff3cd; color: #856404; }
+        .result-card .score-badge.bad { background: #f8d7da; color: #721c24; }
+
+        .result-card .meta {
+            color: #777;
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+        }
+        .result-card .answer-item {
+            padding: 0.5rem 0.8rem;
+            border-radius: 12px;
+            margin-bottom: 0.3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            font-size: 0.9rem;
+            background: #faf8f7;
+            border: 1px solid #e8e0dc;
+        }
+        .result-card .answer-item .q-text {
+            font-weight: 500;
+        }
+        .result-card .answer-item .status {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .result-card .answer-item .status.correct { color: #27ae60; }
+        .result-card .answer-item .status.wrong { color: #c0392b; }
+
+        .result-card .file-download {
+            background: #8D0B0D;
+            color: #fff;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .result-card .file-download:hover {
+            background: #a93226;
+            transform: scale(1.05);
+        }
+
+        .empty-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+        }
+        .empty-results i {
+            font-size: 3rem;
+            color: #FBC5D9;
+            display: block;
+            margin-bottom: 0.8rem;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            padding: 0.5rem 0 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .filters label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .filters select {
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            border: 2px solid #e0d8d4;
+            background: #faf8f7;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .filters select:focus {
+            outline: none;
+            border-color: #8D0B0D;
+        }
+        .filters input {
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            border: 2px solid #e0d8d4;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            background: #faf8f7;
+            width: 150px;
+        }
+        .filters input:focus {
+            outline: none;
+            border-color: #8D0B0D;
+        }
+
+        .btn-clear {
+            background: #c0392b;
+            color: #fff;
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-clear:hover {
+            background: #a93226;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-size: 0.85rem;
+            border-top: 2px solid #FBC5D9;
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ===== МОДАЛЬНОЕ ОКНО ПАРОЛЯ ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal-box {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 2.5rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .modal-box h2 {
+            font-family: 'Playfair Display', serif;
+            color: #8D0B0D;
+            margin-bottom: 0.5rem;
+        }
+        .modal-box p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+        .modal-box input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 16px;
+            border: 2px solid #e0d8d4;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 1rem;
+        }
+        .modal-box input:focus {
+            outline: none;
+            border-color: #8D0B0D;
+        }
+        .modal-box .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+        }
+        .modal-box .modal-actions button {
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .modal-box .modal-actions .btn-confirm {
+            background: #8D0B0D;
+            color: #fff;
+        }
+        .modal-box .modal-actions .btn-confirm:hover {
+            background: #a93226;
+        }
+        .modal-box .modal-actions .btn-cancel {
+            background: #e0d8d4;
+            color: #333;
+        }
+        .modal-box .modal-actions .btn-cancel:hover {
+            background: #ccc;
+        }
+        .modal-box .error-msg {
+            color: #c0392b;
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+            display: none;
+        }
+        .modal-box .error-msg.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 0.8rem; padding: 1rem; }
+            .nav-menu { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+            .page-header { padding: 1.5rem; flex-direction: column; align-items: flex-start; }
+            .results-container { padding: 1rem; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .filters input { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="images/avatar.png" alt="Полина" class="nav-avatar" />
+            <span class="nav-title">Математика <span>с Полиной</span></span>
+        </div>
+        <div class="nav-menu">
+            <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+            <a href="tests.html"><i class="fas fa-tasks"></i> Тесты</a>
+            <a href="results.html" class="active"><i class="fas fa-chart-bar"></i> Результаты</a>
+            <a href="contacts.html"><i class="fas fa-envelope"></i> Контакты</a>
+        </div>
+        <div class="admin-controls">
+            <span class="admin-status" id="adminStatus" style="display:none;">
+                <i class="fas fa-circle" style="color:#27ae60;"></i> Админ
+            </span>
+            <button class="admin-btn" id="adminLoginBtn" onclick="showLoginModal()">
+                <i class="fas fa-user-shield"></i> Вход
+            </button>
+            <button class="admin-btn logout" id="adminLogoutBtn" style="display:none;" onclick="logoutAdmin()">
+                <i class="fas fa-sign-out-alt"></i> Выйти
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО ПАРОЛЯ ===== -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <h2><i class="fas fa-user-shield" style="color:#8D0B0D;"></i> Вход для учителя</h2>
+            <p>Введите пароль для просмотра результатов</p>
+            <div class="error-msg" id="loginError">❌ Неверный пароль. Попробуйте ещё раз.</div>
+            <input type="password" id="passwordInput" placeholder="Введите пароль..." onkeydown="if(event.key==='Enter') checkPassword()" />
+            <div class="modal-actions">
+                <button class="btn-confirm" onclick="checkPassword()">Войти</button>
+                <button class="btn-cancel" onclick="closeLoginModal()">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
+    <div class="page-header">
+        <h1><i class="fas fa-chart-bar"></i> Результаты учеников</h1>
+        <button class="btn-clear" id="clearBtn" onclick="clearAllResults()" style="display:none;">
+            <i class="fas fa-trash-alt"></i> Очистить все
+        </button>
+    </div>
+
+    <div class="results-container" id="resultsContainer">
+        <!-- Загружается динамически -->
+    </div>
+
+    <div class="footer">
+        &copy; 2026 Математика с Полиной · Сделано с ❤️
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = 'polina2026';
+        let isAdmin = false;
+
+        // ===== СТАТУС АДМИНА =====
+        function checkAdminStatus() {
+            const saved = localStorage.getItem('polina_admin');
+            if (saved === 'true') {
+                isAdmin = true;
+                document.getElementById('adminStatus').style.display = 'inline';
+                document.getElementById('adminLoginBtn').style.display = 'none';
+                document.getElementById('adminLogoutBtn').style.display = 'inline-flex';
+                document.getElementById('clearBtn').style.display = 'inline-block';
+                renderResults();
+            } else {
+                isAdmin = false;
+                document.getElementById('adminStatus').style.display = 'none';
+                document.getElementById('adminLoginBtn').style.display = 'inline-flex';
+                document.getElementById('adminLogoutBtn').style.display = 'none';
+                document.getElementById('clearBtn').style.display = 'none';
+                showAccessDenied();
+            }
+        }
+
+        // ===== ПОКАЗАТЬ "ДОСТУП ЗАКРЫТ" =====
+        function showAccessDenied() {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = `
+                <div class="access-denied">
+                    <i class="fas fa-lock"></i>
+                    <h2>Доступ закрыт</h2>
+                    <p>Только учитель может просматривать результаты учеников.<br />Войдите в режим администратора.</p>
+                    <button class="btn-primary" onclick="showLoginModal()">
+                        <i class="fas fa-user-shield"></i> Войти как учитель
+                    </button>
+                </div>
+            `;
+        }
+
+        // ===== МОДАЛКА ПАРОЛЯ =====
+        function showLoginModal() {
+            document.getElementById('loginModal').classList.add('show');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('loginError').classList.remove('show');
+            setTimeout(() => document.getElementById('passwordInput').focus(), 100);
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('show');
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput');
+            if (input.value === ADMIN_PASSWORD) {
+                isAdmin = true;
+                localStorage.setItem('polina_admin', 'true');
+                closeLoginModal();
+                checkAdminStatus();
+            } else {
+                document.getElementById('loginError').classList.add('show');
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        function logoutAdmin() {
+            if (confirm('Выйти из режима администратора?')) {
+                isAdmin = false;
+                localStorage.removeItem('polina_admin');
+                checkAdminStatus();
+            }
+        }
+
+        // ===== ОТОБРАЗИТЬ РЕЗУЛЬТАТЫ =====
+        function renderResults() {
+            const container = document.getElementById('resultsContainer');
+            const allResults = JSON.parse(localStorage.getItem('polina_student_results') || '[]');
+
+            if (allResults.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-results">
+                        <i class="fas fa-users"></i>
+                        <div style="font-size:1.2rem; font-weight:600; color:#555;">Пока нет результатов</div>
+                        <div style="color:#999; margin-top:0.3rem;">Когда ученики пройдут тесты, их ответы появятся здесь</div>
+                    </div>
+                `;
+                return;
+            }
+
+            allResults.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            const totalStudents = allResults.length;
+            const avgScore = Math.round(allResults.reduce((sum, r) => sum + r.score, 0) / totalStudents);
+            const perfectCount = allResults.filter(r => r.score === 100).length;
+
+            let html = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="number">${totalStudents}</div>
+                        <div class="label">👨‍🎓 Всего учеников</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">${avgScore}%</div>
+                        <div class="label">📊 Средний балл</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">${perfectCount}</div>
+                        <div class="label">🏆 Отличников (100%)</div>
+                    </div>
+                </div>
+            `;
+
+            const testNames = [...new Set(allResults.map(r => r.testName))];
+            html += `
+                <div class="filters">
+                    <label>
+                        📝 Тест:
+                        <select id="testFilter" onchange="filterResults()">
+                            <option value="all">Все тесты</option>
+                            ${testNames.map(name => `<option value="${name}">${name}</option>`).join('')}
+                        </select>
+                    </label>
+                    <label>
+                        👤 Ученик:
+                        <input type="text" id="nameFilter" placeholder="Поиск..." oninput="filterResults()" />
+                    </label>
+                </div>
+            `;
+
+            allResults.forEach((result) => {
+                const date = new Date(result.date).toLocaleString('ru-RU');
+                let scoreClass = 'bad';
+                if (result.score === 100) scoreClass = 'perfect';
+                else if (result.score >= 80) scoreClass = 'good';
+                else if (result.score >= 50) scoreClass = 'medium';
+
+                html += `
+                    <div class="result-card" data-test="${result.testName}" data-student="${result.studentName}">
+                        <div class="header">
+                            <span class="student-name"><i class="fas fa-user-graduate"></i> ${result.studentName}</span>
+                            <span class="score-badge ${scoreClass}">${result.score}% (${result.correctCount}/${result.totalQuestions})</span>
+                        </div>
+                        <div class="meta">
+                            📝 ${result.testName} · ${result.testTopic || 'Общее'} ${result.testClass ? `· ${result.testClass} класс` : ''}
+                            · 📅 ${date}
+                        </div>
+                        <div style="margin-top:0.5rem;">
+                            ${result.answers.map((a, idx) => `
+                                <div class="answer-item">
+                                    <span class="q-text">${idx+1}. ${a.questionText.substring(0, 60)}${a.questionText.length > 60 ? '...' : ''}</span>
+                                    <span class="status ${a.isCorrect ? 'correct' : 'wrong'}">
+                                        ${a.isCorrect ? '✅ Верно' : '❌ Неверно'}
+                                    </span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${result.files && result.files.length > 0 ? `
+                            <div style="margin-top:0.8rem; border-top:1px solid #eee; padding-top:0.8rem;">
+                                <span style="font-weight:600; font-size:0.85rem; color:#555;"><i class="fas fa-paperclip"></i> Прикреплённые файлы:</span>
+                                ${result.files.map(f => `
+                                    <button class="file-download" onclick="downloadFile('${f.fileData}', '${f.fileName}')">
+                                        <i class="fas fa-file-pdf"></i> ${f.fileName}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function filterResults() {
+            const testFilter = document.getElementById('testFilter').value;
+            const nameFilter = document.getElementById('nameFilter').value.toLowerCase();
+
+            const cards = document.querySelectorAll('.result-card');
+            cards.forEach(card => {
+                const test = card.dataset.test;
+                const student = card.dataset.student.toLowerCase();
+                let show = true;
+                if (testFilter !== 'all' && test !== testFilter) show = false;
+                if (nameFilter && !student.includes(nameFilter)) show = false;
+                card.style.display = show ? 'block' : 'none';
+            });
+        }
+
+        function downloadFile(dataUrl, fileName) {
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function clearAllResults() {
+            if (!isAdmin) {
+                alert('Только учитель может удалять результаты.');
+                return;
+            }
+            if (!confirm('Вы уверены, что хотите удалить ВСЕ результаты учеников? Это действие нельзя отменить!')) return;
+            if (!confirm('Точно удалить все результаты?')) return;
+            localStorage.removeItem('polina_student_results');
+            renderResults();
+        }
+
+        // ===== ИНИЦИАЛИЗАЦИЯ =====
+        window.addEventListener('DOMContentLoaded', function() {
+            checkAdminStatus();
+
+            document.getElementById('loginModal').addEventListener('click', function(e) {
+                if (e.target === this) closeLoginModal();
+            });
+        });
+    </script>
+
+</body>
+</html>

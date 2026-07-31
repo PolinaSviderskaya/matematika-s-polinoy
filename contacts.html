@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Контакты · Математика с Полиной</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F1EBE9;
+            color: #000000;
+            min-height: 100vh;
+        }
+
+        /* ===== НАВИГАЦИЯ ===== */
+        .navbar {
+            background: #ffffff;
+            padding: 1rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border-bottom: 3px solid #FBC5D9;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .nav-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #FBC5D9;
+            box-shadow: 0 4px 12px rgba(141,11,13,0.15);
+            transition: transform 0.2s;
+        }
+        .nav-avatar:hover { transform: scale(1.05); }
+        .nav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #8D0B0D;
+            letter-spacing: -0.02em;
+        }
+        .nav-title span { font-weight: 400; color: #555; }
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-menu a {
+            text-decoration: none;
+            color: #000000;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.5rem 0.2rem;
+            border-bottom: 3px solid transparent;
+            transition: 0.25s;
+        }
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            border-bottom-color: #8D0B0D;
+            color: #8D0B0D;
+        }
+        .nav-menu a i { margin-right: 6px; }
+
+        .admin-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .admin-btn {
+            background: #8D0B0D;
+            color: #FFFFFF;
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .admin-btn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+        .admin-btn.logout {
+            background: #555;
+        }
+        .admin-btn.logout:hover {
+            background: #333;
+        }
+        .admin-status {
+            font-size: 0.75rem;
+            color: #27ae60;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+        .contacts-wrapper {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 3rem 2rem 4rem;
+        }
+
+        .contacts-card {
+            background: #ffffff;
+            border-radius: 40px;
+            padding: 3rem;
+            box-shadow: 0 8px 0 #d0c8c4, 0 20px 40px rgba(0,0,0,0.06);
+            border: 1px solid #e8e0dc;
+            position: relative;
+            text-align: center;
+        }
+        .contacts-card::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            right: -4px;
+            bottom: -4px;
+            background: #FBC5D9;
+            border-radius: 40px;
+            z-index: -1;
+            opacity: 0.2;
+        }
+
+        .contacts-card .big-icon {
+            font-size: 4rem;
+            color: #FBC5D9;
+            margin-bottom: 0.5rem;
+        }
+
+        .contacts-card h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            color: #8D0B0D;
+            margin-bottom: 0.5rem;
+        }
+
+        .contacts-card .subtitle {
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* ===== КОНТАКТЫ ===== */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1.2rem;
+            background: #faf8f7;
+            border-radius: 60px;
+            border: 1px solid #e8e0dc;
+            transition: 0.25s;
+            text-decoration: none;
+            color: #000;
+            cursor: pointer;
+        }
+        .contact-item:hover {
+            border-color: #8D0B0D;
+            background: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(141,11,13,0.08);
+        }
+
+        .contact-item .icon-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.3rem;
+            color: #fff;
+        }
+
+        .contact-item .icon-circle.vk {
+            background: #4a76a8;
+        }
+        .contact-item .icon-circle.tg {
+            background: #2ca5e0;
+        }
+        .contact-item .icon-circle.pinterest {
+            background: #e60023;
+        }
+        .contact-item .icon-circle.email {
+            background: #8D0B0D;
+        }
+
+        .contact-item .info {
+            text-align: left;
+            flex: 1;
+            min-width: 0;
+        }
+        .contact-item .info .label {
+            font-size: 0.7rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-weight: 600;
+        }
+        .contact-item .info .value {
+            font-weight: 600;
+            color: #000;
+            font-size: 0.9rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .contact-item .info .value .short {
+            font-weight: 400;
+            color: #777;
+            font-size: 0.8rem;
+        }
+
+        .contact-item .arrow {
+            color: #ccc;
+            font-size: 0.8rem;
+            transition: 0.25s;
+            flex-shrink: 0;
+        }
+        .contact-item:hover .arrow {
+            color: #8D0B0D;
+            transform: translateX(4px);
+        }
+
+        /* ===== ПОЛНЫЙ АДРЕС ПОЧТЫ (на всю ширину) ===== */
+        .contact-item.full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* ===== ДОПОЛНИТЕЛЬНЫЙ ТЕКСТ ===== */
+        .contacts-footer {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #FBC5D9;
+            color: #888;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+        .contacts-footer .heart {
+            color: #8D0B0D;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-size: 0.85rem;
+            border-top: 2px solid #FBC5D9;
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ===== МОДАЛЬНОЕ ОКНО ПАРОЛЯ ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.show {
+            display: flex;
+        }
+        .modal-box {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 2.5rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .modal-box h2 {
+            font-family: 'Playfair Display', serif;
+            color: #8D0B0D;
+            margin-bottom: 0.5rem;
+        }
+        .modal-box p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+        .modal-box input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 16px;
+            border: 2px solid #e0d8d4;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 1rem;
+        }
+        .modal-box input:focus {
+            outline: none;
+            border-color: #8D0B0D;
+        }
+        .modal-box .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+        }
+        .modal-box .modal-actions button {
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .modal-box .modal-actions .btn-confirm {
+            background: #8D0B0D;
+            color: #fff;
+        }
+        .modal-box .modal-actions .btn-confirm:hover {
+            background: #a93226;
+        }
+        .modal-box .modal-actions .btn-cancel {
+            background: #e0d8d4;
+            color: #333;
+        }
+        .modal-box .modal-actions .btn-cancel:hover {
+            background: #ccc;
+        }
+        .modal-box .error-msg {
+            color: #c0392b;
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+            display: none;
+        }
+        .modal-box .error-msg.show {
+            display: block;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 0.8rem; padding: 1rem; }
+            .nav-menu { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+            .contacts-wrapper { padding: 1.5rem; }
+            .contacts-card { padding: 1.5rem; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .contact-item.full-width { grid-column: 1; }
+            .contacts-card h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== ШАПКА ===== -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="images/avatar.png" alt="Полина" class="nav-avatar" />
+            <span class="nav-title">Математика <span>с Полиной</span></span>
+        </div>
+        <div class="nav-menu">
+            <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+            <a href="tests.html"><i class="fas fa-tasks"></i> Тесты</a>
+            <a href="results.html"><i class="fas fa-chart-bar"></i> Результаты</a>
+            <a href="contacts.html" class="active"><i class="fas fa-envelope"></i> Контакты</a>
+        </div>
+        <div class="admin-controls">
+            <span class="admin-status" id="adminStatus" style="display:none;">
+                <i class="fas fa-circle" style="color:#27ae60;"></i> Админ
+            </span>
+            <button class="admin-btn" id="adminLoginBtn" onclick="showLoginModal()">
+                <i class="fas fa-user-shield"></i> Вход
+            </button>
+            <button class="admin-btn logout" id="adminLogoutBtn" style="display:none;" onclick="logoutAdmin()">
+                <i class="fas fa-sign-out-alt"></i> Выйти
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО ПАРОЛЯ ===== -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <h2><i class="fas fa-user-shield" style="color:#8D0B0D;"></i> Вход для учителя</h2>
+            <p>Введите пароль для доступа к администрированию</p>
+            <div class="error-msg" id="loginError">❌ Неверный пароль. Попробуйте ещё раз.</div>
+            <input type="password" id="passwordInput" placeholder="Введите пароль..." onkeydown="if(event.key==='Enter') checkPassword()" />
+            <div class="modal-actions">
+                <button class="btn-confirm" onclick="checkPassword()">Войти</button>
+                <button class="btn-cancel" onclick="closeLoginModal()">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== КОНТАКТЫ ===== -->
+    <div class="contacts-wrapper">
+        <div class="contacts-card">
+            <div class="big-icon"><i class="fas fa-heart" style="color:#8D0B0D;"></i></div>
+            <h1>Связь со мной</h1>
+            <p class="subtitle">Буду рада ответить на ваши вопросы! 🤍</p>
+
+            <div class="contact-grid">
+                <!-- ВКонтакте -->
+                <a href="https://vk.ru/polina.sviderskaya" target="_blank" class="contact-item">
+                    <div class="icon-circle vk"><i class="fab fa-vk"></i></div>
+                    <div class="info">
+                        <div class="label">ВКонтакте</div>
+                        <div class="value">@polina.sviderskaya</div>
+                    </div>
+                    <div class="arrow"><i class="fas fa-chevron-right"></i></div>
+                </a>
+
+                <!-- Telegram -->
+                <a href="https://t.me/polinasviderskaya" target="_blank" class="contact-item">
+                    <div class="icon-circle tg"><i class="fab fa-telegram-plane"></i></div>
+                    <div class="info">
+                        <div class="label">Telegram</div>
+                        <div class="value">@polinasviderskaya</div>
+                    </div>
+                    <div class="arrow"><i class="fas fa-chevron-right"></i></div>
+                </a>
+
+                <!-- Pinterest -->
+                <a href="https://ru.pinterest.com/PolliSviderskaya/" target="_blank" class="contact-item">
+                    <div class="icon-circle pinterest"><i class="fab fa-pinterest-p"></i></div>
+                    <div class="info">
+                        <div class="label">Pinterest</div>
+                        <div class="value">@PolliSviderskaya</div>
+                    </div>
+                    <div class="arrow"><i class="fas fa-chevron-right"></i></div>
+                </a>
+
+                <!-- Email (на всю ширину) -->
+                <a href="mailto:polina.sviderskaya05@gmail.com" target="_blank" class="contact-item full-width">
+                    <div class="icon-circle email"><i class="fas fa-envelope"></i></div>
+                    <div class="info">
+                        <div class="label">Email</div>
+                        <div class="value">polina.sviderskaya05@gmail.com</div>
+                    </div>
+                    <div class="arrow"><i class="fas fa-chevron-right"></i></div>
+                </a>
+            </div>
+
+            <div class="contacts-footer">
+                <p>
+                    <i class="fas fa-clock" style="color:#8D0B0D; margin-right:0.4rem;"></i>
+                    Отвечаю обычно в течение нескольких часов
+                </p>
+                <p style="margin-top:0.3rem;">
+                    Пишите, если у вас есть вопросы по математике,<br />
+                    хотите записаться на занятие или просто поздороваться <span class="heart">🤍</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        &copy; 2026 Математика с Полиной · Сделано с ❤️
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = 'polina2026';
+        let isAdmin = false;
+
+        function checkAdminStatus() {
+            const saved = localStorage.getItem('polina_admin');
+            if (saved === 'true') {
+                isAdmin = true;
+                document.getElementById('adminStatus').style.display = 'inline';
+                document.getElementById('adminLoginBtn').style.display = 'none';
+                document.getElementById('adminLogoutBtn').style.display = 'inline-flex';
+            } else {
+                isAdmin = false;
+                document.getElementById('adminStatus').style.display = 'none';
+                document.getElementById('adminLoginBtn').style.display = 'inline-flex';
+                document.getElementById('adminLogoutBtn').style.display = 'none';
+            }
+        }
+
+        function showLoginModal() {
+            document.getElementById('loginModal').classList.add('show');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('loginError').classList.remove('show');
+            setTimeout(() => document.getElementById('passwordInput').focus(), 100);
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('show');
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput');
+            if (input.value === ADMIN_PASSWORD) {
+                isAdmin = true;
+                localStorage.setItem('polina_admin', 'true');
+                closeLoginModal();
+                checkAdminStatus();
+            } else {
+                document.getElementById('loginError').classList.add('show');
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        function logoutAdmin() {
+            if (confirm('Выйти из режима администратора?')) {
+                isAdmin = false;
+                localStorage.removeItem('polina_admin');
+                checkAdminStatus();
+            }
+        }
+
+        document.getElementById('loginModal').addEventListener('click', function(e) {
+            if (e.target === this) closeLoginModal();
+        });
+
+        window.addEventListener('DOMContentLoaded', function() {
+            checkAdminStatus();
+        });
+    </script>
+
+</body>
+</html>

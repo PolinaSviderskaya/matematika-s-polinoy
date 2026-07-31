@@ -597,7 +597,7 @@
                 }
 
                 const data = await response.json();
-                const content = atob(data.content);
+                const content = decodeURIComponent(escape(atob(data.content)));
                 return JSON.parse(content);
             } catch (error) {
                 console.error('Ошибка загрузки тестов:', error);

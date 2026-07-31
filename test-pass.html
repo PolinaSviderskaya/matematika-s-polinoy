@@ -388,6 +388,23 @@
             }
         }
 
+       // ===== ЗАГРУЗКА ТЕСТА ИЗ GITHUB =====
+async function loadTestFromGitHub(testName) {
+    try {
+        const response = await fetch(
+            'https://raw.githubusercontent.com/PolinaSviderskaya/matematika-s-polinoy/main/data/tests.json'
+        );
+        if (!response.ok) throw new Error('Ошибка загрузки');
+        const tests = await response.json();
+        const test = tests.find(t => t.name === testName);
+        if (!test) throw new Error('Тест не найден');
+        return test;
+    } catch (error) {
+        console.error('Ошибка загрузки теста:', error);
+        return null;
+    }
+}
+        
         // ===== ЗАГРУЗКА ТЕСТА =====
         window.addEventListener('DOMContentLoaded', function() {
             const saved = localStorage.getItem('current_test');

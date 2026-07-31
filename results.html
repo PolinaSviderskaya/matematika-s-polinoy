@@ -577,40 +577,41 @@
 
         // ===== ЗАГРУЗКА РЕЗУЛЬТАТОВ ИЗ GITHUB =====
         async function loadResultsFromGitHub() {
-            const { owner, repo, resultsPath } = GITHUB_CONFIG;
-            const token = getGitHubToken();
+    const { owner, repo, resultsPath } = GITHUB_CONFIG;
+    const token = getGitHubToken();
 
-            if (!token) {
-                alert('❌ Токен не введён!');
-                return [];
-            }
+    if (!token) {
+        alert('❌ Токен не введён!');
+        return [];
+    }
 
-            try {
-                const response = await fetch(
-                    `https://api.github.com/repos/${owner}/${repo}/contents/${resultsPath}`,
-                    {
-                        headers: {
-                            'Authorization': `token ${token}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    }
-                );
-
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        return []; // файл ещё не создан
-                    }
-                    throw new Error(`Ошибка загрузки: ${response.status}`);
+    try {
+        const response = await fetch(
+            `https://api.github.com/repos/${owner}/${repo}/contents/${resultsPath}`,
+            {
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json'
                 }
+            }
+        );
 
-                const data = await response.json();
-                const content = atob(data.content);
-                return JSON.parse(content);
-            } catch (error) {
-                console.error('Ошибка загрузки результатов:', error);
+        if (!response.ok) {
+            if (response.status === 404) {
                 return [];
             }
+            throw new Error(`Ошибка загрузки: ${response.status}`);
         }
+
+        const data = await response.json();
+        // 🔥 ГЛАВНОЕ ИЗМЕНЕНИЕ ЗДЕСЬ:
+        const content = decodeURIComponent(escape(atob(data.content)));
+        return JSON.parse(content);
+    } catch (error) {
+        console.error('Ошибка загрузки результатов:', error);
+        return [];
+    }
+}
 
         function checkAdminStatus() {
             const saved = localStorage.getItem('polina_admin');

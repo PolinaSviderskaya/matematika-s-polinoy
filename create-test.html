@@ -401,6 +401,59 @@
             }
         }
 
+        // ===== СОХРАНЕНИЕ ТЕСТА В GITHUB =====
+async function saveTestToGitHub(testData) {
+    const token = 'ghp_НОВЫЙ_ТОКЕН'; // ВСТАВЬТЕ ТОКЕН
+    const url = 'https://api.github.com/repos/PolinaSviderskaya/matematika-s-polinoy/contents/data/tests.json';
+
+    try {
+        // 1. Получаем текущие тесты
+        let existingTests = [];
+        let sha = null;
+        const getResponse = await fetch(url, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+        if (getResponse.ok) {
+            const data = await getResponse.json();
+            const content = decodeURIComponent(escape(atob(data.content)));
+            existingTests = JSON.parse(content);
+            sha = data.sha;
+        }
+
+        // 2. Добавляем новый тест
+        existingTests.push(testData);
+
+        // 3. Сохраняем обратно
+        const updatedContent = JSON.stringify(existingTests, null, 2);
+        const encodedContent = btoa(unescape(encodeURIComponent(updatedContent)));
+        const putResponse = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: `Добавлен тест: ${testData.name}`,
+                content: encodedContent,
+                sha: sha || undefined
+            })
+        });
+
+        if (!putResponse.ok) {
+            const error = await putResponse.json();
+            throw new Error(error.message);
+        }
+        return true;
+    } catch (error) {
+        console.error('Ошибка сохранения в GitHub:', error);
+        // Запасной вариант: сохраняем в localStorage
+        let saved = JSON.parse(localStorage.getItem('polina_tests') || '[]');
+        saved.push(testData);
+        localStorage.setItem('polina_tests', JSON.stringify(saved));
+        return false;
+    }
+}
+        
         function setQuestionType(type) {
             currentType = type;
             document.querySelectorAll('.type-btn').forEach(btn => {

@@ -581,36 +581,59 @@
 
         // ===== ЗАГРУЗКА ТЕСТОВ ИЗ GITHUB =====
         async function loadTestsFromGitHub() {
-            const { owner, repo, testsPath } = GITHUB_CONFIG;
-            const token = getGitHubToken();
-            if (!token) return [];
-
-            try {
-                const response = await fetch(
-                    `https://api.github.com/repos/${owner}/${repo}/contents/${testsPath}`,
-                    {
-                        headers: {
-                            'Authorization': `token ${token}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
+    const { owner, repo, testsPath } = GITHUB_CONFIG;
+    
+    // Пробуем получить токен только если он уже есть
+    let token = localStorage.getItem('github_token');
+    
+    // Если токена нет — пытаемся загрузить тесты без токена (только для чтения)
+    if (!token) {
+        try {
+            // Публичный запрос (без токена) — работает только для публичных репозиториев
+            const response = await fetch(
+                `https://api.github.com/repos/${owner}/${repo}/contents/${testsPath}`,
+                {
+                    headers: {
+                        'Accept': 'application/vnd.github.v3+json'
                     }
-                );
-
-                if (!response.ok) {
-                    if (response.status === 404) return [];
-                    throw new Error(`Ошибка: ${response.status}`);
                 }
-
+            );
+            if (response.ok) {
                 const data = await response.json();
-                // 🔥 ПРАВИЛЬНОЕ ДЕКОДИРОВАНИЕ ДЛЯ UTF-8
                 const content = decodeURIComponent(escape(atob(data.content)));
                 return JSON.parse(content);
-            } catch (error) {
-                console.error('Ошибка загрузки тестов:', error);
-                alert('Ошибка загрузки тестов: ' + error.message);
-                return [];
             }
+            return [];
+        } catch (e) {
+            return [];
         }
+    }
+
+    // Если токен есть — используем его (для редактирования)
+    try {
+        const response = await fetch(
+            `https://api.github.com/repos/${owner}/${repo}/contents/${testsPath}`,
+            {
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            }
+        );
+
+        if (!response.ok) {
+            if (response.status === 404) return [];
+            throw new Error(`Ошибка: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const content = decodeURIComponent(escape(atob(data.content)));
+        return JSON.parse(content);
+    } catch (error) {
+        console.error('Ошибка загрузки тестов:', error);
+        return [];
+    }
+}
 
         // ===== АДМИН =====
         function checkAdminStatus() {

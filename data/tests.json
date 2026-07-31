@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "name": "Мой новый тестagsb",
+    "topic": "Математика",
+    "class": "",
+    "questions": [
+      {
+        "text": "sdfd",
+        "type": "single",
+        "topic": "Математика",
+        "class": "",
+        "options": [
+          "c",
+          "c"
+        ],
+        "correctIndices": [
+          0
+        ]
+      }
+    ],
+    "created": 1785480844593
+  }
+]

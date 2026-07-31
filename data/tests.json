@@ -61,5 +61,26 @@
       }
     ],
     "created": 1785486815764
+  },
+  {
+    "name": "Мой новый тест6",
+    "topic": "Математика",
+    "class": "",
+    "questions": [
+      {
+        "text": "6",
+        "type": "single",
+        "topic": "Математика",
+        "class": "",
+        "options": [
+          "6",
+          "6"
+        ],
+        "correctIndices": [
+          0
+        ]
+      }
+    ],
+    "created": 1785489722964
   }
 ]

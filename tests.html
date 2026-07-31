@@ -16,6 +16,7 @@
             color: #000000;
             min-height: 100vh;
         }
+
         .navbar {
             background: #ffffff;
             padding: 1rem 2.5rem;
@@ -145,6 +146,11 @@
         .btn-primary:hover {
             transform: translateY(-3px);
             box-shadow: 0 12px 28px rgba(141,11,13,0.35);
+        }
+        .btn-primary.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
         }
 
         .filters {
@@ -568,11 +574,12 @@
                 return true;
             } catch (error) {
                 console.error('Ошибка:', error);
+                alert('Ошибка сохранения: ' + error.message);
                 return false;
             }
         }
 
-        // ===== ЗАГРУЗКА ТЕСТОВ ИЗ GITHUB (С ИСПРАВЛЕННОЙ КОДИРОВКОЙ) =====
+        // ===== ЗАГРУЗКА ТЕСТОВ ИЗ GITHUB =====
         async function loadTestsFromGitHub() {
             const { owner, repo, testsPath } = GITHUB_CONFIG;
             const token = getGitHubToken();
@@ -595,15 +602,17 @@
                 }
 
                 const data = await response.json();
-                // 🔥 ИСПРАВЛЕННОЕ ДЕКОДИРОВАНИЕ:
+                // 🔥 ПРАВИЛЬНОЕ ДЕКОДИРОВАНИЕ ДЛЯ UTF-8
                 const content = decodeURIComponent(escape(atob(data.content)));
                 return JSON.parse(content);
             } catch (error) {
                 console.error('Ошибка загрузки тестов:', error);
+                alert('Ошибка загрузки тестов: ' + error.message);
                 return [];
             }
         }
 
+        // ===== АДМИН =====
         function checkAdminStatus() {
             const saved = localStorage.getItem('polina_admin');
             if (saved === 'true') {
@@ -641,7 +650,7 @@
                 localStorage.setItem('polina_admin', 'true');
                 closeLoginModal();
                 checkAdminStatus();
-                applyFilters();
+                loadTests();
             } else {
                 document.getElementById('loginError').classList.add('show');
                 input.value = '';
@@ -654,7 +663,7 @@
                 isAdmin = false;
                 localStorage.removeItem('polina_admin');
                 checkAdminStatus();
-                applyFilters();
+                loadTests();
             }
         }
 
@@ -663,6 +672,7 @@
             const container = document.getElementById('testsGrid');
             let tests = await loadTestsFromGitHub();
 
+            // Если тестов нет — создаём демо-тесты
             if (tests.length === 0) {
                 tests = [
                     {
@@ -695,6 +705,7 @@
                     }
                 ];
                 await saveTestsToGitHub(tests);
+                tests = await loadTestsFromGitHub();
             }
 
             tests.sort((a, b) => (b.created || 0) - (a.created || 0));
@@ -729,8 +740,8 @@
                 container.innerHTML = `
                     <div class="empty-tests">
                         <i class="fas fa-folder-open"></i>
-                        <div>Нет тестов по выбранным фильтрам</div>
-                        <div style="font-size:0.8rem; color:#aaa;">Создайте новый тест или измените фильтры</div>
+                        <div>Нет тестов</div>
+                        <div style="font-size:0.8rem; color:#aaa;">Создайте новый тест</div>
                     </div>
                 `;
                 return;
@@ -789,6 +800,7 @@
             }
         }
 
+        // ===== ПРИМЕНЕНИЕ ФИЛЬТРОВ =====
         function applyFilters() {
             loadTestsFromGitHub().then(tests => {
                 tests.sort((a, b) => (b.created || 0) - (a.created || 0));
@@ -802,6 +814,7 @@
             applyFilters();
         }
 
+        // ===== ОТКРЫТЬ ТЕСТ =====
         function openTest(index) {
             loadTestsFromGitHub().then(tests => {
                 tests.sort((a, b) => (b.created || 0) - (a.created || 0));
@@ -814,34 +827,38 @@
             });
         }
 
+        // ===== УДАЛИТЬ ТЕСТ (ИСПРАВЛЕНО!) =====
         function deleteTest(index) {
-    if (!isAdmin) {
-        alert('Только учитель может удалять тесты. Войдите в режим администратора.');
-        return;
-    }
-    
-    if (!confirm('Вы уверены, что хотите удалить этот тест?')) return;
-    
-    loadTestsFromGitHub().then(async tests => {
-        tests.sort((a, b) => (b.created || 0) - (a.created || 0));
-        if (index >= 0 && index < tests.length) {
-            tests.splice(index, 1);
-            await saveTestsToGitHub(tests);
-            applyFilters();
-        } else {
-            alert('Тест не найден');
-        }
-    });
-}
+            if (!isAdmin) {
+                alert('Только учитель может удалять тесты. Войдите в режим администратора.');
+                return;
+            }
+            if (!confirm('Вы уверены, что хотите удалить этот тест?')) return;
+
+            loadTestsFromGitHub().then(async tests => {
+                tests.sort((a, b) => (b.created || 0) - (a.created || 0));
+                if (index >= 0 && index < tests.length) {
+                    tests.splice(index, 1);
+                    const success = await saveTestsToGitHub(tests);
+                    if (success) {
+                        alert('✅ Тест удалён!');
+                        applyFilters();
+                    } else {
+                        alert('❌ Ошибка при удалении теста');
+                    }
+                } else {
+                    alert('Тест не найден');
+                }
             });
         }
 
+        // ===== РЕДАКТИРОВАТЬ ТЕСТ =====
         function editTest(index) {
             if (!isAdmin) {
                 alert('Только учитель может редактировать тесты. Войдите в режим администратора.');
                 return;
             }
-            
+
             loadTestsFromGitHub().then(tests => {
                 tests.sort((a, b) => (b.created || 0) - (a.created || 0));
                 if (index >= 0 && index < tests.length) {

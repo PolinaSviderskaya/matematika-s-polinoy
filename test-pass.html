@@ -225,7 +225,6 @@
     </nav>
 
     <div class="test-container" id="testContainer">
-
         <div class="name-input-box" id="nameInputBox">
             <h2><i class="fas fa-user-graduate" style="color:#8D0B0D;"></i> Представьтесь, пожалуйста</h2>
             <p>Введите ваше имя, чтобы начать тест</p>
@@ -247,7 +246,7 @@
                 <div class="score-label" id="scoreLabel">0%</div>
                 <div class="score-detail" id="scoreDetail"></div>
                 <div class="save-success" id="saveSuccess">
-                    ✅ Результат сохранён локально!
+                    ✅ Результат сохранён в облаке!
                 </div>
             </div>
 
@@ -272,9 +271,93 @@
     </div>
 
     <script>
+        // ===== КОНФИГУРАЦИЯ GITHUB =====
+        const GITHUB_TOKEN = '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';
+        
+        const GITHUB_CONFIG = {
+            owner: 'PolinaSviderskaya',
+            repo: 'matematika-s-polinoy',
+            resultsPath: 'data/results.json'
+        };
+
         let testData = null;
         let studentName = '';
         let userAnswers = {};
+
+        // ===== СОХРАНЕНИЕ В GITHUB =====
+        async function saveResultsToGitHub(resultsData) {
+            const { owner, repo, resultsPath } = GITHUB_CONFIG;
+            const token = GITHUB_TOKEN;
+
+            try {
+                let existingResults = [];
+                let sha = null;
+                try {
+                    const getResponse = await fetch(
+                        `https://api.github.com/repos/${owner}/${repo}/contents/${resultsPath}`,
+                        {
+                            headers: {
+                                'Authorization': `token ${token}`,
+                                'Accept': 'application/vnd.github.v3+json'
+                            }
+                        }
+                    );
+
+                    if (getResponse.ok) {
+                        const data = await getResponse.json();
+                        const content = decodeURIComponent(escape(atob(data.content)));
+                        existingResults = JSON.parse(content);
+                        sha = data.sha;
+                    }
+                } catch (e) {
+                    console.log('Файл результатов ещё не создан');
+                }
+
+                existingResults.push(resultsData);
+
+                const updatedContent = JSON.stringify(existingResults, null, 2);
+                const encodedContent = btoa(unescape(encodeURIComponent(updatedContent)));
+
+                const body = {
+                    message: `Добавлен результат ученика ${resultsData.studentName}`,
+                    content: encodedContent,
+                    sha: sha || undefined
+                };
+
+                const putResponse = await fetch(
+                    `https://api.github.com/repos/${owner}/${repo}/contents/${resultsPath}`,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(body)
+                    }
+                );
+
+                if (!putResponse.ok) {
+                    const error = await putResponse.json();
+                    throw new Error(`Ошибка сохранения: ${error.message}`);
+                }
+
+                console.log('✅ Результат сохранён в GitHub!');
+                return true;
+            } catch (error) {
+                console.error('Ошибка сохранения:', error);
+                // Запасной вариант: сохраняем локально
+                try {
+                    let localResults = JSON.parse(localStorage.getItem('polina_student_results') || '[]');
+                    localResults.push(resultsData);
+                    localStorage.setItem('polina_student_results', JSON.stringify(localResults));
+                    console.log('✅ Результат сохранён локально (запасной вариант)');
+                } catch (e) {
+                    console.error('Ошибка локального сохранения:', e);
+                }
+                return false;
+            }
+        }
 
         // ===== ЗАГРУЗКА ТЕСТА =====
         window.addEventListener('DOMContentLoaded', function() {
@@ -479,7 +562,6 @@
                 });
             });
 
-            // ===== СОХРАНЯЕМ ЛОКАЛЬНО (БЕЗ ТОКЕНА) =====
             const studentResult = {
                 studentName: studentName,
                 testName: testData.name || 'Без названия',
@@ -509,19 +591,25 @@
                 }).filter(f => f !== null)
             };
 
-            try {
-                let allResults = JSON.parse(localStorage.getItem('polina_student_results') || '[]');
-                allResults.push(studentResult);
-                localStorage.setItem('polina_student_results', JSON.stringify(allResults));
-                document.getElementById('saveSuccess').textContent = '✅ Результат сохранён локально!';
-                document.getElementById('saveSuccess').classList.add('show');
-            } catch (e) {
-                console.error('Ошибка сохранения:', e);
-                document.getElementById('saveSuccess').textContent = '⚠️ Результат не сохранён';
-                document.getElementById('saveSuccess').classList.add('show');
-                document.getElementById('saveSuccess').style.background = '#fff3cd';
-                document.getElementById('saveSuccess').style.color = '#856404';
-            }
+            // ===== СОХРАНЯЕМ В GITHUB =====
+            saveResultsToGitHub(studentResult)
+                .then((success) => {
+                    if (success) {
+                        document.getElementById('saveSuccess').textContent = '✅ Результат сохранён в облаке!';
+                        document.getElementById('saveSuccess').classList.add('show');
+                    } else {
+                        document.getElementById('saveSuccess').textContent = '⚠️ Результат сохранён локально (ошибка облака)';
+                        document.getElementById('saveSuccess').classList.add('show');
+                        document.getElementById('saveSuccess').style.background = '#fff3cd';
+                        document.getElementById('saveSuccess').style.color = '#856404';
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('saveSuccess').textContent = '⚠️ Ошибка сохранения';
+                    document.getElementById('saveSuccess').classList.add('show');
+                    document.getElementById('saveSuccess').style.background = '#fff3cd';
+                    document.getElementById('saveSuccess').style.color = '#856404';
+                });
 
             showResults(results, correctCount, totalQuestions);
         }

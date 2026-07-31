@@ -815,15 +815,24 @@
         }
 
         function deleteTest(index) {
-            if (!confirm('Вы уверены, что хотите удалить этот тест?')) return;
-            
-            loadTestsFromGitHub().then(async tests => {
-                tests.sort((a, b) => (b.created || 0) - (a.created || 0));
-                if (index >= 0 && index < tests.length) {
-                    tests.splice(index, 1);
-                    await saveTestsToGitHub(tests);
-                    applyFilters();
-                }
+    if (!isAdmin) {
+        alert('Только учитель может удалять тесты. Войдите в режим администратора.');
+        return;
+    }
+    
+    if (!confirm('Вы уверены, что хотите удалить этот тест?')) return;
+    
+    loadTestsFromGitHub().then(async tests => {
+        tests.sort((a, b) => (b.created || 0) - (a.created || 0));
+        if (index >= 0 && index < tests.length) {
+            tests.splice(index, 1);
+            await saveTestsToGitHub(tests);
+            applyFilters();
+        } else {
+            alert('Тест не найден');
+        }
+    });
+}
             });
         }
 

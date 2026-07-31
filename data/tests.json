@@ -82,5 +82,26 @@
       }
     ],
     "created": 1785488345108
+  },
+  {
+    "name": "Мой новый тест5",
+    "topic": "Математика",
+    "class": "",
+    "questions": [
+      {
+        "text": "5",
+        "type": "single",
+        "topic": "Математика",
+        "class": "",
+        "options": [
+          "5",
+          "5"
+        ],
+        "correctIndices": [
+          0
+        ]
+      }
+    ],
+    "created": 1785488372852
   }
 ]

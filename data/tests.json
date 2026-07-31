@@ -1,44 +1,49 @@
 [
   {
-    "name": "ÐÐ¾Ð¹ Ð½Ð¾Ð²ÑÐ¹ ÑÐµÑÑagsb",
-    "topic": "ÐÐ°ÑÐµÐ¼Ð°ÑÐ¸ÐºÐ°",
-    "class": "",
+    "name": "Уравнения 7 класс",
+    "topic": "Алгебра",
+    "class": "7",
     "questions": [
       {
-        "text": "sdfd",
-        "type": "single",
-        "topic": "ÐÐ°ÑÐµÐ¼Ð°ÑÐ¸ÐºÐ°",
-        "class": "",
-        "options": [
-          "c",
-          "c"
-        ],
-        "correctIndices": [
-          0
-        ]
+        "text": "Решите уравнение: 3x + 5 = 20",
+        "options": ["x = 5", "x = 7", "x = 3", "x = 10"],
+        "correctIndices": [0],
+        "type": "single"
+      },
+      {
+        "text": "Решите уравнение: 2x - 3 = 11",
+        "options": ["x = 7", "x = 5", "x = 8", "x = 6"],
+        "correctIndices": [0],
+        "type": "single"
       }
     ],
-    "created": 1785480844593
+    "created": 1700000000000
   },
   {
-    "name": "Тест",
-    "topic": "Математика",
-    "class": "",
+    "name": "Треугольники 8 класс",
+    "topic": "Геометрия",
+    "class": "8",
     "questions": [
       {
-        "text": "ываыва",
-        "type": "single",
-        "topic": "Математика",
-        "class": "",
-        "options": [
-          "1",
-          "2"
-        ],
-        "correctIndices": [
-          0
-        ]
+        "text": "Сумма углов треугольника равна...",
+        "options": ["90°", "180°", "360°", "270°"],
+        "correctIndices": [1],
+        "type": "single"
       }
     ],
-    "created": 1785481100569
+    "created": 1690000000000
+  },
+  {
+    "name": "Подготовка к ОГЭ",
+    "topic": "ОГЭ",
+    "class": "9",
+    "questions": [
+      {
+        "text": "Решите задачу: ...",
+        "type": "open",
+        "correctAnswer": "42"
+      }
+    ],
+    "created": 1680000000000
   }
 ]

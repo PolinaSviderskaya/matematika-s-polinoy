@@ -28,6 +28,8 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
         .nav-left {
             display: flex;
@@ -56,6 +58,7 @@
             display: flex;
             gap: 2rem;
             align-items: center;
+            flex-wrap: wrap;
         }
         .nav-menu a {
             text-decoration: none;
@@ -465,7 +468,14 @@
             max-height: 120px;
             border-radius: 12px;
             margin-bottom: 0.5rem;
-            border: 1px solid #ddd;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .preview-question .q-image:hover {
+            border-color: #8D0B0D;
+            box-shadow: 0 4px 16px rgba(141, 11, 13, 0.2);
+            transform: scale(1.01);
         }
         .preview-question .q-options {
             display: flex;
@@ -518,6 +528,55 @@
             margin-top: 1rem;
             background: rgba(255, 255, 255, 0.5);
         }
+
+        .image-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+            padding: 2rem;
+        }
+        .image-overlay.show {
+            display: flex;
+        }
+        .image-overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: zoomIn 0.3s ease;
+            cursor: default;
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .image-overlay .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            font-size: 2.5rem;
+            color: #fff;
+            cursor: pointer;
+            z-index: 10000;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .image-overlay .close-btn:hover {
+            transform: rotate(90deg);
+            color: #FBC5D9;
+        }
+
         @media (max-width: 768px) {
             .navbar { flex-direction: column; gap: 0.8rem; padding: 1rem; }
             .nav-menu { flex-wrap: wrap; justify-content: center; gap: 1rem; }
@@ -534,6 +593,7 @@
         <div class="nav-menu">
             <a href="index.html"><i class="fas fa-home"></i> Главная</a>
             <a href="tests.html"><i class="fas fa-tasks"></i> Тесты</a>
+            <a href="results.html"><i class="fas fa-chart-bar"></i> Результаты</a>
             <a href="contacts.html"><i class="fas fa-envelope"></i> Контакты</a>
         </div>
     </nav>
@@ -662,6 +722,11 @@
 
     <div class="footer">
         &copy; 2026 Математика с Полиной · Сделано с ❤️
+    </div>
+
+    <div class="image-overlay" id="imageOverlay" onclick="closeImage()">
+        <button class="close-btn" onclick="closeImage()">✕</button>
+        <img id="enlargedImage" src="" alt="Увеличенное изображение" />
     </div>
 
     <script>
@@ -871,7 +936,7 @@
                 html += `<div class="q-text">${i+1}. ${q.text}</div>`;
                 
                 if (q.image) {
-                    html += `<img src="${q.image}" class="q-image" alt="Иллюстрация" />`;
+                    html += `<img src="${q.image}" class="q-image" alt="Иллюстрация" onclick="openImage(this.src)" title="Нажмите для увеличения" />`;
                 }
                 
                 if (q.type === 'single' || q.type === 'multiple') {
@@ -936,6 +1001,21 @@
                 renderPreview();
             }
         }
+
+        function openImage(src) {
+            document.getElementById('enlargedImage').src = src;
+            document.getElementById('imageOverlay').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImage() {
+            document.getElementById('imageOverlay').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeImage();
+        });
 
         window.addEventListener('DOMContentLoaded', function() {
             setQuestionType('single');

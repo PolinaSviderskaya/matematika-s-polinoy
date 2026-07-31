@@ -730,6 +730,89 @@
     </div>
 
     <script>
+        // ===== КОНФИГУРАЦИЯ GITHUB =====
+        const GITHUB_CONFIG = {
+            owner: 'PolinaSviderskaya',
+            repo: 'matematika-s-polinoy',
+            testsPath: 'data/tests.json'
+        };
+
+        function getGitHubToken() {
+            let token = localStorage.getItem('github_token');
+            if (!token) {
+                token = prompt('🔑 Введите ваш GitHub токен для сохранения тестов:');
+                if (token) {
+                    localStorage.setItem('github_token', token);
+                }
+            }
+            return token;
+        }
+
+        // ===== СОХРАНЕНИЕ ТЕСТОВ В GITHUB =====
+        async function saveTestsToGitHub(tests) {
+            const { owner, repo, testsPath } = GITHUB_CONFIG;
+            const token = getGitHubToken();
+
+            if (!token) {
+                alert('❌ Токен не введён! Тест не сохранён.');
+                return false;
+            }
+
+            try {
+                // Получаем текущий файл (чтобы получить SHA)
+                let sha = null;
+                const getResponse = await fetch(
+                    `https://api.github.com/repos/${owner}/${repo}/contents/${testsPath}`,
+                    {
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    }
+                );
+
+                if (getResponse.ok) {
+                    const data = await getResponse.json();
+                    sha = data.sha;
+                }
+
+                // Сохраняем
+                const content = JSON.stringify(tests, null, 2);
+                const encodedContent = btoa(unescape(encodeURIComponent(content)));
+
+                const body = {
+                    message: `Обновление тестов (${tests.length} тестов)`,
+                    content: encodedContent,
+                    sha: sha || undefined
+                };
+
+                const putResponse = await fetch(
+                    `https://api.github.com/repos/${owner}/${repo}/contents/${testsPath}`,
+                    {
+                        method: 'PUT',
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(body)
+                    }
+                );
+
+                if (!putResponse.ok) {
+                    const error = await putResponse.json();
+                    throw new Error(error.message);
+                }
+
+                console.log('✅ Тесты сохранены в GitHub!');
+                return true;
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('❌ Ошибка сохранения: ' + error.message);
+                return false;
+            }
+        }
+
         let questions = [];
         let currentType = 'single';
         let currentImageData = null;
@@ -969,14 +1052,15 @@
             count.textContent = `${questions.length} ${questions.length === 1 ? 'вопрос' : 'вопросов'}`;
         }
 
-        function saveTest() {
+        // ===== СОХРАНИТЬ ТЕСТ В GITHUB =====
+        async function saveTest() {
             if (questions.length === 0) {
                 alert('Добавьте хотя бы один вопрос!');
                 return;
             }
 
             const name = document.getElementById('testName').value.trim() || 'Без названия';
-            const testData = {
+            const newTest = {
                 name: name,
                 topic: document.getElementById('topicSelect').value,
                 class: document.getElementById('classSelect').value,
@@ -984,14 +1068,39 @@
                 created: Date.now()
             };
 
-            let saved = JSON.parse(localStorage.getItem('polina_tests') || '[]');
-            saved.push(testData);
-            localStorage.setItem('polina_tests', JSON.stringify(saved));
+            // Загружаем существующие тесты из GitHub
+            const token = getGitHubToken();
+            if (!token) return;
 
-            alert(`✅ Тест «${name}» сохранён! (${questions.length} вопросов)`);
-            questions = [];
-            renderPreview();
-            document.getElementById('testName').value = '';
+            let existingTests = [];
+            try {
+                const response = await fetch(
+                    `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.testsPath}`,
+                    {
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    }
+                );
+                if (response.ok) {
+                    const data = await response.json();
+                    const content = atob(data.content);
+                    existingTests = JSON.parse(content);
+                }
+            } catch (e) {
+                console.log('Файл тестов ещё не создан');
+            }
+
+            existingTests.push(newTest);
+            const saved = await saveTestsToGitHub(existingTests);
+
+            if (saved) {
+                alert(`✅ Тест «${name}» сохранён в облаке! (${questions.length} вопросов)`);
+                questions = [];
+                renderPreview();
+                document.getElementById('testName').value = '';
+            }
         }
 
         function clearTest() {

@@ -560,30 +560,14 @@
         const GITHUB_CONFIG = {
             owner: 'PolinaSviderskaya',
             repo: 'matematika-s-polinoy',
-            resultsPath: 'data/results.json'
+            resultsPath: 'data/results.json',
+            // ⚠️ ВАШ ТОКЕН:
+            token: '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'
         };
-
-        // ===== ПОЛУЧИТЬ ТОКЕН (ОДИН РАЗ) =====
-        function getGitHubToken() {
-            let token = localStorage.getItem('github_token');
-            if (!token) {
-                token = prompt('🔑 Введите ваш GitHub токен для просмотра результатов:');
-                if (token) {
-                    localStorage.setItem('github_token', token);
-                }
-            }
-            return token;
-        }
 
         // ===== ЗАГРУЗКА РЕЗУЛЬТАТОВ ИЗ GITHUB =====
         async function loadResultsFromGitHub() {
-            const { owner, repo, resultsPath } = GITHUB_CONFIG;
-            const token = getGitHubToken();
-
-            if (!token) {
-                alert('❌ Токен не введён!');
-                return [];
-            }
+            const { owner, repo, resultsPath, token } = GITHUB_CONFIG;
 
             try {
                 const response = await fetch(
@@ -608,7 +592,6 @@
                 return JSON.parse(content);
             } catch (error) {
                 console.error('Ошибка загрузки результатов:', error);
-                alert('❌ Ошибка загрузки: ' + error.message);
                 return [];
             }
         }

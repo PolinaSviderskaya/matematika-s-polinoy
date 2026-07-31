@@ -132,9 +132,7 @@
             margin-bottom: 2rem;
             display: none;
         }
-        .test-header.show {
-            display: block;
-        }
+        .test-header.show { display: block; }
         .test-header h1 {
             font-family: 'Playfair Display', serif;
             color: #8D0B0D;
@@ -161,9 +159,7 @@
             margin-bottom: 1.5rem;
             display: none;
         }
-        .question-block.show {
-            display: block;
-        }
+        .question-block.show { display: block; }
         .question-block .q-number {
             font-weight: 600;
             color: #8D0B0D;
@@ -243,9 +239,7 @@
             text-align: center;
             display: none;
         }
-        .result-box.show {
-            display: block;
-        }
+        .result-box.show { display: block; }
         .result-box .score {
             font-size: 4rem;
             font-weight: 700;
@@ -270,16 +264,10 @@
             display: none;
             font-weight: 600;
         }
-        .result-box .save-success.show {
-            display: block;
-        }
+        .result-box .save-success.show { display: block; }
 
-        .question-block.correct {
-            border-left: 6px solid #27ae60;
-        }
-        .question-block.wrong {
-            border-left: 6px solid #c0392b;
-        }
+        .question-block.correct { border-left: 6px solid #27ae60; }
+        .question-block.wrong { border-left: 6px solid #c0392b; }
         .question-block .options label.correct-answer {
             border-color: #27ae60;
             background: #eafaf1;
@@ -297,12 +285,8 @@
             margin-left: auto;
             font-size: 1.2rem;
         }
-        .question-block .options label .status-icon.correct {
-            color: #27ae60;
-        }
-        .question-block .options label .status-icon.wrong {
-            color: #c0392b;
-        }
+        .question-block .options label .status-icon.correct { color: #27ae60; }
+        .question-block .options label .status-icon.wrong { color: #c0392b; }
         .question-block .open-answer-result {
             padding: 0.7rem 1rem;
             border-radius: 16px;
@@ -373,9 +357,7 @@
             justify-content: center;
             display: none;
         }
-        .actions.show {
-            display: flex;
-        }
+        .actions.show { display: flex; }
 
         .hidden { display: none !important; }
 
@@ -403,9 +385,7 @@
             cursor: zoom-out;
             padding: 2rem;
         }
-        .image-overlay.show {
-            display: flex;
-        }
+        .image-overlay.show { display: flex; }
         .image-overlay img {
             max-width: 90%;
             max-height: 90%;
@@ -482,7 +462,7 @@
                 <div class="score-label" id="scoreLabel">0%</div>
                 <div class="score-detail" id="scoreDetail"></div>
                 <div class="save-success" id="saveSuccess">
-                    ✅ Результат сохранён! Учитель сможет его увидеть.
+                    ✅ Результат сохранён!
                 </div>
             </div>
 
@@ -507,93 +487,11 @@
     </div>
 
     <script>
-        // ===== КОНФИГУРАЦИЯ GITHUB =====
-        const GITHUB_CONFIG = {
-            owner: 'PolinaSviderskaya',
-            repo: 'matematika-s-polinoy',
-            resultsPath: 'data/results.json'
-        };
-
-        fasync function saveResultsToGitHub(resultsData) {
-    // Результаты пока сохраняем в localStorage (для демонстрации)
-        let allResults = JSON.parse(localStorage.getItem('polina_student_results') || '[]');
-            allResults.push(resultsData);
-            localStorage.setItem('polina_student_results', JSON.stringify(allResults));
-            console.log('✅ Результат сохранён локально');
-        return true;
-}
-
-        // ===== СОХРАНЕНИЕ В GITHUB (С ИСПРАВЛЕННОЙ КОДИРОВКОЙ) =====
-        async function saveResultsToGitHub(resultsData) {
-            const { owner, repo, resultsPath } = GITHUB_CONFIG;
-            const token = getGitHubToken();
-            
-            if (!token) {
-                alert('❌ Токен не введён! Результаты не сохранены.');
-                return false;
-            }
-
-            let existingResults = [];
-            let sha = null;
-            try {
-                const getResponse = await fetch(
-                    `https://api.github.com/repos/${owner}/${repo}/contents/${resultsPath}`,
-                    {
-                        headers: {
-                            'Authorization': `token ${token}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    }
-                );
-
-                if (getResponse.ok) {
-                    const data = await getResponse.json();
-                    // 🔥 ИСПРАВЛЕННОЕ ДЕКОДИРОВАНИЕ:
-                    const content = decodeURIComponent(escape(atob(data.content)));
-                    existingResults = JSON.parse(content);
-                    sha = data.sha;
-                }
-            } catch (e) {
-                console.log('Файл результатов ещё не создан, создаём новый');
-            }
-
-            existingResults.push(resultsData);
-
-            const updatedContent = JSON.stringify(existingResults, null, 2);
-            const encodedContent = btoa(unescape(encodeURIComponent(updatedContent)));
-
-            const body = {
-                message: `Добавлен результат ученика ${resultsData.studentName}`,
-                content: encodedContent,
-                sha: sha || undefined
-            };
-
-            const putResponse = await fetch(
-                `https://api.github.com/repos/${owner}/${repo}/contents/${resultsPath}`,
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(body)
-                }
-            );
-
-            if (!putResponse.ok) {
-                const error = await putResponse.json();
-                throw new Error(`Ошибка сохранения: ${error.message}`);
-            }
-
-            console.log('✅ Результат сохранён в GitHub!');
-            return true;
-        }
-
         let testData = null;
         let studentName = '';
         let userAnswers = {};
 
+        // ===== ЗАГРУЗКА ТЕСТА =====
         window.addEventListener('DOMContentLoaded', function() {
             const saved = localStorage.getItem('current_test');
             if (!saved) {
@@ -618,6 +516,7 @@
             }
         });
 
+        // ===== НАЧАТЬ ТЕСТ =====
         function startTest() {
             const input = document.getElementById('studentNameInput');
             studentName = input.value.trim();
@@ -635,6 +534,7 @@
             renderQuestions();
         }
 
+        // ===== ОТОБРАЗИТЬ ВОПРОСЫ =====
         function renderQuestions() {
             const container = document.getElementById('questionsContainer');
             const typeLabels = {
@@ -687,6 +587,7 @@
             container.innerHTML = html;
         }
 
+        // ===== СОХРАНЕНИЕ ОТВЕТОВ =====
         function saveAnswer(index, type) {
             if (type === 'single' || type === 'multiple') {
                 const options = document.querySelectorAll(`#options-${index} input`);
@@ -716,6 +617,7 @@
             }
         }
 
+        // ===== ПРОВЕРКА ТЕСТА =====
         function submitTest() {
             testData.questions.forEach((q, index) => {
                 if (q.type === 'single' || q.type === 'multiple') {
@@ -792,6 +694,7 @@
                 });
             });
 
+            // ===== СОХРАНЯЕМ РЕЗУЛЬТАТ ЛОКАЛЬНО (БЕЗ ТОКЕНА!) =====
             const studentResult = {
                 studentName: studentName,
                 testName: testData.name || 'Без названия',
@@ -821,22 +724,25 @@
                 }).filter(f => f !== null)
             };
 
-            saveResultsToGitHub(studentResult)
-                .then(() => {
-                    document.getElementById('saveSuccess').textContent = '✅ Результат сохранён в облаке!';
-                    document.getElementById('saveSuccess').classList.add('show');
-                })
-                .catch((error) => {
-                    console.error('Ошибка сохранения:', error);
-                    document.getElementById('saveSuccess').textContent = '⚠️ Ошибка сохранения, но результат виден на этой странице';
-                    document.getElementById('saveSuccess').classList.add('show');
-                    document.getElementById('saveSuccess').style.background = '#fff3cd';
-                    document.getElementById('saveSuccess').style.color = '#856404';
-                });
+            // Сохраняем локально (в браузере ученика)
+            try {
+                let allResults = JSON.parse(localStorage.getItem('polina_student_results') || '[]');
+                allResults.push(studentResult);
+                localStorage.setItem('polina_student_results', JSON.stringify(allResults));
+                document.getElementById('saveSuccess').textContent = '✅ Результат сохранён локально!';
+                document.getElementById('saveSuccess').classList.add('show');
+            } catch (e) {
+                console.error('Ошибка сохранения:', e);
+                document.getElementById('saveSuccess').textContent = '⚠️ Результат не сохранён, но вы видите его на этой странице';
+                document.getElementById('saveSuccess').classList.add('show');
+                document.getElementById('saveSuccess').style.background = '#fff3cd';
+                document.getElementById('saveSuccess').style.color = '#856404';
+            }
 
             showResults(results, correctCount, totalQuestions);
         }
 
+        // ===== ПОКАЗАТЬ РЕЗУЛЬТАТЫ =====
         function showResults(results, correctCount, totalQuestions) {
             const score = Math.round((correctCount / totalQuestions) * 100);
 
@@ -936,6 +842,7 @@
             document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
+        // ===== ФУНКЦИИ ДЛЯ УВЕЛИЧЕНИЯ КАРТИНОК =====
         function openImage(src) {
             document.getElementById('enlargedImage').src = src;
             document.getElementById('imageOverlay').classList.add('show');

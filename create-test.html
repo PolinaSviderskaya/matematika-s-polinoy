@@ -642,7 +642,7 @@
             localStorage.setItem('polina_tests', JSON.stringify(saved));
 
             // Показываем инструкцию
-            alert(`✅ Тест «${name}» сохранён локально!\n\n📌 Чтобы он стал доступен ученикам, скопируйте его в файл data/tests.json на GitHub.\n\n📋 Скопируйте этот текст и вставьте в файл data/tests.json:\n\n${JSON.stringify(newTest, null, 2)}`);
+            alert(`✅ Тест «${name}» сохранён локально!\n\n📌 Чтобы он стал доступен ученикам, добавьте его в файл data/tests.json на GitHub.\n\n📋 Скопируйте этот код и вставьте в файл data/tests.json:\n\n${JSON.stringify(newTest, null, 2)}`);
 
             questions = [];
             renderPreview();

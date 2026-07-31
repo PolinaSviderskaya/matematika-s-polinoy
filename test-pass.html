@@ -694,7 +694,7 @@
                 });
             });
 
-            // ===== СОХРАНЯЕМ РЕЗУЛЬТАТ ЛОКАЛЬНО (БЕЗ ТОКЕНА!) =====
+            // ===== СОХРАНЯЕМ РЕЗУЛЬТАТ ЛОКАЛЬНО =====
             const studentResult = {
                 studentName: studentName,
                 testName: testData.name || 'Без названия',
@@ -724,16 +724,15 @@
                 }).filter(f => f !== null)
             };
 
-            // Сохраняем локально (в браузере ученика)
             try {
                 let allResults = JSON.parse(localStorage.getItem('polina_student_results') || '[]');
                 allResults.push(studentResult);
                 localStorage.setItem('polina_student_results', JSON.stringify(allResults));
-                document.getElementById('saveSuccess').textContent = '✅ Результат сохранён локально!';
+                document.getElementById('saveSuccess').textContent = '✅ Результат сохранён!';
                 document.getElementById('saveSuccess').classList.add('show');
             } catch (e) {
                 console.error('Ошибка сохранения:', e);
-                document.getElementById('saveSuccess').textContent = '⚠️ Результат не сохранён, но вы видите его на этой странице';
+                document.getElementById('saveSuccess').textContent = '⚠️ Результат не сохранён';
                 document.getElementById('saveSuccess').classList.add('show');
                 document.getElementById('saveSuccess').style.background = '#fff3cd';
                 document.getElementById('saveSuccess').style.color = '#856404';

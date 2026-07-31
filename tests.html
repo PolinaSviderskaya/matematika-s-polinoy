@@ -16,7 +16,6 @@
             color: #000000;
             min-height: 100vh;
         }
-
         .navbar {
             background: #ffffff;
             padding: 1rem 2.5rem;
@@ -417,7 +416,6 @@
     </style>
 </head>
 <body>
-
     <nav class="navbar">
         <div class="nav-left">
             <img src="images/avatar.png" alt="Полина" class="nav-avatar" />
@@ -574,7 +572,7 @@
             }
         }
 
-        // ===== ЗАГРУЗКА ТЕСТОВ ИЗ GITHUB =====
+        // ===== ЗАГРУЗКА ТЕСТОВ ИЗ GITHUB (С ИСПРАВЛЕННОЙ КОДИРОВКОЙ) =====
         async function loadTestsFromGitHub() {
             const { owner, repo, testsPath } = GITHUB_CONFIG;
             const token = getGitHubToken();
@@ -597,6 +595,7 @@
                 }
 
                 const data = await response.json();
+                // 🔥 ИСПРАВЛЕННОЕ ДЕКОДИРОВАНИЕ:
                 const content = decodeURIComponent(escape(atob(data.content)));
                 return JSON.parse(content);
             } catch (error) {
@@ -790,35 +789,20 @@
             }
         }
 
-        // ===== ВЫЗОВ ФИЛЬТРОВ =====
         function applyFilters() {
-            // Загружаем тесты из localStorage (для совместимости со старыми)
-            const saved = localStorage.getItem('polina_tests');
-            let tests = saved ? JSON.parse(saved) : [];
-            tests.sort((a, b) => (b.created || 0) - (a.created || 0));
-            applyFiltersToTests(tests);
-        }
-
-        // ===== ПЕРЕЗАГРУЗКА С ФИЛЬТРАМИ =====
-        async function reloadTestsWithFilters() {
-            let tests = await loadTestsFromGitHub();
-            if (tests.length === 0) {
-                // Если нет тестов в GitHub, пробуем загрузить из localStorage
-                const saved = localStorage.getItem('polina_tests');
-                tests = saved ? JSON.parse(saved) : [];
-            }
-            tests.sort((a, b) => (b.created || 0) - (a.created || 0));
-            applyFiltersToTests(tests);
+            loadTestsFromGitHub().then(tests => {
+                tests.sort((a, b) => (b.created || 0) - (a.created || 0));
+                applyFiltersToTests(tests);
+            });
         }
 
         function resetFilters() {
             document.getElementById('classFilter').value = 'all';
             document.getElementById('sectionFilter').value = 'all';
-            reloadTestsWithFilters();
+            applyFilters();
         }
 
         function openTest(index) {
-            // Загружаем тесты из GitHub
             loadTestsFromGitHub().then(tests => {
                 tests.sort((a, b) => (b.created || 0) - (a.created || 0));
                 if (index >= 0 && index < tests.length) {
@@ -838,7 +822,7 @@
                 if (index >= 0 && index < tests.length) {
                     tests.splice(index, 1);
                     await saveTestsToGitHub(tests);
-                    reloadTestsWithFilters();
+                    applyFilters();
                 }
             });
         }

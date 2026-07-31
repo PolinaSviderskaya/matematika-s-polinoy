@@ -509,14 +509,24 @@
     </div>
 
     <script>
-        // ===== КОНФИГУРАЦИЯ GITHUB =====
-        // ⚠️ ЗАМЕНИТЕ ЭТИ ДАННЫЕ НА ВАШИ!
+        // ===== КОНФИГУРАЦИЯ GITHUB (БЕЗ ТОКЕНА!) =====
         const GITHUB_CONFIG = {
             owner: 'PolinaSviderskaya',        // Ваше имя пользователя GitHub
             repo: 'matematika-s-polinoy',      // Название репозитория
-            token: 'ВАШ_ТОКЕН_СЮДА',            // ВСТАВЬТЕ ВАШ ТОКЕН!
             resultsPath: 'data/results.json'   // Путь к файлу с результатами
         };
+
+        // ===== ПОЛУЧИТЬ ТОКЕН ИЗ БРАУЗЕРА ИЛИ ЗАПРОСИТЬ =====
+        function getGitHubToken() {
+            let token = localStorage.getItem('github_token');
+            if (!token) {
+                token = prompt('🔑 Введите ваш GitHub токен для сохранения результатов:');
+                if (token) {
+                    localStorage.setItem('github_token', token);
+                }
+            }
+            return token;
+        }
 
         let testData = null;
         let studentName = '';
@@ -524,10 +534,17 @@
 
         // ===== ФУНКЦИЯ ДЛЯ СОХРАНЕНИЯ В GITHUB =====
         async function saveResultsToGitHub(resultsData) {
-            const { owner, repo, token, resultsPath } = GITHUB_CONFIG;
+            const { owner, repo, resultsPath } = GITHUB_CONFIG;
+            const token = getGitHubToken();
+            
+            if (!token) {
+                alert('❌ Токен не введён! Результаты не сохранены.');
+                return false;
+            }
 
-            // 1. Получаем текущий файл (чтобы не потерять старые результаты)
+            // 1. Получаем текущий файл
             let existingResults = [];
+            let sha = null;
             try {
                 const getResponse = await fetch(
                     `https://api.github.com/repos/${owner}/${repo}/contents/${resultsPath}`,
@@ -541,11 +558,9 @@
 
                 if (getResponse.ok) {
                     const data = await getResponse.json();
-                    // Декодируем содержимое из base64
                     const content = atob(data.content);
                     existingResults = JSON.parse(content);
-                    // Сохраняем SHA для обновления
-                    var sha = data.sha;
+                    sha = data.sha;
                 }
             } catch (e) {
                 console.log('Файл результатов ещё не создан, создаём новый');

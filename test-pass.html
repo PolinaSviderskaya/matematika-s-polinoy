@@ -180,7 +180,14 @@
             max-height: 200px;
             border-radius: 12px;
             margin-bottom: 0.8rem;
-            border: 1px solid #ddd;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .question-block .q-image:hover {
+            border-color: #8D0B0D;
+            box-shadow: 0 4px 16px rgba(141, 11, 13, 0.2);
+            transform: scale(1.01);
         }
         .question-block .options {
             display: flex;
@@ -255,6 +262,18 @@
             font-size: 1rem;
             color: #777;
             margin-top: 0.5rem;
+        }
+        .result-box .save-success {
+            background: #d4edda;
+            color: #155724;
+            padding: 0.8rem 1.5rem;
+            border-radius: 16px;
+            margin-top: 1rem;
+            display: none;
+            font-weight: 600;
+        }
+        .result-box .save-success.show {
+            display: block;
         }
 
         .question-block.correct {
@@ -372,18 +391,53 @@
             background: rgba(255, 255, 255, 0.5);
         }
 
-        /* ===== СООБЩЕНИЕ ОБ УСПЕШНОМ СОХРАНЕНИИ ===== */
-        .save-success {
-            background: #d4edda;
-            color: #155724;
-            padding: 0.8rem 1.5rem;
-            border-radius: 16px;
-            margin-top: 1rem;
+        /* ===== УВЕЛИЧЕНИЕ КАРТИНОК ===== */
+        .image-overlay {
             display: none;
-            font-weight: 600;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+            padding: 2rem;
         }
-        .save-success.show {
-            display: block;
+        .image-overlay.show {
+            display: flex;
+        }
+        .image-overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: zoomIn 0.3s ease;
+            cursor: default;
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .image-overlay .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            font-size: 2.5rem;
+            color: #fff;
+            cursor: pointer;
+            z-index: 10000;
+            transition: 0.2s;
+            background: none;
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .image-overlay .close-btn:hover {
+            transform: rotate(90deg);
+            color: #FBC5D9;
         }
 
         @media (max-width: 768px) {
@@ -410,7 +464,7 @@
     </nav>
 
     <div class="test-container" id="testContainer">
-        <!-- ВВОД ИМЕНИ -->
+
         <div class="name-input-box" id="nameInputBox">
             <h2><i class="fas fa-user-graduate" style="color:#8D0B0D;"></i> Представьтесь, пожалуйста</h2>
             <p>Введите ваше имя, чтобы начать тест</p>
@@ -449,6 +503,12 @@
 
     <div class="footer">
         &copy; 2026 Математика с Полиной · Сделано с ❤️
+    </div>
+
+    <!-- ===== ОВЕРЛЕЙ ДЛЯ УВЕЛИЧЕНИЯ КАРТИНОК ===== -->
+    <div class="image-overlay" id="imageOverlay" onclick="closeImage()">
+        <button class="close-btn" onclick="closeImage()">✕</button>
+        <img id="enlargedImage" src="" alt="Увеличенное изображение" />
     </div>
 
     <script>
@@ -516,7 +576,7 @@
                 html += `<div class="q-text">${q.text}</div>`;
 
                 if (q.image) {
-                    html += `<img src="${q.image}" class="q-image" alt="Иллюстрация" />`;
+                    html += `<img src="${q.image}" class="q-image" alt="Иллюстрация" onclick="openImage(this.src)" title="Нажмите для увеличения" />`;
                 }
 
                 if (q.type === 'single' || q.type === 'multiple') {
@@ -584,7 +644,6 @@
 
         // ===== ПРОВЕРКА ТЕСТА =====
         function submitTest() {
-            // Сохраняем все ответы
             testData.questions.forEach((q, index) => {
                 if (q.type === 'single' || q.type === 'multiple') {
                     const options = document.querySelectorAll(`#options-${index} input`);
@@ -660,14 +719,10 @@
                 });
             });
 
-            // Сохраняем результат ученика
             saveStudentResult(correctCount, totalQuestions, results);
-
-            // Показываем результаты
             showResults(results, correctCount, totalQuestions);
         }
 
-        // ===== СОХРАНЕНИЕ РЕЗУЛЬТАТА УЧЕНИКА =====
         function saveStudentResult(correctCount, totalQuestions, results) {
             const studentResult = {
                 studentName: studentName,
@@ -698,20 +753,13 @@
                 }).filter(f => f !== null)
             };
 
-            // Сохраняем в localStorage
             let allResults = JSON.parse(localStorage.getItem('polina_student_results') || '[]');
             allResults.push(studentResult);
             localStorage.setItem('polina_student_results', JSON.stringify(allResults));
 
-            // Показываем сообщение об успешном сохранении
             document.getElementById('saveSuccess').classList.add('show');
-
-            // Отладочное сообщение в консоль
-            console.log('✅ Результат сохранён!', studentResult);
-            console.log('📊 Всего результатов:', allResults.length);
         }
 
-        // ===== ПОКАЗАТЬ РЕЗУЛЬТАТЫ =====
         function showResults(results, correctCount, totalQuestions) {
             const score = Math.round((correctCount / totalQuestions) * 100);
 
@@ -810,6 +858,22 @@
 
             document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+
+        // ===== ФУНКЦИИ ДЛЯ УВЕЛИЧЕНИЯ КАРТИНОК =====
+        function openImage(src) {
+            document.getElementById('enlargedImage').src = src;
+            document.getElementById('imageOverlay').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImage() {
+            document.getElementById('imageOverlay').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeImage();
+        });
     </script>
 
 </body>

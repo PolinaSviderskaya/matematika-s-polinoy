@@ -91,6 +91,8 @@
         .result-card .answer-item .status { font-weight: 600; font-size: 0.85rem; }
         .result-card .answer-item .status.correct { color: #27ae60; }
         .result-card .answer-item .status.wrong { color: #c0392b; }
+        .result-card .file-download { background: #8D0B0D; color: #fff; border: none; padding: 0.3rem 0.8rem; border-radius: 40px; font-weight: 600; font-size: 0.75rem; cursor: pointer; transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; }
+        .result-card .file-download:hover { background: #a93226; transform: scale(1.05); }
 
         .empty-results { text-align: center; padding: 4rem 2rem; color: #999; }
         .empty-results i { font-size: 3rem; color: #FBC5D9; display: block; margin-bottom: 0.8rem; }
@@ -120,15 +122,7 @@
             align-items: center;
         }
         .modal-overlay.show { display: flex; }
-        .modal-box {
-            background: #ffffff;
-            border-radius: 32px;
-            padding: 2.5rem;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            text-align: center;
-        }
+        .modal-box { background: #ffffff; border-radius: 32px; padding: 2.5rem; max-width: 400px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center; }
         .modal-box h2 { font-family: 'Playfair Display', serif; color: #8D0B0D; margin-bottom: 0.5rem; }
         .modal-box p { color: #666; margin-bottom: 1.5rem; }
         .modal-box input { width: 100%; padding: 0.8rem 1rem; border-radius: 16px; border: 2px solid #e0d8d4; font-size: 1rem; font-family: 'Inter', sans-serif; margin-bottom: 1rem; }
@@ -205,19 +199,51 @@
     </div>
 
     <script>
+        // ===== КОНФИГУРАЦИЯ GITHUB =====
+        const GITHUB_TOKEN = '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';
+        
+        const GITHUB_CONFIG = {
+            owner: 'PolinaSviderskaya',
+            repo: 'matematika-s-polinoy',
+            resultsPath: 'data/results.json'
+        };
+
         const ADMIN_PASSWORD = 'polina2026';
         let isAdmin = false;
 
-        function loadResultsFromLocal() {
-            const saved = localStorage.getItem('polina_student_results');
-            if (!saved) return [];
+        // ===== ЗАГРУЗКА РЕЗУЛЬТАТОВ ИЗ GITHUB =====
+        async function loadResultsFromGitHub() {
+            const { owner, repo, resultsPath } = GITHUB_CONFIG;
+            const token = GITHUB_TOKEN;
+
             try {
-                return JSON.parse(saved);
-            } catch (e) {
+                const response = await fetch(
+                    `https://api.github.com/repos/${owner}/${repo}/contents/${resultsPath}`,
+                    {
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    }
+                );
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        return [];
+                    }
+                    throw new Error(`Ошибка загрузки: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const content = decodeURIComponent(escape(atob(data.content)));
+                return JSON.parse(content);
+            } catch (error) {
+                console.error('Ошибка загрузки результатов:', error);
                 return [];
             }
         }
 
+        // ===== ПРОВЕРКА АДМИНА =====
         function checkAdminStatus() {
             const saved = localStorage.getItem('polina_admin');
             if (saved === 'true') {
@@ -284,7 +310,8 @@
             }
         }
 
-        function renderResults() {
+        // ===== ОТОБРАЗИТЬ РЕЗУЛЬТАТЫ =====
+        async function renderResults() {
             const container = document.getElementById('resultsContainer');
 
             if (!isAdmin) {
@@ -292,7 +319,7 @@
                 return;
             }
 
-            const allResults = loadResultsFromLocal();
+            const allResults = await loadResultsFromGitHub();
 
             if (allResults.length === 0) {
                 container.innerHTML = `

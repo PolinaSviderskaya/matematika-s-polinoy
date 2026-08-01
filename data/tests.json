@@ -1,16 +1,30 @@
 [
   {
-    "name": "Пример теста",
-    "topic": "Математика",
-    "class": "7",
-    "questions": [
-      {
-        "text": "Сколько будет 2 + 2?",
-        "options": ["3", "4", "5", "6"],
-        "correctIndices": [1],
-        "type": "single"
-      }
-    ],
-    "created": 1700000000000
-  }
+  "name": "Мой новый тест1",
+  "topic": "Алгебра",
+  "class": "5",
+  "questions": [
+    {
+      "text": "1",
+      "type": "single",
+      "topic": "Математика",
+      "class": "",
+      "options": [
+        "1",
+        "1"
+      ],
+      "correctIndices": [
+        0
+      ]
+    },
+    {
+      "text": "2",
+      "type": "open",
+      "topic": "Алгебра",
+      "class": "5",
+      "correctAnswer": "2"
+    }
+  ],
+  "created": 1785585333348
+}
 ]

@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Числовой тренажёр · Математика с Полиной</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ===== ОБЩИЕ СТИЛИ ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F1EBE9;
+            color: #000000;
+            min-height: 100vh;
+        }
+
+        /* ===== НАВИГАЦИЯ ===== */
+        .navbar {
+            background: #ffffff;
+            padding: 1rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border-bottom: 3px solid #FBC5D9;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .nav-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #FBC5D9;
+            box-shadow: 0 4px 12px rgba(141,11,13,0.15);
+            transition: transform 0.2s;
+        }
+        .nav-avatar:hover { transform: scale(1.05); }
+        .nav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #8D0B0D;
+            letter-spacing: -0.02em;
+        }
+        .nav-title span { font-weight: 400; color: #555; }
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-menu a {
+            text-decoration: none;
+            color: #000000;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.5rem 0.2rem;
+            border-bottom: 3px solid transparent;
+            transition: 0.25s;
+        }
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            border-bottom-color: #8D0B0D;
+            color: #8D0B0D;
+        }
+        .nav-menu a i { margin-right: 6px; }
+
+        /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+        .trainer-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1.5rem 3rem;
+        }
+
+        /* ===== ЗАГОЛОВОК ===== */
+        .trainer-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .trainer-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 2.8rem;
+            color: #8D0B0D;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+        .trainer-header h1 span {
+            color: #333;
+            font-weight: 700;
+        }
+        .trainer-header .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #666;
+            margin-top: 0.3rem;
+        }
+
+        /* ===== ВЕРХНЯЯ ПАНЕЛЬ ===== */
+        .top-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 1.2rem 2rem;
+            box-shadow: 0 4px 0 #d0c8c4, 0 8px 20px rgba(0,0,0,0.04);
+            border: 1px solid #e8e0dc;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* ===== ЗВЁЗДОЧКИ ===== */
+        .stars-container {
+            display: flex;
+            gap: 0.4rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .star {
+            font-size: 1.8rem;
+            color: #ddd;
+            transition: 0.3s;
+            cursor: default;
+            line-height: 1;
+        }
+        .star.filled {
+            color: #8D0B0D;
+            animation: starPop 0.3s ease;
+        }
+        @keyframes starPop {
+            0% { transform: scale(0.5); }
+            70% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        .stars-label {
+            font-size: 0.85rem;
+            color: #888;
+            font-weight: 500;
+            margin-right: 0.3rem;
+        }
+
+        /* ===== СЧЁТЧИК БАЛЛОВ ===== */
+        .score-display {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #8D0B0D;
+            background: #FBC5D9;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .score-display i {
+            font-size: 1.2rem;
+        }
+
+        /* ===== КАРТОЧКА ПРИМЕРА ===== */
+        .question-card {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 8px 0 #d0c8c4, 0 12px 28px rgba(0,0,0,0.06);
+            border: 1px solid #e8e0dc;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .question-card .question-number {
+            font-size: 0.85rem;
+            color: #999;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .question-card .question-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #1a2639;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.02em;
+        }
+        .question-card .answer-input {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .question-card .answer-input input {
+            width: 200px;
+            padding: 0.8rem 1.2rem;
+            border-radius: 16px;
+            border: 2px solid #e0d8d4;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            text-align: center;
+            background: #faf8f7;
+            transition: 0.2s;
+        }
+        .question-card .answer-input input:focus {
+            outline: none;
+            border-color: #8D0B0D;
+            background: #ffffff;
+        }
+        .question-card .answer-input input:disabled {
+            background: #f0f0f0;
+            border-color: #ddd;
+        }
+        .question-card .answer-input .btn-check {
+            background: #8D0B0D;
+            color: #ffffff;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.25s;
+            box-shadow: 0 6px 16px rgba(141,11,13,0.25);
+        }
+        .question-card .answer-input .btn-check:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(141,11,13,0.35);
+        }
+        .question-card .answer-input .btn-check:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ===== РЕЗУЛЬТАТ ОТВЕТА ===== */
+        .answer-result {
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            min-height: 2rem;
+        }
+        .answer-result.correct {
+            color: #27ae60;
+        }
+        .answer-result.wrong {
+            color: #c0392b;
+        }
+        .answer-result .correct-answer-show {
+            color: #27ae60;
+            font-weight: 700;
+        }
+
+        /* ===== КНОПКА ДАЛЕЕ ===== */
+        .btn-next {
+            background: #FBC5D9;
+            color: #000;
+            border: none;
+            padding: 0.8rem 2.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .btn-next:hover {
+            background: #f5b2cc;
+            transform: translateY(-2px);
+        }
+        .btn-next:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ===== ФИНИШ ===== */
+        .finish-screen {
+            text-align: center;
+            padding: 2rem;
+        }
+        .finish-screen .big-score {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: #8D0B0D;
+        }
+        .finish-screen .big-score span {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #666;
+        }
+        .finish-screen .finish-text {
+            font-size: 1.2rem;
+            color: #333;
+            margin: 0.5rem 0 1.5rem;
+        }
+        .btn-restart {
+            background: #8D0B0D;
+            color: #fff;
+            border: none;
+            padding: 0.8rem 2.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.25s;
+            box-shadow: 0 6px 16px rgba(141,11,13,0.25);
+        }
+        .btn-restart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(141,11,13,0.35);
+        }
+
+        /* ===== ПРОГРЕСС ===== */
+        .progress-text {
+            font-size: 0.9rem;
+            color: #888;
+            font-weight: 500;
+        }
+
+        /* ===== ФУТЕР ===== */
+        .trainer-footer {
+            margin-top: 2.5rem;
+            padding: 2rem;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 4px 0 #d0c8c4, 0 8px 20px rgba(0,0,0,0.04);
+            border: 1px solid #e8e0dc;
+            text-align: center;
+        }
+        .trainer-footer .footer-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .trainer-footer .footer-title i {
+            color: #8D0B0D;
+        }
+        .trainer-footer .social-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .trainer-footer .social-buttons a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 1.8rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: 0.25s;
+            color: #fff;
+        }
+        .trainer-footer .social-buttons .btn-vk {
+            background: #4a76a8;
+        }
+        .trainer-footer .social-buttons .btn-vk:hover {
+            background: #3a5f8a;
+            transform: translateY(-2px);
+        }
+        .trainer-footer .social-buttons .btn-tg {
+            background: #2ca5e0;
+        }
+        .trainer-footer .social-buttons .btn-tg:hover {
+            background: #1d8bc2;
+            transform: translateY(-2px);
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 0.8rem; padding: 1rem; }
+            .nav-menu { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+            .trainer-header h1 { font-size: 2rem; }
+            .question-card { padding: 1.5rem; }
+            .question-card .question-text { font-size: 2rem; }
+            .question-card .answer-input input { width: 140px; }
+            .top-panel { flex-direction: column; align-items: stretch; text-align: center; }
+            .stars-container { justify-content: center; }
+            .score-display { justify-content: center; }
+        }
+        @media (max-width: 480px) {
+            .trainer-header h1 { font-size: 1.6rem; }
+            .question-card .question-text { font-size: 1.6rem; }
+            .star { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== ШАПКА ===== -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="images/avatar.png" alt="Полина" class="nav-avatar" />
+            <span class="nav-title">Математика <span>с Полиной</span></span>
+        </div>
+        <div class="nav-menu">
+            <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+            <a href="tests.html"><i class="fas fa-tasks"></i> Тесты</a>
+            <a href="trainer.html" class="active"><i class="fas fa-brain"></i> Тренажёр</a>
+            <a href="contacts.html"><i class="fas fa-envelope"></i> Контакты</a>
+        </div>
+    </nav>
+
+    <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
+    <div class="trainer-container" id="app">
+
+        <!-- ЗАГОЛОВОК -->
+        <div class="trainer-header">
+            <h1>Числовой тренажёр</h1>
+            <div class="subtitle">«Операции с отрицательными числами»</div>
+        </div>
+
+        <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
+        <div class="top-panel">
+            <div class="stars-container">
+                <span class="stars-label">✨ Баллы:</span>
+                <span id="starsDisplay"></span>
+            </div>
+            <div class="score-display">
+                <i class="fas fa-star"></i>
+                <span id="scoreDisplay">0</span>
+            </div>
+            <div class="progress-text">
+                Вопрос <span id="currentQuestionNum">1</span> из <span id="totalQuestionsNum">12</span>
+            </div>
+        </div>
+
+        <!-- КАРТОЧКА ВОПРОСА -->
+        <div id="questionCard" class="question-card">
+            <div class="question-number" id="questionNumberLabel">Вопрос 1 из 12</div>
+            <div class="question-text" id="questionText">(-4) + (-6) =</div>
+            <div class="answer-input">
+                <input type="text" id="answerInput" placeholder="Введите ответ..." />
+                <button class="btn-check" id="checkBtn" onclick="checkAnswer()">Проверить</button>
+            </div>
+            <div class="answer-result" id="answerResult"></div>
+        </div>
+
+        <!-- КНОПКА ДАЛЕЕ -->
+        <div style="text-align: center;">
+            <button class="btn-next" id="nextBtn" onclick="nextQuestion()" disabled>
+                <i class="fas fa-arrow-right"></i> Далее
+            </button>
+        </div>
+
+        <!-- ФИНИШ (скрыт) -->
+        <div id="finishScreen" class="finish-screen" style="display:none;">
+            <div class="big-score">
+                <span id="finalScore">0</span> <span>⭐</span>
+            </div>
+            <div class="finish-text">🎉 Ты справился с тренажёром!</div>
+            <button class="btn-restart" onclick="restartGame()">
+                <i class="fas fa-redo"></i> Пройти ещё раз
+            </button>
+        </div>
+
+        <!-- ФУТЕР -->
+        <div class="trainer-footer">
+            <div class="footer-title">
+                🎓 Больше интерактивных заданий по математике
+            </div>
+            <div class="social-buttons">
+                <a href="https://vk.ru/polina.sviderskaya" target="_blank" class="btn-vk">
+                    <i class="fab fa-vk"></i> Подписаться ВК
+                </a>
+                <a href="https://t.me/polinasviderskaya" target="_blank" class="btn-tg">
+                    <i class="fab fa-telegram-plane"></i> Подписаться ТГ
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ПОДВАЛ ===== -->
+    <div class="footer" style="text-align:center; padding:2rem; color:#666; font-size:0.85rem; border-top:2px solid #FBC5D9; margin-top:1rem; background:rgba(255,255,255,0.5);">
+        &copy; 2026 Математика с Полиной · Сделано с ❤️
+    </div>
+
+    <script>
+        // ===== ОСНОВНЫЕ ПАРАМЕТРЫ =====
+        const TOTAL_QUESTIONS = 12;
+        const ALL_EXAMPLES_COUNT = 100;
+
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let answered = false;
+        let stars = [];
+
+        // ===== ГЕНЕРАЦИЯ ПРИМЕРОВ =====
+        function generateAllExamples() {
+            const examples = [];
+            const operations = ['+', '-', '*', '/'];
+
+            for (let i = 0; i < ALL_EXAMPLES_COUNT; i++) {
+                let a, b, op, answer, display;
+                const opIndex = Math.floor(Math.random() * operations.length);
+                op = operations[opIndex];
+
+                // Генерируем числа от -20 до 20 (без нуля)
+                do { a = Math.floor(Math.random() * 41) - 20; } while (a === 0);
+                do { b = Math.floor(Math.random() * 41) - 20; } while (b === 0);
+
+                // Для деления проверяем, чтобы результат был целым числом
+                if (op === '/') {
+                    let tempB = b;
+                    let tempA = a;
+                    // Подбираем такие числа, чтобы a / b давало целое число
+                    let attempts = 0;
+                    while (attempts < 50) {
+                        do { b = Math.floor(Math.random() * 41) - 20; } while (b === 0);
+                        if (a % b === 0) break;
+                        attempts++;
+                    }
+                    if (a % b !== 0) {
+                        // Если не получилось, меняем a
+                        a = b * (Math.floor(Math.random() * 11) - 5);
+                        if (a === 0) a = b * 2;
+                    }
+                }
+
+                switch(op) {
+                    case '+':
+                        answer = a + b;
+                        display = `(${a}) + (${b})`;
+                        break;
+                    case '-':
+                        answer = a - b;
+                        display = `(${a}) - (${b})`;
+                        break;
+                    case '*':
+                        answer = a * b;
+                        display = `(${a}) × (${b})`;
+                        break;
+                    case '/':
+                        answer = a / b;
+                        if (!Number.isInteger(answer) || answer === 0) {
+                            // Запасной вариант
+                            a = b * 2;
+                            answer = a / b;
+                        }
+                        display = `(${a}) : (${b})`;
+                        break;
+                }
+
+                examples.push({
+                    a: a,
+                    b: b,
+                    op: op,
+                    answer: answer,
+                    display: display
+                });
+            }
+            return examples;
+        }
+
+        // ===== ВЫБОР 12 СЛУЧАЙНЫХ ПРИМЕРОВ =====
+        function selectRandomQuestions(allExamples) {
+            const shuffled = [...allExamples];
+            // Перемешиваем
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled.slice(0, TOTAL_QUESTIONS);
+        }
+
+        // ===== ИНИЦИАЛИЗАЦИЯ =====
+        function initGame() {
+            const allExamples = generateAllExamples();
+            currentQuestions = selectRandomQuestions(allExamples);
+            currentIndex = 0;
+            score = 0;
+            answered = false;
+            stars = Array(TOTAL_QUESTIONS).fill(false);
+
+            document.getElementById('finishScreen').style.display = 'none';
+            document.getElementById('questionCard').style.display = 'block';
+            document.getElementById('nextBtn').style.display = 'inline-flex';
+
+            renderStars();
+            updateScore();
+            renderQuestion();
+        }
+
+        // ===== ОТОБРАЗИТЬ ЗВЁЗДОЧКИ =====
+        function renderStars() {
+            const container = document.getElementById('starsDisplay');
+            let html = '';
+            for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+                const filled = stars[i] ? 'filled' : '';
+                html += `<span class="star ${filled}">⭐</span>`;
+            }
+            container.innerHTML = html;
+        }
+
+        // ===== ОБНОВИТЬ СЧЁТ =====
+        function updateScore() {
+            document.getElementById('scoreDisplay').textContent = score;
+        }
+
+        // ===== ОТОБРАЗИТЬ ВОПРОС =====
+        function renderQuestion() {
+            const q = currentQuestions[currentIndex];
+            document.getElementById('questionNumberLabel').textContent = `Вопрос ${currentIndex + 1} из ${TOTAL_QUESTIONS}`;
+            document.getElementById('questionText').textContent = `${q.display} =`;
+
+            const input = document.getElementById('answerInput');
+            input.value = '';
+            input.disabled = false;
+            input.focus();
+
+            document.getElementById('checkBtn').disabled = false;
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('answerResult').textContent = '';
+            document.getElementById('answerResult').className = 'answer-result';
+
+            answered = false;
+
+            // Обновляем номера
+            document.getElementById('currentQuestionNum').textContent = currentIndex + 1;
+            document.getElementById('totalQuestionsNum').textContent = TOTAL_QUESTIONS;
+        }
+
+        // ===== ПРОВЕРКА ОТВЕТА =====
+        function checkAnswer() {
+            if (answered) return;
+
+            const input = document.getElementById('answerInput');
+            const userAnswer = input.value.trim();
+            if (userAnswer === '') {
+                alert('Введите ответ!');
+                return;
+            }
+
+            const q = currentQuestions[currentIndex];
+            const correctAnswer = q.answer;
+            const userNum = parseFloat(userAnswer.replace(',', '.'));
+
+            const resultDiv = document.getElementById('answerResult');
+
+            if (userNum === correctAnswer) {
+                resultDiv.textContent = '✅ Правильно! +10 баллов';
+                resultDiv.className = 'answer-result correct';
+                score += 10;
+                stars[currentIndex] = true;
+                updateScore();
+                renderStars();
+            } else {
+                resultDiv.innerHTML = `❌ Неправильно. Правильный ответ: <span class="correct-answer-show">${correctAnswer}</span>`;
+                resultDiv.className = 'answer-result wrong';
+                // Звёздочка не закрашивается
+            }
+
+            answered = true;
+            input.disabled = true;
+            document.getElementById('checkBtn').disabled = true;
+
+            // Показываем кнопку "Далее"
+            document.getElementById('nextBtn').disabled = false;
+
+            // Если это последний вопрос, меняем текст кнопки
+            if (currentIndex === TOTAL_QUESTIONS - 1) {
+                document.getElementById('nextBtn').innerHTML = '<i class="fas fa-trophy"></i> Завершить';
+            } else {
+                document.getElementById('nextBtn').innerHTML = '<i class="fas fa-arrow-right"></i> Далее';
+            }
+        }
+
+        // ===== СЛЕДУЮЩИЙ ВОПРОС =====
+        function nextQuestion() {
+            if (!answered) return;
+
+            if (currentIndex === TOTAL_QUESTIONS - 1) {
+                // Финиш
+                showFinish();
+                return;
+            }
+
+            currentIndex++;
+            renderQuestion();
+        }
+
+        // ===== ПОКАЗАТЬ ФИНИШ =====
+        function showFinish() {
+            document.getElementById('questionCard').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('finishScreen').style.display = 'block';
+            document.getElementById('finalScore').textContent = score;
+
+            // Проверяем, все ли звёздочки собраны
+            const allStars = stars.every(s => s === true);
+            const finishText = document.querySelector('.finish-text');
+            if (allStars && score === TOTAL_QUESTIONS * 10) {
+                finishText.textContent = '🌟 Идеально! Ты собрал все звёздочки! 🌟';
+            } else if (score >= TOTAL_QUESTIONS * 5) {
+                finishText.textContent = '🎉 Отличный результат! Продолжай в том же духе!';
+            } else {
+                finishText.textContent = '💪 Хорошая попытка! Тренируйся ещё!';
+            }
+        }
+
+        // ===== РЕСТАРТ =====
+        function restartGame() {
+            initGame();
+            // Прокручиваем к началу
+            document.getElementById('app').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ===== ОБРАБОТЧИКИ СОБЫТИЙ =====
+        document.addEventListener('DOMContentLoaded', function() {
+            initGame();
+
+            document.getElementById('answerInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    if (!answered) {
+                        checkAnswer();
+                    } else {
+                        nextQuestion();
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

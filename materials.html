@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Материалы · Математика с Полиной</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F1EBE9;
+            color: #000000;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #ffffff;
+            padding: 1rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border-bottom: 3px solid #FBC5D9;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .nav-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #FBC5D9;
+            box-shadow: 0 4px 12px rgba(141,11,13,0.15);
+            transition: transform 0.2s;
+        }
+        .nav-avatar:hover { transform: scale(1.05); }
+        .nav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #8D0B0D;
+            letter-spacing: -0.02em;
+        }
+        .nav-title span { font-weight: 400; color: #555; }
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-menu a {
+            text-decoration: none;
+            color: #000000;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.5rem 0.2rem;
+            border-bottom: 3px solid transparent;
+            transition: 0.25s;
+        }
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            border-bottom-color: #8D0B0D;
+            color: #8D0B0D;
+        }
+        .nav-menu a i { margin-right: 6px; }
+
+        .admin-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .admin-btn {
+            background: #8D0B0D;
+            color: #FFFFFF;
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .admin-btn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+        .admin-btn.logout {
+            background: #555;
+        }
+        .admin-btn.logout:hover { background: #333; }
+        .admin-status {
+            font-size: 0.75rem;
+            color: #27ae60;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .page-header {
+            padding: 2rem 4rem 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .page-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.4rem;
+            color: #8D0B0D;
+        }
+        .page-header h1 i { margin-right: 10px; }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 4rem 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .filters label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .filters select {
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            border: 2px solid #e0d8d4;
+            background: #faf8f7;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .filters select:focus {
+            outline: none;
+            border-color: #8D0B0D;
+        }
+        .filters .reset-filters {
+            background: none;
+            border: none;
+            color: #8D0B0D;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            text-decoration: underline;
+        }
+        .filters .reset-filters:hover {
+            color: #a93226;
+        }
+        .filter-count {
+            margin-left: auto;
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.8rem;
+            padding: 1.5rem 4rem 3rem;
+        }
+
+        .material-card {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 1.8rem 1.8rem 1.5rem;
+            box-shadow: 0 8px 0 #d0c8c4, 0 12px 28px rgba(0,0,0,0.06);
+            border: 1px solid #e8e0dc;
+            transition: 0.3s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 200px;
+            height: 100%;
+        }
+        .material-card:hover {
+            transform: translateY(-6px);
+        }
+        .material-card::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            right: -4px;
+            bottom: -4px;
+            background: #FBC5D9;
+            border-radius: 32px;
+            z-index: -1;
+            opacity: 0.2;
+        }
+
+        .material-card .material-icon {
+            font-size: 2.5rem;
+            color: #8D0B0D;
+            margin-bottom: 0.3rem;
+        }
+        .material-card h3 {
+            font-size: 1.15rem;
+            margin: 0.2rem 0 0.2rem;
+            color: #000;
+            flex: 1;
+        }
+        .material-card .meta {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        .material-card .meta .badge {
+            background: #FBC5D9;
+            padding: 0.1rem 0.6rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .material-card .meta .type-badge {
+            background: #d4e2d4;
+            padding: 0.1rem 0.6rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #155724;
+        }
+        .material-card .card-actions {
+            display: flex;
+            gap: 0.6rem;
+            margin-top: auto;
+            flex-wrap: wrap;
+        }
+        .material-card .btn-small {
+            background: #FBC5D9;
+            color: #000;
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .material-card .btn-small:hover {
+            background: #f5b2cc;
+        }
+        .material-card .btn-small-primary {
+            background: #8D0B0D;
+            color: #fff;
+        }
+        .material-card .btn-small-primary:hover {
+            background: #a93226;
+        }
+
+        .empty-materials {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #777;
+            grid-column: 1 / -1;
+        }
+        .empty-materials i {
+            font-size: 3rem;
+            color: #FBC5D9;
+            display: block;
+            margin-bottom: 0.8rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-size: 0.85rem;
+            border-top: 2px solid #FBC5D9;
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 2.5rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .modal-box h2 {
+            font-family: 'Playfair Display', serif;
+            color: #8D0B0D;
+            margin-bottom: 0.5rem;
+        }
+        .modal-box p { color: #666; margin-bottom: 1.5rem; }
+        .modal-box input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 16px;
+            border: 2px solid #e0d8d4;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 1rem;
+        }
+        .modal-box input:focus { outline: none; border-color: #8D0B0D; }
+        .modal-box .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+        }
+        .modal-box .modal-actions button {
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .modal-box .modal-actions .btn-confirm {
+            background: #8D0B0D;
+            color: #fff;
+        }
+        .modal-box .modal-actions .btn-confirm:hover { background: #a93226; }
+        .modal-box .modal-actions .btn-cancel {
+            background: #e0d8d4;
+            color: #333;
+        }
+        .modal-box .modal-actions .btn-cancel:hover { background: #ccc; }
+        .modal-box .error-msg {
+            color: #c0392b;
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+            display: none;
+        }
+        .modal-box .error-msg.show { display: block; }
+
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 0.8rem; padding: 1rem; }
+            .nav-menu { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+            .page-header { padding: 1.5rem; flex-direction: column; align-items: flex-start; }
+            .filters { padding: 0.5rem 1.5rem; }
+            .materials-grid { padding: 1.5rem; grid-template-columns: 1fr; }
+            .admin-controls { width: 100%; justify-content: flex-end; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="images/avatar.png" alt="Полина" class="nav-avatar" />
+            <span class="nav-title">Математика <span>с Полиной</span></span>
+        </div>
+        <div class="nav-menu">
+            <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+            <a href="tests.html"><i class="fas fa-tasks"></i> Тесты</a>
+            <a href="materials.html" class="active"><i class="fas fa-folder-open"></i> Материалы</a>
+            <a href="contacts.html"><i class="fas fa-envelope"></i> Контакты</a>
+        </div>
+        <div class="admin-controls">
+            <span class="admin-status" id="adminStatus" style="display:none;">
+                <i class="fas fa-circle" style="color:#27ae60;"></i> Админ
+            </span>
+            <button class="admin-btn" id="adminLoginBtn" onclick="showLoginModal()">
+                <i class="fas fa-user-shield"></i> Вход
+            </button>
+            <button class="admin-btn logout" id="adminLogoutBtn" style="display:none;" onclick="logoutAdmin()">
+                <i class="fas fa-sign-out-alt"></i> Выйти
+            </button>
+        </div>
+    </nav>
+
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <h2><i class="fas fa-user-shield" style="color:#8D0B0D;"></i> Вход для учителя</h2>
+            <p>Введите пароль для доступа к управлению материалами</p>
+            <div class="error-msg" id="loginError">❌ Неверный пароль. Попробуйте ещё раз.</div>
+            <input type="password" id="passwordInput" placeholder="Введите пароль..." onkeydown="if(event.key==='Enter') checkPassword()" />
+            <div class="modal-actions">
+                <button class="btn-confirm" onclick="checkPassword()">Войти</button>
+                <button class="btn-cancel" onclick="closeLoginModal()">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-header">
+        <h1><i class="fas fa-folder-open"></i> Материалы</h1>
+        <a href="create-material.html" class="btn-primary admin-only" id="createMaterialBtn" style="background:#8D0B0D; color:#fff; border:none; padding:0.8rem 2rem; border-radius:60px; font-weight:600; font-size:1rem; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:0.6rem; transition:0.25s; box-shadow:0 8px 20px rgba(141,11,13,0.2);">
+            <i class="fas fa-plus-circle"></i> Добавить материал
+        </a>
+    </div>
+
+    <div class="filters">
+        <label>
+            <i class="fas fa-users"></i> Класс:
+            <select id="classFilter" onchange="applyFilters()">
+                <option value="all">Все классы</option>
+                <option value="5">5 класс</option>
+                <option value="6">6 класс</option>
+                <option value="7">7 класс</option>
+                <option value="8">8 класс</option>
+                <option value="9">9 класс</option>
+                <option value="10">10 класс</option>
+                <option value="11">11 класс</option>
+            </select>
+        </label>
+        <label>
+            <i class="fas fa-tag"></i> Тип:
+            <select id="typeFilter" onchange="applyFilters()">
+                <option value="all">Все типы</option>
+                <option value="Тренажёр">Тренажёр</option>
+                <option value="Игра">Игра</option>
+                <option value="Документ">Документ</option>
+                <option value="Видео">Видео</option>
+            </select>
+        </label>
+        <button class="reset-filters" onclick="resetFilters()">
+            <i class="fas fa-undo"></i> Сбросить
+        </button>
+        <span class="filter-count" id="materialCount"></span>
+    </div>
+
+    <div class="materials-grid" id="materialsGrid">
+        <!-- Загружается динамически -->
+    </div>
+
+    <div class="footer">
+        &copy; 2026 Математика с Полиной · Сделано с ❤️
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = 'polina2026';
+        let isAdmin = false;
+
+        // ===== ДАННЫЕ МАТЕРИАЛОВ =====
+        let materials = [
+            {
+                id: 1,
+                name: 'Числовой тренажёр «Операции с отрицательными числами»',
+                class: '6',
+                type: 'Тренажёр',
+                description: 'Тренируйся складывать, вычитать, умножать и делить отрицательные числа. 12 случайных примеров за раунд!',
+                icon: 'fa-brain',
+                link: 'trainer.html',
+                created: Date.now() - 86400000
+            }
+        ];
+
+        // ===== ЗАГРУЗКА И СОХРАНЕНИЕ =====
+        function loadMaterials() {
+            const saved = localStorage.getItem('polina_materials');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    // Объединяем с дефолтными, чтобы не потерять
+                    const defaultIds = materials.map(m => m.id);
+                    const newMaterials = parsed.filter(m => !defaultIds.includes(m.id));
+                    materials = [...materials, ...newMaterials];
+                } catch (e) {}
+            }
+            // Сохраняем для будущих добавлений
+            localStorage.setItem('polina_materials', JSON.stringify(materials));
+        }
+
+        function saveMaterials() {
+            localStorage.setItem('polina_materials', JSON.stringify(materials));
+        }
+
+        // ===== ФИЛЬТРАЦИЯ =====
+        function applyFilters() {
+            const classFilter = document.getElementById('classFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+
+            let filtered = materials.filter(m => {
+                let matchClass = true;
+                let matchType = true;
+                if (classFilter !== 'all') {
+                    matchClass = String(m.class) === String(classFilter);
+                }
+                if (typeFilter !== 'all') {
+                    matchType = m.type === typeFilter;
+                }
+                return matchClass && matchType;
+            });
+
+            renderMaterials(filtered);
+            document.getElementById('materialCount').textContent = `Найдено: ${filtered.length}`;
+        }
+
+        function resetFilters() {
+            document.getElementById('classFilter').value = 'all';
+            document.getElementById('typeFilter').value = 'all';
+            applyFilters();
+        }
+
+        // ===== ОТОБРАЖЕНИЕ =====
+        function renderMaterials(items) {
+            const container = document.getElementById('materialsGrid');
+
+            if (items.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-materials">
+                        <i class="fas fa-folder-open"></i>
+                        <div>Нет материалов по выбранным фильтрам</div>
+                        <div style="font-size:0.8rem; color:#aaa;">Добавьте новый материал или измените фильтры</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            items.forEach((item) => {
+                const iconMap = {
+                    'Тренажёр': 'fa-brain',
+                    'Игра': 'fa-gamepad',
+                    'Документ': 'fa-file-pdf',
+                    'Видео': 'fa-video'
+                };
+                const icon = item.icon || iconMap[item.type] || 'fa-file';
+                const date = item.created ? new Date(item.created).toLocaleDateString('ru-RU') : 'Нет даты';
+
+                html += `
+                    <div class="material-card" data-class="${item.class}" data-type="${item.type}">
+                        <div class="material-icon"><i class="fas ${icon}"></i></div>
+                        <h3>${item.name}</h3>
+                        <div class="meta">
+                            <span class="badge">${item.class || 'Без класса'} класс</span>
+                            <span class="type-badge">${item.type || 'Материал'}</span>
+                            <span class="date"><i class="far fa-calendar-alt"></i> ${date}</span>
+                        </div>
+                        ${item.description ? `<p style="font-size:0.85rem; color:#555; margin-bottom:0.8rem; flex:1;">${item.description}</p>` : ''}
+                        <div class="card-actions">
+                            <a href="${item.link || '#'}" class="btn-small btn-small-primary" target="${item.link && item.link.startsWith('http') ? '_blank' : '_self'}">
+                                <i class="fas fa-arrow-right"></i> Открыть
+                            </a>
+                            ${isAdmin ? `<button class="btn-small" onclick="deleteMaterial(${item.id})" style="background:#c0392b; color:#fff;">
+                                <i class="fas fa-trash-alt"></i> Удалить
+                            </button>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // ===== УДАЛЕНИЕ МАТЕРИАЛА =====
+        function deleteMaterial(id) {
+            if (!isAdmin) {
+                alert('Только учитель может удалять материалы.');
+                return;
+            }
+            if (!confirm('Удалить этот материал?')) return;
+            materials = materials.filter(m => m.id !== id);
+            saveMaterials();
+            applyFilters();
+        }
+
+        // ===== АДМИН =====
+        function checkAdminStatus() {
+            const saved = localStorage.getItem('polina_admin');
+            if (saved === 'true') {
+                isAdmin = true;
+                document.getElementById('adminStatus').style.display = 'inline';
+                document.getElementById('adminLoginBtn').style.display = 'none';
+                document.getElementById('adminLogoutBtn').style.display = 'inline-flex';
+                document.getElementById('createMaterialBtn').style.display = 'inline-flex';
+            } else {
+                isAdmin = false;
+                document.getElementById('adminStatus').style.display = 'none';
+                document.getElementById('adminLoginBtn').style.display = 'inline-flex';
+                document.getElementById('adminLogoutBtn').style.display = 'none';
+                document.getElementById('createMaterialBtn').style.display = 'none';
+            }
+        }
+
+        function showLoginModal() {
+            document.getElementById('loginModal').classList.add('show');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('loginError').classList.remove('show');
+            setTimeout(() => document.getElementById('passwordInput').focus(), 100);
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('show');
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput');
+            if (input.value === ADMIN_PASSWORD) {
+                isAdmin = true;
+                localStorage.setItem('polina_admin', 'true');
+                closeLoginModal();
+                checkAdminStatus();
+                applyFilters();
+            } else {
+                document.getElementById('loginError').classList.add('show');
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        function logoutAdmin() {
+            if (confirm('Выйти из режима администратора?')) {
+                isAdmin = false;
+                localStorage.removeItem('polina_admin');
+                checkAdminStatus();
+                applyFilters();
+            }
+        }
+
+        document.getElementById('loginModal').addEventListener('click', function(e) {
+            if (e.target === this) closeLoginModal();
+        });
+
+        window.addEventListener('DOMContentLoaded', function() {
+            loadMaterials();
+            checkAdminStatus();
+            applyFilters();
+        });
+    </script>
+</body>
+</html>

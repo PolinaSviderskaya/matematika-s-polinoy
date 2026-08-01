@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
-        /* ===== ОБЩИЕ СТИЛИ ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
@@ -18,7 +17,6 @@
             min-height: 100vh;
         }
 
-        /* ===== НАВИГАЦИЯ ===== */
         .navbar {
             background: #ffffff;
             padding: 1rem 2.5rem;
@@ -78,14 +76,12 @@
         }
         .nav-menu a i { margin-right: 6px; }
 
-        /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
         .trainer-container {
             max-width: 900px;
             margin: 2rem auto;
             padding: 0 1.5rem 3rem;
         }
 
-        /* ===== ЗАГОЛОВОК ===== */
         .trainer-header {
             text-align: center;
             margin-bottom: 2rem;
@@ -110,7 +106,6 @@
             margin-top: 0.3rem;
         }
 
-        /* ===== ВЕРХНЯЯ ПАНЕЛЬ ===== */
         .top-panel {
             display: flex;
             justify-content: space-between;
@@ -125,7 +120,6 @@
             gap: 1rem;
         }
 
-        /* ===== ЗВЁЗДОЧКИ ===== */
         .stars-container {
             display: flex;
             gap: 0.4rem;
@@ -155,7 +149,6 @@
             margin-right: 0.3rem;
         }
 
-        /* ===== СЧЁТЧИК БАЛЛОВ ===== */
         .score-display {
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
@@ -172,7 +165,6 @@
             font-size: 1.2rem;
         }
 
-        /* ===== КАРТОЧКА ПРИМЕРА ===== */
         .question-card {
             background: #ffffff;
             border-radius: 32px;
@@ -245,7 +237,6 @@
             transform: none;
         }
 
-        /* ===== РЕЗУЛЬТАТ ОТВЕТА ===== */
         .answer-result {
             margin-top: 1rem;
             font-size: 1.1rem;
@@ -263,7 +254,6 @@
             font-weight: 700;
         }
 
-        /* ===== КНОПКА ДАЛЕЕ ===== */
         .btn-next {
             background: #FBC5D9;
             color: #000;
@@ -288,7 +278,6 @@
             transform: none;
         }
 
-        /* ===== ФИНИШ ===== */
         .finish-screen {
             text-align: center;
             padding: 2rem;
@@ -326,14 +315,12 @@
             box-shadow: 0 10px 24px rgba(141,11,13,0.35);
         }
 
-        /* ===== ПРОГРЕСС ===== */
         .progress-text {
             font-size: 0.9rem;
             color: #888;
             font-weight: 500;
         }
 
-        /* ===== ФУТЕР ===== */
         .trainer-footer {
             margin-top: 2.5rem;
             padding: 2rem;
@@ -386,7 +373,6 @@
             transform: translateY(-2px);
         }
 
-        /* ===== АДАПТИВ ===== */
         @media (max-width: 768px) {
             .navbar { flex-direction: column; gap: 0.8rem; padding: 1rem; }
             .nav-menu { flex-wrap: wrap; justify-content: center; gap: 1rem; }
@@ -407,7 +393,6 @@
 </head>
 <body>
 
-    <!-- ===== ШАПКА ===== -->
     <nav class="navbar">
         <div class="nav-left">
             <img src="images/avatar.png" alt="Полина" class="nav-avatar" />
@@ -421,16 +406,13 @@
         </div>
     </nav>
 
-    <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
     <div class="trainer-container" id="app">
 
-        <!-- ЗАГОЛОВОК -->
         <div class="trainer-header">
             <h1>Числовой тренажёр</h1>
             <div class="subtitle">«Операции с отрицательными числами»</div>
         </div>
 
-        <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
         <div class="top-panel">
             <div class="stars-container">
                 <span class="stars-label">✨ Баллы:</span>
@@ -445,7 +427,6 @@
             </div>
         </div>
 
-        <!-- КАРТОЧКА ВОПРОСА -->
         <div id="questionCard" class="question-card">
             <div class="question-number" id="questionNumberLabel">Вопрос 1 из 12</div>
             <div class="question-text" id="questionText">(-4) + (-6) =</div>
@@ -456,14 +437,12 @@
             <div class="answer-result" id="answerResult"></div>
         </div>
 
-        <!-- КНОПКА ДАЛЕЕ -->
         <div style="text-align: center;">
             <button class="btn-next" id="nextBtn" onclick="nextQuestion()" disabled>
                 <i class="fas fa-arrow-right"></i> Далее
             </button>
         </div>
 
-        <!-- ФИНИШ (скрыт) -->
         <div id="finishScreen" class="finish-screen" style="display:none;">
             <div class="big-score">
                 <span id="finalScore">0</span> <span>⭐</span>
@@ -474,7 +453,6 @@
             </button>
         </div>
 
-        <!-- ФУТЕР -->
         <div class="trainer-footer">
             <div class="footer-title">
                 🎓 Больше интерактивных заданий по математике
@@ -490,13 +468,11 @@
         </div>
     </div>
 
-    <!-- ===== ПОДВАЛ ===== -->
     <div class="footer" style="text-align:center; padding:2rem; color:#666; font-size:0.85rem; border-top:2px solid #FBC5D9; margin-top:1rem; background:rgba(255,255,255,0.5);">
         &copy; 2026 Математика с Полиной · Сделано с ❤️
     </div>
 
     <script>
-        // ===== ОСНОВНЫЕ ПАРАМЕТРЫ =====
         const TOTAL_QUESTIONS = 12;
         const ALL_EXAMPLES_COUNT = 100;
 
@@ -506,7 +482,7 @@
         let answered = false;
         let stars = [];
 
-        // ===== ГЕНЕРАЦИЯ ПРИМЕРОВ =====
+        // ===== ГЕНЕРАЦИЯ ПРИМЕРОВ (ТОЛЬКО ОТРИЦАТЕЛЬНЫЕ ЧИСЛА) =====
         function generateAllExamples() {
             const examples = [];
             const operations = ['+', '-', '*', '/'];
@@ -516,25 +492,25 @@
                 const opIndex = Math.floor(Math.random() * operations.length);
                 op = operations[opIndex];
 
-                // Генерируем числа от -20 до 20 (без нуля)
-                do { a = Math.floor(Math.random() * 41) - 20; } while (a === 0);
-                do { b = Math.floor(Math.random() * 41) - 20; } while (b === 0);
+                // ===== ТОЛЬКО ОТРИЦАТЕЛЬНЫЕ ЧИСЛА =====
+                a = -(Math.floor(Math.random() * 20) + 1);
+                b = -(Math.floor(Math.random() * 20) + 1);
 
-                // Для деления проверяем, чтобы результат был целым числом
+                // ===== ДЛЯ ДЕЛЕНИЯ =====
                 if (op === '/') {
-                    let tempB = b;
-                    let tempA = a;
-                    // Подбираем такие числа, чтобы a / b давало целое число
                     let attempts = 0;
                     while (attempts < 50) {
-                        do { b = Math.floor(Math.random() * 41) - 20; } while (b === 0);
+                        a = -(Math.floor(Math.random() * 20) + 1);
+                        b = -(Math.floor(Math.random() * 20) + 1);
                         if (a % b === 0) break;
                         attempts++;
                     }
                     if (a % b !== 0) {
-                        // Если не получилось, меняем a
-                        a = b * (Math.floor(Math.random() * 11) - 5);
-                        if (a === 0) a = b * 2;
+                        b = a / 2;
+                        if (!Number.isInteger(b) || b >= 0) {
+                            b = -2;
+                            a = -4;
+                        }
                     }
                 }
 
@@ -553,11 +529,6 @@
                         break;
                     case '/':
                         answer = a / b;
-                        if (!Number.isInteger(answer) || answer === 0) {
-                            // Запасной вариант
-                            a = b * 2;
-                            answer = a / b;
-                        }
                         display = `(${a}) : (${b})`;
                         break;
                 }
@@ -573,10 +544,8 @@
             return examples;
         }
 
-        // ===== ВЫБОР 12 СЛУЧАЙНЫХ ПРИМЕРОВ =====
         function selectRandomQuestions(allExamples) {
             const shuffled = [...allExamples];
-            // Перемешиваем
             for (let i = shuffled.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
@@ -584,7 +553,6 @@
             return shuffled.slice(0, TOTAL_QUESTIONS);
         }
 
-        // ===== ИНИЦИАЛИЗАЦИЯ =====
         function initGame() {
             const allExamples = generateAllExamples();
             currentQuestions = selectRandomQuestions(allExamples);
@@ -602,7 +570,6 @@
             renderQuestion();
         }
 
-        // ===== ОТОБРАЗИТЬ ЗВЁЗДОЧКИ =====
         function renderStars() {
             const container = document.getElementById('starsDisplay');
             let html = '';
@@ -613,12 +580,10 @@
             container.innerHTML = html;
         }
 
-        // ===== ОБНОВИТЬ СЧЁТ =====
         function updateScore() {
             document.getElementById('scoreDisplay').textContent = score;
         }
 
-        // ===== ОТОБРАЗИТЬ ВОПРОС =====
         function renderQuestion() {
             const q = currentQuestions[currentIndex];
             document.getElementById('questionNumberLabel').textContent = `Вопрос ${currentIndex + 1} из ${TOTAL_QUESTIONS}`;
@@ -636,12 +601,10 @@
 
             answered = false;
 
-            // Обновляем номера
             document.getElementById('currentQuestionNum').textContent = currentIndex + 1;
             document.getElementById('totalQuestionsNum').textContent = TOTAL_QUESTIONS;
         }
 
-        // ===== ПРОВЕРКА ОТВЕТА =====
         function checkAnswer() {
             if (answered) return;
 
@@ -668,17 +631,13 @@
             } else {
                 resultDiv.innerHTML = `❌ Неправильно. Правильный ответ: <span class="correct-answer-show">${correctAnswer}</span>`;
                 resultDiv.className = 'answer-result wrong';
-                // Звёздочка не закрашивается
             }
 
             answered = true;
             input.disabled = true;
             document.getElementById('checkBtn').disabled = true;
-
-            // Показываем кнопку "Далее"
             document.getElementById('nextBtn').disabled = false;
 
-            // Если это последний вопрос, меняем текст кнопки
             if (currentIndex === TOTAL_QUESTIONS - 1) {
                 document.getElementById('nextBtn').innerHTML = '<i class="fas fa-trophy"></i> Завершить';
             } else {
@@ -686,12 +645,10 @@
             }
         }
 
-        // ===== СЛЕДУЮЩИЙ ВОПРОС =====
         function nextQuestion() {
             if (!answered) return;
 
             if (currentIndex === TOTAL_QUESTIONS - 1) {
-                // Финиш
                 showFinish();
                 return;
             }
@@ -700,14 +657,12 @@
             renderQuestion();
         }
 
-        // ===== ПОКАЗАТЬ ФИНИШ =====
         function showFinish() {
             document.getElementById('questionCard').style.display = 'none';
             document.getElementById('nextBtn').style.display = 'none';
             document.getElementById('finishScreen').style.display = 'block';
             document.getElementById('finalScore').textContent = score;
 
-            // Проверяем, все ли звёздочки собраны
             const allStars = stars.every(s => s === true);
             const finishText = document.querySelector('.finish-text');
             if (allStars && score === TOTAL_QUESTIONS * 10) {
@@ -719,14 +674,11 @@
             }
         }
 
-        // ===== РЕСТАРТ =====
         function restartGame() {
             initGame();
-            // Прокручиваем к началу
             document.getElementById('app').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // ===== ОБРАБОТЧИКИ СОБЫТИЙ =====
         document.addEventListener('DOMContentLoaded', function() {
             initGame();
 

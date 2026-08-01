@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Тренажёр · Обыкновенные дроби</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F1EBE9;
+            color: #000000;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #ffffff;
+            padding: 1rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border-bottom: 3px solid #FBC5D9;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .nav-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #FBC5D9;
+            box-shadow: 0 4px 12px rgba(141,11,13,0.15);
+            transition: transform 0.2s;
+        }
+        .nav-avatar:hover { transform: scale(1.05); }
+        .nav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #8D0B0D;
+            letter-spacing: -0.02em;
+        }
+        .nav-title span { font-weight: 400; color: #555; }
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-menu a {
+            text-decoration: none;
+            color: #000000;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.5rem 0.2rem;
+            border-bottom: 3px solid transparent;
+            transition: 0.25s;
+        }
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            border-bottom-color: #8D0B0D;
+            color: #8D0B0D;
+        }
+        .nav-menu a i { margin-right: 6px; }
+
+        .trainer-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1.5rem 3rem;
+        }
+
+        .trainer-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .trainer-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 2.8rem;
+            color: #8D0B0D;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+        .trainer-header .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #666;
+            margin-top: 0.3rem;
+        }
+
+        /* ===== ПОЛОСА ПРОГРЕССА ===== */
+        .progress-section {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 1.2rem 2rem;
+            box-shadow: 0 4px 0 #d0c8c4, 0 8px 20px rgba(0,0,0,0.04);
+            border: 1px solid #e8e0dc;
+            margin-bottom: 2rem;
+        }
+        .progress-bar-container {
+            width: 100%;
+            height: 20px;
+            background: #e8e0dc;
+            border-radius: 40px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: #8D0B0D;
+            border-radius: 40px;
+            transition: width 0.5s ease;
+        }
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.4rem;
+            font-size: 0.85rem;
+            color: #888;
+            font-weight: 500;
+        }
+        .progress-text .score-display {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            color: #8D0B0D;
+        }
+
+        /* ===== КАРТОЧКА ВОПРОСА ===== */
+        .question-card {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 8px 0 #d0c8c4, 0 12px 28px rgba(0,0,0,0.06);
+            border: 1px solid #e8e0dc;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .question-card .question-number {
+            font-size: 0.85rem;
+            color: #999;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .question-card .question-text {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #1a2639;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.02em;
+        }
+        .question-card .question-text .frac {
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+        }
+        .question-card .question-text .frac .num {
+            display: block;
+            border-bottom: 2px solid #1a2639;
+            padding: 0 0.2rem 0.1rem;
+        }
+        .question-card .question-text .frac .den {
+            display: block;
+            padding: 0.1rem 0.2rem 0;
+        }
+        .question-card .question-text .frac .whole {
+            display: inline-block;
+            margin-right: 0.2rem;
+            font-weight: 700;
+            vertical-align: middle;
+        }
+
+        .answer-inputs {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .answer-inputs .answer-field {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.2rem;
+        }
+        .answer-inputs .answer-field label {
+            font-size: 0.7rem;
+            color: #999;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .answer-inputs .answer-field input {
+            width: 70px;
+            padding: 0.6rem 0.5rem;
+            border-radius: 12px;
+            border: 2px solid #e0d8d4;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            text-align: center;
+            background: #faf8f7;
+            transition: 0.2s;
+        }
+        .answer-inputs .answer-field input:focus {
+            outline: none;
+            border-color: #8D0B0D;
+            background: #ffffff;
+        }
+        .answer-inputs .answer-field input:disabled {
+            background: #f0f0f0;
+            border-color: #ddd;
+        }
+        .answer-inputs .answer-separator {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a2639;
+            padding-bottom: 0.5rem;
+        }
+
+        .btn-check {
+            background: #8D0B0D;
+            color: #ffffff;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.25s;
+            box-shadow: 0 6px 16px rgba(141,11,13,0.25);
+            margin-top: 0.5rem;
+        }
+        .btn-check:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(141,11,13,0.35);
+        }
+        .btn-check:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .answer-result {
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            min-height: 2rem;
+        }
+        .answer-result.correct {
+            color: #27ae60;
+        }
+        .answer-result.wrong {
+            color: #c0392b;
+        }
+        .answer-result .correct-answer-show {
+            color: #27ae60;
+            font-weight: 700;
+        }
+
+        .btn-next {
+            background: #FBC5D9;
+            color: #000;
+            border: none;
+            padding: 0.8rem 2.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.25s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .btn-next:hover {
+            background: #f5b2cc;
+            transform: translateY(-2px);
+        }
+        .btn-next:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .finish-screen {
+            text-align: center;
+            padding: 2rem;
+        }
+        .finish-screen .big-score {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            color: #8D0B0D;
+        }
+        .finish-screen .big-score span {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #666;
+        }
+        .finish-screen .finish-text {
+            font-size: 1.2rem;
+            color: #333;
+            margin: 0.5rem 0 1.5rem;
+        }
+        .btn-restart {
+            background: #8D0B0D;
+            color: #fff;
+            border: none;
+            padding: 0.8rem 2.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.25s;
+            box-shadow: 0 6px 16px rgba(141,11,13,0.25);
+        }
+        .btn-restart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(141,11,13,0.35);
+        }
+
+        .trainer-footer {
+            margin-top: 2.5rem;
+            padding: 2rem;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 4px 0 #d0c8c4, 0 8px 20px rgba(0,0,0,0.04);
+            border: 1px solid #e8e0dc;
+            text-align: center;
+        }
+        .trainer-footer .footer-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .trainer-footer .footer-title i {
+            color: #8D0B0D;
+        }
+        .trainer-footer .social-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .trainer-footer .social-buttons a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 1.8rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: 0.25s;
+            color: #fff;
+        }
+        .trainer-footer .social-buttons .btn-vk {
+            background: #4a76a8;
+        }
+        .trainer-footer .social-buttons .btn-vk:hover {
+            background: #3a5f8a;
+            transform: translateY(-2px);
+        }
+        .trainer-footer .social-buttons .btn-tg {
+            background: #2ca5e0;
+        }
+        .trainer-footer .social-buttons .btn-tg:hover {
+            background: #1d8bc2;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 0.8rem; padding: 1rem; }
+            .nav-menu { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+            .trainer-header h1 { font-size: 2rem; }
+            .question-card { padding: 1.5rem; }
+            .question-card .question-text { font-size: 2rem; }
+            .answer-inputs .answer-field input { width: 55px; font-size: 1rem; }
+        }
+        @media (max-width: 480px) {
+            .trainer-header h1 { font-size: 1.6rem; }
+            .question-card .question-text { font-size: 1.6rem; }
+            .answer-inputs .answer-field input { width: 45px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <img src="images/avatar.png" alt="Полина" class="nav-avatar" />
+            <span class="nav-title">Математика <span>с Полиной</span></span>
+        </div>
+        <div class="nav-menu">
+            <a href="index.html"><i class="fas fa-home"></i> Главная</a>
+            <a href="tests.html"><i class="fas fa-tasks"></i> Тесты</a>
+            <a href="materials.html" class="active"><i class="fas fa-folder-open"></i> Материалы</a>
+            <a href="contacts.html"><i class="fas fa-envelope"></i> Контакты</a>
+        </div>
+    </nav>
+
+    <div class="trainer-container" id="app">
+
+        <div class="trainer-header">
+            <h1>Действия с дробями</h1>
+            <div class="subtitle">«Обыкновенные дроби»</div>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                <span>Прогресс</span>
+                <span><span class="score-display" id="progressPercent">0</span>%</span>
+            </div>
+        </div>
+
+        <div id="questionCard" class="question-card">
+            <div class="question-number" id="questionNumberLabel">Вопрос 1 из 12</div>
+            <div class="question-text" id="questionText"></div>
+            <div class="answer-inputs">
+                <div class="answer-field">
+                    <label>Целая</label>
+                    <input type="text" id="wholeInput" placeholder="0" />
+                </div>
+                <div class="answer-field">
+                    <label>Числитель</label>
+                    <input type="text" id="numInput" placeholder="0" />
+                </div>
+                <div class="answer-separator">/</div>
+                <div class="answer-field">
+                    <label>Знаменатель</label>
+                    <input type="text" id="denInput" placeholder="1" />
+                </div>
+            </div>
+            <button class="btn-check" id="checkBtn" onclick="checkAnswer()">Проверить</button>
+            <div class="answer-result" id="answerResult"></div>
+        </div>
+
+        <div style="text-align: center;">
+            <button class="btn-next" id="nextBtn" onclick="nextQuestion()" disabled>
+                <i class="fas fa-arrow-right"></i> Далее
+            </button>
+        </div>
+
+        <div id="finishScreen" class="finish-screen" style="display:none;">
+            <div class="big-score">
+                <span id="finalScore">0</span> <span>из 12</span>
+            </div>
+            <div class="finish-text">🎉 Ты справился с тренажёром!</div>
+            <button class="btn-restart" onclick="restartGame()">
+                <i class="fas fa-redo"></i> Пройти ещё раз
+            </button>
+        </div>
+
+        <div class="trainer-footer">
+            <div class="footer-title">
+                🎓 Больше интерактивных заданий по математике
+            </div>
+            <div class="social-buttons">
+                <a href="https://vk.ru/polina.sviderskaya" target="_blank" class="btn-vk">
+                    <i class="fab fa-vk"></i> Подписаться ВК
+                </a>
+                <a href="https://t.me/polinasviderskaya" target="_blank" class="btn-tg">
+                    <i class="fab fa-telegram-plane"></i> Подписаться ТГ
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer" style="text-align:center; padding:2rem; color:#666; font-size:0.85rem; border-top:2px solid #FBC5D9; margin-top:1rem; background:rgba(255,255,255,0.5);">
+        &copy; 2026 Математика с Полиной · Сделано с ❤️
+    </div>
+
+    <script>
+        const TOTAL_QUESTIONS = 12;
+        const ALL_EXAMPLES_COUNT = 100;
+
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let correctCount = 0;
+        let answered = false;
+
+        // ===== НОД ДЛЯ СОКРАЩЕНИЯ =====
+        function gcd(a, b) {
+            a = Math.abs(a);
+            b = Math.abs(b);
+            while (b) {
+                [a, b] = [b, a % b];
+            }
+            return a;
+        }
+
+        // ===== СОКРАЩЕНИЕ ДРОБИ =====
+        function simplifyFraction(num, den) {
+            if (den < 0) { num = -num; den = -den; }
+            if (num === 0) return { whole: 0, num: 0, den: 1 };
+            const g = gcd(Math.abs(num), Math.abs(den));
+            num = num / g;
+            den = den / g;
+            if (Math.abs(num) >= den) {
+                const whole = Math.floor(num / den);
+                num = num % den;
+                if (num === 0) return { whole: whole, num: 0, den: 1 };
+                return { whole: whole, num: num, den: den };
+            }
+            return { whole: 0, num: num, den: den };
+        }
+
+        // ===== ГЕНЕРАЦИЯ ПРИМЕРОВ =====
+        function generateAllExamples() {
+            const examples = [];
+            const operations = ['+', '-', '*', '/'];
+
+            for (let i = 0; i < ALL_EXAMPLES_COUNT * 2; i++) {
+                let aNum, aDen, bNum, bDen, op, answerNum, answerDen, display;
+
+                // Генерируем дроби: числители от 1 до 9, знаменатели от 2 до 12
+                aNum = Math.floor(Math.random() * 9) + 1;
+                do { aDen = Math.floor(Math.random() * 11) + 2; } while (aDen <= aNum);
+                bNum = Math.floor(Math.random() * 9) + 1;
+                do { bDen = Math.floor(Math.random() * 11) + 2; } while (bDen <= bNum);
+
+                const opIndex = Math.floor(Math.random() * operations.length);
+                op = operations[opIndex];
+
+                let resultNum, resultDen;
+
+                switch(op) {
+                    case '+':
+                        resultNum = aNum * bDen + bNum * aDen;
+                        resultDen = aDen * bDen;
+                        display = `${aNum}/${aDen} + ${bNum}/${bDen}`;
+                        break;
+                    case '-':
+                        // Чтобы результат не был отрицательным, проверяем
+                        if (aNum * bDen < bNum * aDen) {
+                            [aNum, bNum] = [bNum, aNum];
+                            [aDen, bDen] = [bDen, aDen];
+                        }
+                        resultNum = aNum * bDen - bNum * aDen;
+                        resultDen = aDen * bDen;
+                        display = `${aNum}/${aDen} − ${bNum}/${bDen}`;
+                        break;
+                    case '*':
+                        resultNum = aNum * bNum;
+                        resultDen = aDen * bDen;
+                        display = `${aNum}/${aDen} × ${bNum}/${bDen}`;
+                        break;
+                    case '/':
+                        resultNum = aNum * bDen;
+                        resultDen = aDen * bNum;
+                        display = `${aNum}/${aDen} : ${bNum}/${bDen}`;
+                        break;
+                }
+
+                // Сокращаем результат
+                const simplified = simplifyFraction(resultNum, resultDen);
+                answerNum = simplified.num;
+                answerDen = simplified.den;
+                const whole = simplified.whole;
+
+                examples.push({
+                    aNum, aDen, bNum, bDen, op,
+                    display: display,
+                    answerWhole: whole,
+                    answerNum: answerNum,
+                    answerDen: answerDen
+                });
+
+                if (examples.length >= ALL_EXAMPLES_COUNT) break;
+            }
+            return examples;
+        }
+
+        function selectRandomQuestions(allExamples) {
+            const shuffled = [...allExamples];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled.slice(0, TOTAL_QUESTIONS);
+        }
+
+        function renderFraction(num, den) {
+            if (num === 0) return '0';
+            if (den === 1) return `${num}`;
+            return `<span class="frac"><span class="num">${num}</span><span class="den">${den}</span></span>`;
+        }
+
+        function initGame() {
+            const allExamples = generateAllExamples();
+            currentQuestions = selectRandomQuestions(allExamples);
+            currentIndex = 0;
+            correctCount = 0;
+            answered = false;
+
+            document.getElementById('finishScreen').style.display = 'none';
+            document.getElementById('questionCard').style.display = 'block';
+            document.getElementById('nextBtn').style.display = 'inline-flex';
+
+            updateProgress();
+            renderQuestion();
+        }
+
+        function updateProgress() {
+            const percent = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressPercent').textContent = percent;
+        }
+
+        function renderQuestion() {
+            const q = currentQuestions[currentIndex];
+            document.getElementById('questionNumberLabel').textContent = `Вопрос ${currentIndex + 1} из ${TOTAL_QUESTIONS}`;
+            document.getElementById('questionText').innerHTML = q.display;
+
+            document.getElementById('wholeInput').value = '';
+            document.getElementById('numInput').value = '';
+            document.getElementById('denInput').value = '';
+            document.getElementById('wholeInput').disabled = false;
+            document.getElementById('numInput').disabled = false;
+            document.getElementById('denInput').disabled = false;
+
+            document.getElementById('checkBtn').disabled = false;
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('answerResult').textContent = '';
+            document.getElementById('answerResult').className = 'answer-result';
+
+            answered = false;
+
+            document.getElementById('wholeInput').focus();
+        }
+
+        function checkAnswer() {
+            if (answered) return;
+
+            const wholeInput = document.getElementById('wholeInput').value.trim();
+            const numInput = document.getElementById('numInput').value.trim();
+            const denInput = document.getElementById('denInput').value.trim();
+
+            if (wholeInput === '' || numInput === '' || denInput === '') {
+                alert('Заполните все поля!');
+                return;
+            }
+
+            const userWhole = parseInt(wholeInput) || 0;
+            const userNum = parseInt(numInput) || 0;
+            const userDen = parseInt(denInput) || 1;
+
+            if (userDen <= 0) {
+                alert('Знаменатель должен быть положительным числом!');
+                return;
+            }
+
+            const q = currentQuestions[currentIndex];
+            const correctWhole = q.answerWhole || 0;
+            const correctNum = q.answerNum || 0;
+            const correctDen = q.answerDen || 1;
+
+            const resultDiv = document.getElementById('answerResult');
+
+            // Проверяем эквивалентность дробей
+            const userSimplified = simplifyFraction(userWhole * userDen + userNum, userDen);
+            const correctSimplified = simplifyFraction(correctWhole * correctDen + correctNum, correctDen);
+
+            const isCorrect = userSimplified.num === correctSimplified.num &&
+                              userSimplified.den === correctSimplified.den &&
+                              userSimplified.whole === correctSimplified.whole;
+
+            if (isCorrect) {
+                resultDiv.textContent = '✅ Правильно!';
+                resultDiv.className = 'answer-result correct';
+                correctCount++;
+                updateProgress();
+            } else {
+                let correctDisplay = '';
+                if (correctWhole !== 0) correctDisplay += correctWhole + ' ';
+                if (correctNum !== 0 || correctDen !== 1) {
+                    correctDisplay += `${correctNum}/${correctDen}`;
+                }
+                if (correctDisplay.trim() === '') correctDisplay = '0';
+                resultDiv.innerHTML = `❌ Неправильно. Правильный ответ: <span class="correct-answer-show">${correctDisplay}</span>`;
+                resultDiv.className = 'answer-result wrong';
+            }
+
+            answered = true;
+            document.getElementById('wholeInput').disabled = true;
+            document.getElementById('numInput').disabled = true;
+            document.getElementById('denInput').disabled = true;
+            document.getElementById('checkBtn').disabled = true;
+            document.getElementById('nextBtn').disabled = false;
+
+            if (currentIndex === TOTAL_QUESTIONS - 1) {
+                document.getElementById('nextBtn').innerHTML = '<i class="fas fa-trophy"></i> Завершить';
+            } else {
+                document.getElementById('nextBtn').innerHTML = '<i class="fas fa-arrow-right"></i> Далее';
+            }
+        }
+
+        function nextQuestion() {
+            if (!answered) return;
+
+            if (currentIndex === TOTAL_QUESTIONS - 1) {
+                showFinish();
+                return;
+            }
+
+            currentIndex++;
+            renderQuestion();
+        }
+
+        function showFinish() {
+            document.getElementById('questionCard').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('finishScreen').style.display = 'block';
+            document.getElementById('finalScore').textContent = correctCount;
+
+            const finishText = document.querySelector('.finish-text');
+            if (correctCount === TOTAL_QUESTIONS) {
+                finishText.textContent = '🌟 Идеально! Ты справился со всеми заданиями! 🌟';
+            } else if (correctCount >= TOTAL_QUESTIONS * 0.7) {
+                finishText.textContent = '🎉 Отличный результат! Продолжай в том же духе!';
+            } else if (correctCount >= TOTAL_QUESTIONS * 0.4) {
+                finishText.textContent = '💪 Хорошая попытка! Тренируйся ещё!';
+            } else {
+                finishText.textContent = '📚 Нужно ещё немного потренироваться. Попробуй снова!';
+            }
+        }
+
+        function restartGame() {
+            initGame();
+            document.getElementById('app').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initGame();
+
+            // Обработка Enter
+            document.getElementById('wholeInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    if (!answered) checkAnswer();
+                    else nextQuestion();
+                }
+            });
+            document.getElementById('numInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    if (!answered) checkAnswer();
+                    else nextQuestion();
+                }
+            });
+            document.getElementById('denInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    if (!answered) checkAnswer();
+                    else nextQuestion();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

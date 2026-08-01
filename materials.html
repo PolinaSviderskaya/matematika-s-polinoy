@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="icon" type="image/png" href="images/favicon.png" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -126,6 +127,27 @@
             color: #8D0B0D;
         }
         .page-header h1 i { margin-right: 10px; }
+
+        .btn-primary {
+            background: #8D0B0D;
+            color: #FFFFFF;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: 0.25s;
+            box-shadow: 0 8px 20px rgba(141,11,13,0.2);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(141,11,13,0.35);
+        }
 
         .filters {
             display: flex;
@@ -275,6 +297,13 @@
         .material-card .btn-small-primary:hover {
             background: #a93226;
         }
+        .material-card .btn-danger {
+            background: #c0392b;
+            color: #fff;
+        }
+        .material-card .btn-danger:hover {
+            background: #a93226;
+        }
 
         .empty-materials {
             text-align: center;
@@ -368,6 +397,13 @@
         }
         .modal-box .error-msg.show { display: block; }
 
+        .admin-only {
+            display: none !important;
+        }
+        .admin-only.show {
+            display: inline-flex !important;
+        }
+
         @media (max-width: 768px) {
             .navbar { flex-direction: column; gap: 0.8rem; padding: 1rem; }
             .nav-menu { flex-wrap: wrap; justify-content: center; gap: 1rem; }
@@ -418,7 +454,7 @@
 
     <div class="page-header">
         <h1><i class="fas fa-folder-open"></i> Материалы</h1>
-        <a href="create-material.html" class="btn-primary admin-only" id="createMaterialBtn" style="background:#8D0B0D; color:#fff; border:none; padding:0.8rem 2rem; border-radius:60px; font-weight:600; font-size:1rem; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:0.6rem; transition:0.25s; box-shadow:0 8px 20px rgba(141,11,13,0.2);">
+        <a href="create-material.html" class="btn-primary admin-only" id="createMaterialBtn" style="display:none;">
             <i class="fas fa-plus-circle"></i> Добавить материал
         </a>
     </div>
@@ -476,6 +512,26 @@
                 icon: 'fa-brain',
                 link: 'trainer.html',
                 created: Date.now() - 86400000
+            },
+            {
+                id: 2,
+                name: 'Действия с обыкновенными дробями (5 класс)',
+                class: '5',
+                type: 'Тренажёр',
+                description: 'Сложение, вычитание, умножение и деление обыкновенных дробей. 12 заданий с разными знаменателями.',
+                icon: 'fa-calculator',
+                link: 'trainer-fractions.html',
+                created: Date.now() - 43200000
+            },
+            {
+                id: 3,
+                name: 'Действия с обыкновенными дробями (6 класс)',
+                class: '6',
+                type: 'Тренажёр',
+                description: 'Сложение, вычитание, умножение и деление обыкновенных дробей. 12 заданий с разными знаменателями.',
+                icon: 'fa-calculator',
+                link: 'trainer-fractions.html',
+                created: Date.now() - 21600000
             }
         ];
 
@@ -485,13 +541,11 @@
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
-                    // Объединяем с дефолтными, чтобы не потерять
                     const defaultIds = materials.map(m => m.id);
                     const newMaterials = parsed.filter(m => !defaultIds.includes(m.id));
                     materials = [...materials, ...newMaterials];
                 } catch (e) {}
             }
-            // Сохраняем для будущих добавлений
             localStorage.setItem('polina_materials', JSON.stringify(materials));
         }
 
@@ -566,7 +620,7 @@
                             <a href="${item.link || '#'}" class="btn-small btn-small-primary" target="${item.link && item.link.startsWith('http') ? '_blank' : '_self'}">
                                 <i class="fas fa-arrow-right"></i> Открыть
                             </a>
-                            ${isAdmin ? `<button class="btn-small" onclick="deleteMaterial(${item.id})" style="background:#c0392b; color:#fff;">
+                            ${isAdmin ? `<button class="btn-small btn-danger" onclick="deleteMaterial(${item.id})">
                                 <i class="fas fa-trash-alt"></i> Удалить
                             </button>` : ''}
                         </div>
@@ -598,12 +652,14 @@
                 document.getElementById('adminLoginBtn').style.display = 'none';
                 document.getElementById('adminLogoutBtn').style.display = 'inline-flex';
                 document.getElementById('createMaterialBtn').style.display = 'inline-flex';
+                document.getElementById('createMaterialBtn').classList.add('show');
             } else {
                 isAdmin = false;
                 document.getElementById('adminStatus').style.display = 'none';
                 document.getElementById('adminLoginBtn').style.display = 'inline-flex';
                 document.getElementById('adminLogoutBtn').style.display = 'none';
                 document.getElementById('createMaterialBtn').style.display = 'none';
+                document.getElementById('createMaterialBtn').classList.remove('show');
             }
         }
 

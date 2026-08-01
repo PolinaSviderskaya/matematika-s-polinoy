@@ -209,6 +209,68 @@
         .empty-preview i { font-size: 2.5rem; color: #FBC5D9; display: block; margin-bottom: 0.5rem; }
         .footer { text-align: center; padding: 2rem; color: #666; font-size: 0.85rem; border-top: 2px solid #FBC5D9; margin-top: 1rem; background: rgba(255, 255, 255, 0.5); }
 
+        /* ===== СТИЛИ ДЛЯ ТЕКСТОВОГО ПОЛЯ С JSON ===== */
+        .json-output {
+            display: none;
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 2rem;
+            box-shadow: 0 8px 0 #d0c8c4, 0 12px 28px rgba(0,0,0,0.06);
+            border: 1px solid #e8e0dc;
+            margin-top: 1.5rem;
+        }
+        .json-output.show {
+            display: block;
+        }
+        .json-output h3 {
+            font-family: 'Playfair Display', serif;
+            color: #8D0B0D;
+            margin-bottom: 0.5rem;
+        }
+        .json-output .hint {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+        .json-output textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 1rem;
+            border-radius: 16px;
+            border: 2px solid #e0d8d4;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.85rem;
+            background: #faf8f7;
+            resize: vertical;
+            color: #000;
+        }
+        .json-output textarea:focus {
+            outline: none;
+            border-color: #8D0B0D;
+        }
+        .json-output .copy-btn {
+            background: #8D0B0D;
+            color: #FFFFFF;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.25s;
+            margin-top: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .json-output .copy-btn:hover {
+            background: #a93226;
+            transform: scale(1.02);
+        }
+        .json-output .copy-btn.copied {
+            background: #27ae60;
+        }
+
         .image-overlay {
             display: none;
             position: fixed;
@@ -369,6 +431,16 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- ===== БЛОК ДЛЯ ВЫВОДА JSON ===== -->
+    <div class="json-output" id="jsonOutput">
+        <h3>📋 Скопируйте код теста</h3>
+        <div class="hint">Выделите текст ниже, скопируйте (Ctrl+C) и вставьте в файл <strong>data/tests.json</strong> на GitHub</div>
+        <textarea id="jsonCode" readonly></textarea>
+        <button class="copy-btn" id="copyBtn" onclick="copyJson()">
+            <i class="fas fa-copy"></i> Копировать
+        </button>
     </div>
 
     <div class="footer">
@@ -641,12 +713,41 @@
             saved.push(newTest);
             localStorage.setItem('polina_tests', JSON.stringify(saved));
 
-            // Показываем инструкцию
-            alert(`✅ Тест «${name}» сохранён локально!\n\n📌 Чтобы он стал доступен ученикам, добавьте его в файл data/tests.json на GitHub.\n\n📋 Скопируйте этот код и вставьте в файл data/tests.json:\n\n${JSON.stringify(newTest, null, 2)}`);
+            // Показываем JSON для копирования
+            const jsonStr = JSON.stringify(newTest, null, 2);
+            document.getElementById('jsonCode').value = jsonStr;
+            document.getElementById('jsonOutput').classList.add('show');
+            document.getElementById('jsonOutput').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
+            // Сбрасываем форму
             questions = [];
             renderPreview();
             document.getElementById('testName').value = '';
+        }
+
+        // ===== КОПИРОВАТЬ JSON =====
+        function copyJson() {
+            const textarea = document.getElementById('jsonCode');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999);
+            try {
+                navigator.clipboard.writeText(textarea.value).then(() => {
+                    const btn = document.getElementById('copyBtn');
+                    btn.innerHTML = '<i class="fas fa-check"></i> Скопировано!';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fas fa-copy"></i> Копировать';
+                        btn.classList.remove('copied');
+                    }, 3000);
+                }).catch(() => {
+                    // fallback
+                    document.execCommand('copy');
+                    alert('✅ JSON скопирован в буфер обмена!');
+                });
+            } catch (e) {
+                document.execCommand('copy');
+                alert('✅ JSON скопирован в буфер обмена!');
+            }
         }
 
         function clearTest() {

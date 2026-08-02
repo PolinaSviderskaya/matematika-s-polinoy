@@ -252,6 +252,126 @@
             line-height: 1.7;
         }
 
+        /* ===== ОТЗЫВЫ ===== */
+        .reviews-section {
+            margin: 3rem 0 2rem;
+        }
+        .reviews-section .section-title {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: #8D0B0D;
+            margin-bottom: 0.5rem;
+        }
+        .reviews-section .section-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .reviews-slider {
+            position: relative;
+            overflow: hidden;
+            border-radius: 32px;
+            background: #ffffff;
+            box-shadow: 0 8px 0 #d0c8c4, 0 12px 28px rgba(0,0,0,0.06);
+            border: 1px solid #e8e0dc;
+        }
+
+        .reviews-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .review-slide {
+            min-width: 100%;
+            padding: 2.5rem 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .review-slide img {
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            object-fit: contain;
+            background: #faf8f7;
+            margin-bottom: 1rem;
+        }
+
+        .review-slide .review-caption {
+            font-size: 0.95rem;
+            color: #555;
+            font-style: italic;
+            max-width: 600px;
+            margin-top: 0.5rem;
+            line-height: 1.6;
+        }
+        .review-slide .review-author {
+            font-weight: 600;
+            color: #8D0B0D;
+            margin-top: 0.3rem;
+        }
+
+        /* Кнопки навигации */
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(141, 11, 13, 0.8);
+            color: #fff;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slider-btn:hover {
+            background: #8D0B0D;
+            transform: translateY(-50%) scale(1.1);
+        }
+        .slider-btn.prev {
+            left: 16px;
+        }
+        .slider-btn.next {
+            right: 16px;
+        }
+
+        /* Точки (индикаторы) */
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.6rem;
+            padding: 1.2rem 0 1.5rem;
+        }
+        .slider-dots .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #d0c8c4;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .slider-dots .dot.active {
+            background: #8D0B0D;
+            transform: scale(1.2);
+        }
+        .slider-dots .dot:hover {
+            background: #8D0B0D;
+            opacity: 0.7;
+        }
+
         /* ===== КНОПКИ ===== */
         .btn-primary {
             background: #8D0B0D;
@@ -457,6 +577,25 @@
             .services-grid {
                 grid-template-columns: 1fr;
             }
+
+            .review-slide {
+                padding: 1.5rem;
+            }
+            .review-slide img {
+                max-height: 300px;
+            }
+            .slider-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 0.9rem;
+            }
+            .slider-btn.prev {
+                left: 8px;
+            }
+            .slider-btn.next {
+                right: 8px;
+            }
+
             .admin-controls {
                 width: 100%;
                 justify-content: flex-end;
@@ -468,6 +607,9 @@
             .nav-title { font-size: 0.9rem; }
             .nav-avatar { width: 30px; height: 30px; }
             .burger-btn { font-size: 1.5rem; }
+            .review-slide img {
+                max-height: 200px;
+            }
         }
     </style>
 </head>
@@ -603,6 +745,82 @@
             </div>
         </div>
 
+        <!-- ===== ОТЗЫВЫ ===== -->
+        <div class="reviews-section">
+            <h2 class="section-title"><i class="fas fa-star" style="color:#FBC5D9;"></i> Отзывы учеников</h2>
+            <p class="section-subtitle">Что говорят те, кто уже занимается со мной</p>
+
+            <div class="reviews-slider" id="reviewsSlider">
+                <div class="reviews-track" id="reviewsTrack">
+
+                    <!-- Слайд 1 -->
+                    <div class="review-slide">
+                        <img src="images/otziv1.png" alt="Отзыв 1" />
+                        <div class="review-caption">«Люблю наши с Вами занятия, мне они нравятся.»</div>
+                        <div class="review-author">— Ученица 8 класса</div>
+                    </div>
+
+                    <!-- Слайд 2 -->
+                    <div class="review-slide">
+                        <img src="images/otziv2.png" alt="Отзыв 2" />
+                        <div class="review-caption">«Уроки проходили в онлайн формате и были очень интересными!!»</div>
+                        <div class="review-author">— Ученица 7 класса</div>
+                    </div>
+
+                    <!-- Слайд 3 -->
+                    <div class="review-slide">
+                        <img src="images/otziv3.png" alt="Отзыв 3" />
+                        <div class="review-caption">«Полина объясняла материал, и я начинала все понимать, и оценки стали лучше.»</div>
+                        <div class="review-author">— Ученица 8 класса</div>
+                    </div>
+
+                    <!-- Слайд 4 -->
+                    <div class="review-slide">
+                        <img src="images/otziv4.png" alt="Отзыв 4" />
+                        <div class="review-caption">«Диана сдала ОГЭ на 4. Пришла осенью, не умея считать дроби (5 класс). Мы во всем разобрались, и она получила заветную 4! »</div>
+                        <div class="review-author">— Ученица 9 класса. ОГЭ</div>
+                    </div>
+
+                    <!-- Слайд 5 -->
+                    <div class="review-slide">
+                        <img src="images/otziv5.png" alt="Отзыв 5" />
+                        <div class="review-caption">«Вы прекрасный учитель, прекрасный наставник, прекрасный и светлый человек!»</div>
+                        <div class="review-author">— Ученица 9 класса. ОГЭ</div>
+                    </div>
+                    <!-- Слайд 6 -->
+                    <div class="review-slide">
+                        <img src="images/otziv6.png" alt="Отзыв 6" />
+                        <div class="review-caption">«Очень хороший репетитор, огромное спасибо, профессионал своего дела.»</div>
+                        <div class="review-author">— Папа ученика 6 класса</div>
+                    </div>|
+                    <!-- Слайд 7 -->
+                    <div class="review-slide">
+                        <img src="images/otziv7.png" alt="Отзыв 7" />
+                        <div class="review-caption">«Однозначно всем рекомендую!»</div>
+                        <div class="review-author">— Мама ученицы 6 класса (занимаемся до 9 класса)</div>
+                    </div>
+                    <!-- Слайд 8 -->
+                    <div class="review-slide">
+                        <img src="images/otziv8.png" alt="Отзыв 8" />
+                        <div class="review-caption">«Помогла разобраться в теме и найти ответы на вссе интересующие вопросы.»</div>
+                        <div class="review-author">— Студентка 1 курса ВУЗа</div>
+                    </div>
+
+                </div>
+
+                <!-- Кнопки переключения -->
+                <button class="slider-btn prev" onclick="prevSlide()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="slider-btn next" onclick="nextSlide()">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Точки -->
+            <div class="slider-dots" id="sliderDots"></div>
+        </div>
+
     </div>
 
     <div class="footer">
@@ -640,6 +858,59 @@
                 menu.classList.remove('open');
                 burger.innerHTML = '<i class="fas fa-bars"></i>';
             }
+        });
+
+        // ===== СЛАЙДЕР ОТЗЫВОВ =====
+        let currentSlide = 0;
+        const track = document.getElementById('reviewsTrack');
+        const slides = track.querySelectorAll('.review-slide');
+        const totalSlides = slides.length;
+        const dotsContainer = document.getElementById('sliderDots');
+
+        // Создаём точки
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('button');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dot.dataset.index = i;
+            dot.addEventListener('click', function() {
+                goToSlide(parseInt(this.dataset.index));
+            });
+            dotsContainer.appendChild(dot);
+        }
+
+        function updateSlider() {
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        function goToSlide(index) {
+            if (index < 0) index = totalSlides - 1;
+            if (index >= totalSlides) index = 0;
+            currentSlide = index;
+            updateSlider();
+        }
+
+        function nextSlide() {
+            goToSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            goToSlide(currentSlide - 1);
+        }
+
+        // Автопрокрутка каждые 5 секунд
+        let autoSlideInterval = setInterval(nextSlide, 5000);
+
+        // Останавливаем автопрокрутку при наведении на слайдер
+        const slider = document.getElementById('reviewsSlider');
+        slider.addEventListener('mouseenter', function() {
+            clearInterval(autoSlideInterval);
+        });
+        slider.addEventListener('mouseleave', function() {
+            autoSlideInterval = setInterval(nextSlide, 5000);
         });
 
         // ===== АДМИН =====

@@ -3,216 +3,733 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Контакты · Математика с Полиной</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <title>Математика с Полиной</title>
     <link rel="icon" type="image/png" href="images/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #F1EBE9;
             color: #000000;
             min-height: 100vh;
+            padding-top: 70px;
         }
 
-        /* ===== НАВИГАЦИЯ ===== */
-        /* ===== ШАПКА (ФИКСИРОВАННАЯ) ===== */
-.navbar {
-    background: #ffffff;
-    padding: 0.6rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-    border-bottom: 3px solid #FBC5D9;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-    min-height: 60px;
-    overflow-x: auto;              /* ← добавляем горизонтальную прокрутку */
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;         /* ← скрываем скроллбар в Firefox */
-    -ms-overflow-style: none;     /* ← скрываем скроллбар в IE/Edge */
-}
-.navbar::-webkit-scrollbar {
-    display: none;                /* ← скрываем скроллбар в Chrome/Safari */
-}
+        /* ===== ШАПКА ===== */
+        .navbar {
+            background: #ffffff;
+            padding: 0.6rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border-bottom: 3px solid #FBC5D9;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            min-height: 60px;
+        }
 
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-shrink: 0;               /* ← не сжимается */
-}
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
 
-.nav-avatar {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #FBC5D9;
-    box-shadow: 0 4px 12px rgba(141,11,13,0.15);
-    transition: transform 0.2s;
-    flex-shrink: 0;               /* ← не сжимается */
-}
-.nav-avatar:hover { transform: scale(1.05); }
+        .nav-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #FBC5D9;
+            box-shadow: 0 4px 12px rgba(141,11,13,0.15);
+            transition: transform 0.2s;
+        }
+        .nav-avatar:hover { transform: scale(1.05); }
 
-.nav-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.7rem;
-    font-weight: 700;
-    color: #8D0B0D;
-    letter-spacing: -0.02em;
-    white-space: nowrap;           /* ← текст не переносится */
-}
-.nav-title span { font-weight: 400; color: #555; }
+        .nav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: #8D0B0D;
+            letter-spacing: -0.02em;
+        }
+        .nav-title span { font-weight: 400; color: #555; }
 
-.nav-menu {
-    display: flex;
-    gap: 2rem;
-    align-items: center;
-    flex-wrap: nowrap;             /* ← меню не переносится */
-    flex-shrink: 0;               /* ← не сжимается */
-}
-.nav-menu a {
-    text-decoration: none;
-    color: #000000;
-    font-weight: 600;
-    font-size: 1rem;
-    padding: 0.5rem 0.2rem;
-    border-bottom: 3px solid transparent;
-    transition: 0.25s;
-    white-space: nowrap;           /* ← текст не переносится */
-}
-.nav-menu a:hover,
-.nav-menu a.active {
-    border-bottom-color: #8D0B0D;
-    color: #8D0B0D;
-}
-.nav-menu a i { margin-right: 6px; }
+        /* ===== БУРГЕР-КНОПКА ===== */
+        .burger-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: #8D0B0D;
+            cursor: pointer;
+            padding: 0.3rem;
+            transition: 0.3s;
+        }
+        .burger-btn:hover {
+            transform: scale(1.1);
+        }
 
-.admin-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    flex-shrink: 0;               /* ← не сжимается */
-}
-.admin-btn {
-    background: #8D0B0D;
-    color: #FFFFFF;
-    border: none;
-    padding: 0.4rem 1.2rem;
-    border-radius: 40px;
-    font-weight: 600;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: 0.25s;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    white-space: nowrap;           /* ← текст не переносится */
-}
-.admin-btn:hover {
-    transform: scale(1.05);
-    opacity: 0.9;
-}
-.admin-btn.logout {
-    background: #555;
-}
-.admin-btn.logout:hover { background: #333; }
-.admin-status {
-    font-size: 0.75rem;
-    color: #27ae60;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    white-space: nowrap;           /* ← текст не переносится */
-}
+        /* ===== МЕНЮ ===== */
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        .nav-menu a {
+            text-decoration: none;
+            color: #000000;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.5rem 0.2rem;
+            border-bottom: 3px solid transparent;
+            transition: 0.25s;
+        }
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            border-bottom-color: #8D0B0D;
+            color: #8D0B0D;
+        }
+        .nav-menu a i { margin-right: 6px; }
 
-body {
-    padding-top: 70px;
-}
+        /* ===== АДМИН-ПАНЕЛЬ ===== */
+        .admin-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .admin-btn {
+            background: #8D0B0D;
+            color: #FFFFFF;
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .admin-btn:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+        .admin-btn.logout {
+            background: #555;
+        }
+        .admin-btn.logout:hover { background: #333; }
+        .admin-status {
+            font-size: 0.75rem;
+            color: #27ae60;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
 
-/* ===== АДАПТИВ ДЛЯ ТЕЛЕФОНА ===== */
-@media (max-width: 768px) {
-    .navbar {
-        padding: 0.4rem 0.8rem;
-        min-height: 50px;
-        gap: 0.3rem;
-        flex-wrap: nowrap;          /* ← вся шапка в одну строку */
-        justify-content: flex-start; /* ← элементы прижимаются к левому краю */
-        overflow-x: auto;           /* ← горизонтальная прокрутка */
-    }
-    .nav-left {
-        gap: 0.5rem;
-        flex-shrink: 0;
-    }
-    .nav-avatar {
-        width: 32px;
-        height: 32px;
-    }
-    .nav-title {
-        font-size: 1rem;
-        white-space: nowrap;
-    }
-    .nav-title span {
-        display: none;
-    }
-    .nav-menu {
-        gap: 0.6rem;
-        font-size: 0.8rem;
-        flex-shrink: 0;
-    }
-    .nav-menu a {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.3rem;
-    }
-    .nav-menu a i {
-        margin-right: 3px;
-    }
-    .admin-controls {
-        flex-shrink: 0;
-    }
-    .admin-controls .admin-btn {
-        font-size: 0.6rem;
-        padding: 0.2rem 0.6rem;
-    }
-    .admin-status {
-        font-size: 0.55rem;
-    }
-    body {
-        padding-top: 55px;
-    }
-}
+        /* ===== АДАПТИВ: БУРГЕР-МЕНЮ ===== */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 55px;
+            }
+            .navbar {
+                padding: 0.4rem 1rem;
+                min-height: 50px;
+            }
+            .nav-avatar {
+                width: 36px;
+                height: 36px;
+            }
+            .nav-title {
+                font-size: 1.1rem;
+            }
+            .nav-title span {
+                display: none;
+            }
 
-@media (max-width: 480px) {
-    .nav-title {
-        font-size: 0.85rem;
-    }
-    .nav-menu a {
-        font-size: 0.6rem;
-        padding: 0.15rem 0.2rem;
-    }
-    .nav-menu {
-        gap: 0.4rem;
-    }
-    .nav-avatar {
-        width: 28px;
-        height: 28px;
-    }
-    body {
-        padding-top: 48px;
-    }
-}
+            /* Показываем бургер-кнопку */
+            .burger-btn {
+                display: block;
+            }
+
+            /* Меню скрыто по умолчанию */
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: #ffffff;
+                flex-direction: column;
+                padding: 1rem;
+                gap: 0.5rem;
+                border-bottom: 3px solid #FBC5D9;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            }
+            .nav-menu.open {
+                display: flex;
+            }
+            .nav-menu a {
+                font-size: 0.9rem;
+                padding: 0.5rem 0;
+                width: 100%;
+                text-align: center;
+                border-bottom: 1px solid #f0ecea;
+            }
+            .nav-menu a:last-child {
+                border-bottom: none;
+            }
+
+            /* Админ-панель на телефоне */
+            .admin-controls {
+                gap: 0.4rem;
+            }
+            .admin-controls .admin-btn {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.6rem;
+            }
+            .admin-status {
+                font-size: 0.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding-top: 48px;
+            }
+            .nav-title {
+                font-size: 0.9rem;
+            }
+            .nav-avatar {
+                width: 30px;
+                height: 30px;
+            }
+            .burger-btn {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* ===== ОСТАЛЬНЫЕ СТИЛИ СТРАНИЦЫ ===== */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2rem 4rem 2rem 4rem;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .hero-content {
+            flex: 1;
+            min-width: 280px;
+        }
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1.15;
+            color: #8D0B0D;
+        }
+        .hero-content h1 .highlight {
+            background: #FBC5D9;
+            padding: 0 12px;
+            border-radius: 40px;
+            display: inline-block;
+        }
+        .hero-content p {
+            font-size: 1.2rem;
+            color: #333;
+            margin: 1.2rem 0 1.8rem;
+            max-width: 480px;
+            line-height: 1.6;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: #8D0B0D;
+            color: #FFFFFF;
+            border: none;
+            padding: 0.9rem 2.2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: 0.25s;
+            box-shadow: 0 8px 20px rgba(141,11,13,0.25);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(141,11,13,0.35);
+        }
+        .btn-secondary {
+            background: #FBC5D9;
+            color: #000000;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: 0.25s;
+        }
+        .btn-secondary:hover {
+            background: #f5b2cc;
+            transform: translateY(-3px);
+        }
+
+        .admin-only {
+            display: none !important;
+        }
+        .admin-only.show {
+            display: inline-flex !important;
+        }
+
+        .hero-photo {
+            flex: 0 0 340px;
+            text-align: center;
+        }
+        .hero-photo img {
+            width: 100%;
+            max-width: 340px;
+            height: 380px;
+            object-fit: cover;
+            border-radius: 24px;
+            border: 4px solid #FBC5D9;
+            box-shadow: 0 20px 40px rgba(141,11,13,0.15);
+            transition: transform 0.3s;
+        }
+        .hero-photo img:hover { transform: scale(1.02); }
+
+        .hero-info {
+            flex: 1;
+            min-width: 280px;
+        }
+        .hero-info .info-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 2rem 2.2rem;
+            box-shadow: 0 8px 0 #d0c8c4, 0 12px 28px rgba(0,0,0,0.06);
+            border: 1px solid #e8e0dc;
+        }
+        .hero-info .info-card .greeting {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #8D0B0D;
+            margin-bottom: 0.8rem;
+        }
+        .hero-info .info-card .greeting span {
+            color: #555;
+            font-weight: 400;
+        }
+        .hero-info .info-card .bio {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 1.2rem;
+        }
+        .hero-info .info-card .bio .heart { color: #8D0B0D; }
+        .hero-info .info-card .features {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .hero-info .info-card .features .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 500;
+            color: #333;
+            padding: 0.4rem 0;
+            border-bottom: 1px dashed #f0ecea;
+        }
+        .hero-info .info-card .features .feature-item i {
+            color: #8D0B0D;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+        .hero-info .info-card .features .feature-item:last-child { border-bottom: none; }
+
+        .paper-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            padding: 2rem 4rem 3rem;
+            justify-content: center;
+        }
+        .paper-item {
+            background: #ffffff;
+            padding: 1.8rem 2rem;
+            border-radius: 24px 24px 24px 4px;
+            box-shadow: 0 8px 0 #d0c8c4, 0 12px 28px rgba(0,0,0,0.06);
+            border: 1px solid #e8e0dc;
+            flex: 1;
+            min-width: 200px;
+            max-width: 280px;
+            transition: 0.3s;
+            position: relative;
+        }
+        .paper-item::before {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            right: -4px;
+            bottom: -4px;
+            background: #FBC5D9;
+            border-radius: 24px 24px 24px 4px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        .paper-item:hover { transform: translateY(-6px); }
+        .paper-item h4 {
+            font-size: 1.1rem;
+            color: #8D0B0D;
+            margin-bottom: 0.4rem;
+        }
+        .paper-item p {
+            font-size: 0.9rem;
+            color: #444;
+            line-height: 1.5;
+        }
+        .paper-item .emoji-big {
+            font-size: 2.2rem;
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.show { display: flex; }
+        .modal-box {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 2.5rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .modal-box h2 {
+            font-family: 'Playfair Display', serif;
+            color: #8D0B0D;
+            margin-bottom: 0.5rem;
+        }
+        .modal-box p { color: #666; margin-bottom: 1.5rem; }
+        .modal-box input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 16px;
+            border: 2px solid #e0d8d4;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 1rem;
+        }
+        .modal-box input:focus { outline: none; border-color: #8D0B0D; }
+        .modal-box .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+        }
+        .modal-box .modal-actions button {
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .modal-box .modal-actions .btn-confirm {
+            background: #8D0B0D;
+            color: #fff;
+        }
+        .modal-box .modal-actions .btn-confirm:hover { background: #a93226; }
+        .modal-box .modal-actions .btn-cancel {
+            background: #e0d8d4;
+            color: #333;
+        }
+        .modal-box .error-msg {
+            color: #c0392b;
+            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
+            display: none;
+        }
+        .modal-box .error-msg.show { display: block; }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-size: 0.85rem;
+            border-top: 2px solid #FBC5D9;
+            margin-top: 1rem;
+            background: rgba(255,255,255,0.5);
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 1.5rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+            .hero-content h1 { font-size: 2rem; }
+            .hero-content p { max-width: 100%; }
+            .hero-buttons { justify-content: center; }
+            .hero-photo { flex: 0 0 auto; width: 100%; max-width: 260px; margin: 0 auto; }
+            .hero-photo img { height: 260px; }
+            .hero-info { text-align: left; }
+            .paper-stack { padding: 1rem; }
+        }
+        @media (max-width: 480px) {
+            .hero-photo img { height: 200px; }
+            .hero-info .info-card { padding: 1rem; }
+            .hero-info .info-card .greeting { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== ШАПКА С БУРГЕР-МЕНЮ ===== -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-left">
+            <img src="images/avatar.png" alt="Полина" class="nav-avatar" />
+            <span class="nav-title">Математика <span>с Полиной</span></span>
+        </div>
+
+        <button class="burger-btn" id="burgerBtn" onclick="toggleMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="active"><i class="fas fa-home"></i> Главная</a>
+            <a href="tests.html"><i class="fas fa-tasks"></i> Тесты</a>
+            <a href="materials.html"><i class="fas fa-folder-open"></i> Материалы</a>
+            <a href="tutoring.html"><i class="fas fa-chalkboard-teacher"></i> Репетиторство</a>
+            <a href="contacts.html"><i class="fas fa-envelope"></i> Контакты</a>
+        </div>
+
+        <div class="admin-controls">
+            <span class="admin-status" id="adminStatus" style="display:none;">
+                <i class="fas fa-circle" style="color:#27ae60;"></i> Админ
+            </span>
+            <button class="admin-btn" id="adminLoginBtn" onclick="showLoginModal()">
+                <i class="fas fa-user-shield"></i> Вход
+            </button>
+            <button class="admin-btn logout" id="adminLogoutBtn" style="display:none;" onclick="logoutAdmin()">
+                <i class="fas fa-sign-out-alt"></i> Выйти
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО ПАРОЛЯ ===== -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-box">
+            <h2><i class="fas fa-user-shield" style="color:#8D0B0D;"></i> Вход для учителя</h2>
+            <p>Введите пароль для доступа к созданию тестов</p>
+            <div class="error-msg" id="loginError">❌ Неверный пароль. Попробуйте ещё раз.</div>
+            <input type="password" id="passwordInput" placeholder="Введите пароль..." onkeydown="if(event.key==='Enter') checkPassword()" />
+            <div class="modal-actions">
+                <button class="btn-confirm" onclick="checkPassword()">Войти</button>
+                <button class="btn-cancel" onclick="closeLoginModal()">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>
+                ТВОЙ ПРОВОДНИК <br />
+                <span class="highlight">В МИР МАТЕМАТИКИ</span> ❤️
+            </h1>
+            <p>
+                Помогаю ученикам полюбить математику, понимать, а не зубрить.
+                ОГЭ на 4 и 5 — реально!
+            </p>
+            <div class="hero-buttons">
+                <a href="tests.html" class="btn-primary">
+                    <i class="fas fa-rocket"></i> Начать тест
+                </a>
+                <a href="contacts.html" class="btn-secondary">
+                    <i class="fas fa-envelope"></i> Связаться со мной
+                </a>
+                <a href="create-test.html" class="btn-secondary admin-only" id="createTestBtn">
+                    <i class="fas fa-pen-fancy"></i> Создать тест
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-photo">
+            <img src="images/polina.jpg" alt="Полина — репетитор по математике" />
+        </div>
+
+        <div class="hero-info">
+            <div class="info-card">
+                <div class="greeting">
+                    Привет! Я — Полина, <br /><span>репетитор по математике</span> 🤍
+                </div>
+                <div class="bio">
+                    рассказываю о математике красиво, с изюминкой<br />
+                    помогаю ученикам влюбиться в математику и обрести мотивацию к ее изучению<br />
+                    а еще, поддерживаю <br />
+                    и верю в каждого <span class="heart">🐚🤍</span>
+                </div>
+                <div class="features">
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i> Индивидуальный подход
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i> Практика без стресса
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-check-circle"></i> Уверенность на экзамене
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="paper-stack">
+        <div class="paper-item">
+            <span class="emoji-big">📐</span>
+            <h4>Понятное объяснение</h4>
+            <p>Разбираем сложные темы простым языком, с примерами из жизни.</p>
+        </div>
+        <div class="paper-item">
+            <span class="emoji-big">🧠</span>
+            <h4>Логика и мышление</h4>
+            <p>Учимся рассуждать, а не просто запоминать формулы.</p>
+        </div>
+        <div class="paper-item">
+            <span class="emoji-big">🏆</span>
+            <h4>Результат гарантирован</h4>
+            <p>Мои ученики сдают ОГЭ на 4 и 5, поступают в лучшие школы.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        &copy; 2026 Математика с Полиной · Сделано с ❤️ для учеников
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = 'polina2026';
+        let isAdmin = false;
+
+        // ===== БУРГЕР-МЕНЮ =====
+        function toggleMenu() {
+            const menu = document.getElementById('navMenu');
+            const burger = document.getElementById('burgerBtn');
+            menu.classList.toggle('open');
+            if (menu.classList.contains('open')) {
+                burger.innerHTML = '<i class="fas fa-times"></i>';
+            } else {
+                burger.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        }
+
+        // Закрываем меню при клике на ссылку
+        document.querySelectorAll('#navMenu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('navMenu').classList.remove('open');
+                document.getElementById('burgerBtn').innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+
+        // ===== АДМИН =====
+        function checkAdminStatus() {
+            const saved = localStorage.getItem('polina_admin');
+            if (saved === 'true') {
+                isAdmin = true;
+                document.getElementById('adminStatus').style.display = 'inline';
+                document.getElementById('adminLoginBtn').style.display = 'none';
+                document.getElementById('adminLogoutBtn').style.display = 'inline-flex';
+                document.getElementById('createTestBtn').classList.add('show');
+            } else {
+                isAdmin = false;
+                document.getElementById('adminStatus').style.display = 'none';
+                document.getElementById('adminLoginBtn').style.display = 'inline-flex';
+                document.getElementById('adminLogoutBtn').style.display = 'none';
+                document.getElementById('createTestBtn').classList.remove('show');
+            }
+        }
+
+        function showLoginModal() {
+            document.getElementById('loginModal').classList.add('show');
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('loginError').classList.remove('show');
+            setTimeout(() => document.getElementById('passwordInput').focus(), 100);
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('show');
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput');
+            if (input.value === ADMIN_PASSWORD) {
+                isAdmin = true;
+                localStorage.setItem('polina_admin', 'true');
+                closeLoginModal();
+                checkAdminStatus();
+            } else {
+                document.getElementById('loginError').classList.add('show');
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        function logoutAdmin() {
+            if (confirm('Выйти из режима администратора?')) {
+                isAdmin = false;
+                localStorage.removeItem('polina_admin');
+                checkAdminStatus();
+            }
+        }
+
+        document.getElementById('loginModal').addEventListener('click', function(e) {
+            if (e.target === this) closeLoginModal();
+        });
+
+        window.addEventListener('DOMContentLoaded', function() {
+            checkAdminStatus();
+        });
+    </script>
+
+</body>
+</html>
 
         /* ===== ОСНОВНОЙ КОНТЕНТ ===== */
         .contacts-wrapper {

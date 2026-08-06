@@ -62,7 +62,6 @@
         }
         .nav-title span { font-weight: 400; color: #555; }
 
-        /* ===== БУРГЕР ===== */
         .burger-btn {
             display: none;
             background: none;
@@ -73,9 +72,7 @@
             padding: 0.3rem;
             transition: 0.3s;
         }
-        .burger-btn:hover {
-            transform: scale(1.1);
-        }
+        .burger-btn:hover { transform: scale(1.1); }
 
         .nav-menu {
             display: flex;
@@ -98,7 +95,6 @@
         }
         .nav-menu a i { margin-right: 6px; }
 
-        /* ===== АДМИН ===== */
         .admin-controls {
             display: flex;
             align-items: center;
@@ -351,6 +347,7 @@
             background: rgba(255, 255, 255, 0.5);
         }
 
+        /* ===== МОДАЛЬНОЕ ОКНО ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -429,9 +426,7 @@
 
         /* ===== АДАПТИВ ===== */
         @media (max-width: 768px) {
-            body {
-                padding-top: 55px;
-            }
+            body { padding-top: 55px; }
             .navbar {
                 padding: 0.4rem 1rem;
                 min-height: 50px;
@@ -508,19 +503,10 @@
         }
 
         @media (max-width: 480px) {
-            body {
-                padding-top: 48px;
-            }
-            .nav-title {
-                font-size: 0.9rem;
-            }
-            .nav-avatar {
-                width: 30px;
-                height: 30px;
-            }
-            .burger-btn {
-                font-size: 1.5rem;
-            }
+            body { padding-top: 48px; }
+            .nav-title { font-size: 0.9rem; }
+            .nav-avatar { width: 30px; height: 30px; }
+            .burger-btn { font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -682,6 +668,16 @@
                 icon: 'fa-calculator',
                 link: 'trainer-fractions.html',
                 created: Date.now() - 21600000
+            },
+            {
+                id: 4,
+                name: 'Действия с десятичными дробями',
+                class: '5',
+                type: 'Тренажёр',
+                description: 'Сложение, вычитание, умножение и деление десятичных дробей. 12 заданий с разным количеством знаков после запятой.',
+                icon: 'fa-calculator',
+                link: 'trainer-decimals.html',
+                created: Date.now() - 10800000
             }
         ];
 

@@ -430,9 +430,19 @@
                 html += `<div class="q-number">Вопрос ${index + 1} <span style="font-weight:400; color:#999; font-size:0.8rem;">(${typeLabels[q.type] || 'Один ответ'})</span></div>`;
                 html += `<div class="q-text">${q.text}</div>`;
 
+                // ===== ОТОБРАЖЕНИЕ КАРТИНОК (ОДНА ИЛИ НЕСКОЛЬКО) =====
                 if (q.image) {
-                    html += `<img src="${q.image}" class="q-image" alt="Иллюстрация" onclick="openImage(this.src)" title="Нажмите для увеличения" />`;
-                }
+                    if (Array.isArray(q.image)) {
+                        // Если массив — показываем все картинки
+                        q.image.forEach(imgSrc => {
+                            html += `<img src="${imgSrc}" class="q-image" alt="Иллюстрация" onclick="openImage(this.src)" title="Нажмите для увеличения" style="margin-right: 8px;" />`;
+                        });
+                     } else {
+                    // Если строка — показываем одну
+                        html += `<img src="${q.image}" class="q-image" alt="Иллюстрация" onclick="openImage(this.src)" title="Нажмите для увеличения" />`;
+                        }
+                    }            
+
 
                 if (q.type === 'single' || q.type === 'multiple') {
                     const inputType = q.type === 'single' ? 'radio' : 'checkbox';

@@ -168,173 +168,125 @@
             box-shadow: 0 12px 28px rgba(141,11,13,0.35);
         }
 
-        .filters {
-            display: flex;
-            gap: 1rem;
-            padding: 1rem 4rem 0.5rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .filters label {
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #555;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-        .filters select {
-            padding: 0.5rem 1.2rem;
-            border-radius: 40px;
-            border: 2px solid #e0d8d4;
-            background: #faf8f7;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .filters select:focus {
-            outline: none;
-            border-color: #8D0B0D;
-        }
-        .filters .reset-filters {
-            background: none;
-            border: none;
-            color: #8D0B0D;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 0.85rem;
-            text-decoration: underline;
-        }
-        .filters .reset-filters:hover {
-            color: #a93226;
-        }
-        .filter-count {
-            margin-left: auto;
-            font-size: 0.85rem;
-            color: #999;
-        }
-
-        .materials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.8rem;
-            padding: 1.5rem 4rem 3rem;
-        }
-
-        .material-card {
-            background: #ffffff;
-            border-radius: 32px;
-            padding: 1.8rem 1.8rem 1.5rem;
-            box-shadow: 0 8px 0 #d0c8c4, 0 12px 28px rgba(0,0,0,0.06);
-            border: 1px solid #e8e0dc;
-            transition: 0.3s;
-            position: relative;
+        /* ===== КАТАЛОГ-ПАПКИ ===== */
+        .catalog {
+            max-width: 900px;
+            margin: 1.5rem auto;
+            padding: 0 2rem 3rem;
             display: flex;
             flex-direction: column;
-            min-height: 200px;
-            height: 100%;
-        }
-        .material-card:hover {
-            transform: translateY(-6px);
-        }
-        .material-card::before {
-            content: '';
-            position: absolute;
-            top: 6px;
-            left: 6px;
-            right: -4px;
-            bottom: -4px;
-            background: #FBC5D9;
-            border-radius: 32px;
-            z-index: -1;
-            opacity: 0.2;
+            gap: 1rem;
         }
 
-        .material-card .material-icon {
-            font-size: 2.5rem;
-            color: #8D0B0D;
-            margin-bottom: 0.3rem;
+        .folder-item {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 4px 0 #d0c8c4, 0 6px 16px rgba(0,0,0,0.04);
+            border: 1px solid #e8e0dc;
+            overflow: hidden;
+            transition: 0.3s;
         }
-        .material-card h3 {
-            font-size: 1.15rem;
-            margin: 0.2rem 0 0.2rem;
-            color: #000;
-            flex: 1;
+        .folder-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d0c8c4, 0 10px 24px rgba(0,0,0,0.06);
         }
-        .material-card .meta {
-            font-size: 0.8rem;
-            color: #666;
-            margin-bottom: 0.8rem;
+
+        .folder-header {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-        }
-        .material-card .meta .badge {
-            background: #FBC5D9;
-            padding: 0.1rem 0.6rem;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        .material-card .meta .type-badge {
-            background: #d4e2d4;
-            padding: 0.1rem 0.6rem;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #155724;
-        }
-        .material-card .card-actions {
-            display: flex;
-            gap: 0.6rem;
-            margin-top: auto;
-            flex-wrap: wrap;
-        }
-        .material-card .btn-small {
-            background: #FBC5D9;
-            color: #000;
-            border: none;
-            padding: 0.4rem 1.2rem;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.8rem;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
             cursor: pointer;
             transition: 0.2s;
-            text-decoration: none;
-            display: inline-flex;
+            user-select: none;
+        }
+        .folder-header:hover {
+            background: #faf8f7;
+        }
+        .folder-header .folder-left {
+            display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 1rem;
         }
-        .material-card .btn-small:hover {
-            background: #f5b2cc;
+        .folder-header .folder-icon {
+            font-size: 1.8rem;
+            color: #8D0B0D;
+            width: 2.5rem;
+            text-align: center;
         }
-        .material-card .btn-small-primary {
-            background: #8D0B0D;
-            color: #fff;
+        .folder-header .folder-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a2639;
         }
-        .material-card .btn-small-primary:hover {
-            background: #a93226;
+        .folder-header .folder-count {
+            font-size: 0.8rem;
+            color: #999;
+            background: #f1ebe9;
+            padding: 0.1rem 0.8rem;
+            border-radius: 40px;
+            font-weight: 600;
         }
-        .material-card .btn-danger {
-            background: #c0392b;
-            color: #fff;
+        .folder-header .folder-arrow {
+            color: #999;
+            transition: transform 0.3s;
+            font-size: 1.2rem;
         }
-        .material-card .btn-danger:hover {
-            background: #a93226;
+        .folder-header .folder-arrow.open {
+            transform: rotate(90deg);
         }
 
-        .empty-materials {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: #777;
-            grid-column: 1 / -1;
+        .folder-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 1.5rem;
         }
-        .empty-materials i {
-            font-size: 3rem;
-            color: #FBC5D9;
-            display: block;
-            margin-bottom: 0.8rem;
+        .folder-content.open {
+            max-height: 600px;
+            padding: 0 1.5rem 1rem;
+        }
+
+        .folder-content .material-link {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.6rem 1rem;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .folder-content .material-link:hover {
+            background: #faf8f7;
+            border-left-color: #8D0B0D;
+            color: #8D0B0D;
+        }
+        .folder-content .material-link i {
+            color: #8D0B0D;
+            width: 1.5rem;
+            text-align: center;
+            font-size: 1rem;
+        }
+        .folder-content .material-link .link-class {
+            font-size: 0.7rem;
+            color: #999;
+            background: #f1ebe9;
+            padding: 0.05rem 0.6rem;
+            border-radius: 40px;
+            margin-left: auto;
+            font-weight: 600;
+        }
+
+        .empty-folder {
+            color: #999;
+            font-size: 0.9rem;
+            padding: 0.5rem 0;
+            font-style: italic;
         }
 
         .footer {
@@ -489,12 +441,20 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .filters {
-                padding: 0.5rem 1.5rem;
+            .catalog {
+                padding: 0 1rem 2rem;
             }
-            .materials-grid {
-                padding: 1.5rem;
-                grid-template-columns: 1fr;
+            .folder-header {
+                padding: 0.8rem 1rem;
+            }
+            .folder-header .folder-name {
+                font-size: 1.1rem;
+            }
+            .folder-content {
+                padding: 0 1rem;
+            }
+            .folder-content.open {
+                padding: 0 1rem 0.8rem;
             }
             .admin-controls {
                 width: 100%;
@@ -507,6 +467,13 @@
             .nav-title { font-size: 0.9rem; }
             .nav-avatar { width: 30px; height: 30px; }
             .burger-btn { font-size: 1.5rem; }
+            .folder-header .folder-name {
+                font-size: 1rem;
+            }
+            .folder-content .material-link {
+                font-size: 0.85rem;
+                padding: 0.5rem 0.8rem;
+            }
         }
     </style>
 </head>
@@ -566,37 +533,7 @@
         </a>
     </div>
 
-    <div class="filters">
-        <label>
-            <i class="fas fa-users"></i> Класс:
-            <select id="classFilter" onchange="applyFilters()">
-                <option value="all">Все классы</option>
-                <option value="5">5 класс</option>
-                <option value="6">6 класс</option>
-                <option value="7">7 класс</option>
-                <option value="8">8 класс</option>
-                <option value="9">9 класс</option>
-                <option value="10">10 класс</option>
-                <option value="11">11 класс</option>
-            </select>
-        </label>
-        <label>
-            <i class="fas fa-tag"></i> Тип:
-            <select id="typeFilter" onchange="applyFilters()">
-                <option value="all">Все типы</option>
-                <option value="Тренажёр">Тренажёр</option>
-                <option value="Игра">Игра</option>
-                <option value="Документ">Документ</option>
-                <option value="Видео">Видео</option>
-            </select>
-        </label>
-        <button class="reset-filters" onclick="resetFilters()">
-            <i class="fas fa-undo"></i> Сбросить
-        </button>
-        <span class="filter-count" id="materialCount"></span>
-    </div>
-
-    <div class="materials-grid" id="materialsGrid">
+    <div class="catalog" id="catalogContainer">
         <!-- Загружается динамически -->
     </div>
 
@@ -637,138 +574,55 @@
             }
         });
 
-        // ===== ДАННЫЕ МАТЕРИАЛОВ =====
-        let materials = [
+        // ===== ДАННЫЕ МАТЕРИАЛОВ (НОВАЯ СТРУКТУРА С ПАПКАМИ) =====
+        const foldersData = [
             {
-                id: 1,
-                name: 'Числовой тренажёр «Операции с отрицательными числами»',
-                class: '6',
-                type: 'Тренажёр',
-                description: 'Тренируйся складывать, вычитать, умножать и делить отрицательные числа. 12 случайных примеров за раунд!',
+                name: 'Тренажёры',
                 icon: 'fa-brain',
-                link: 'trainer.html',
-                created: Date.now() - 86400000
+                items: [
+                    { name: 'Числовой тренажёр «Операции с отрицательными числами»', link: 'trainer.html', class: '6' },
+                    { name: 'Действия с обыкновенными дробями (5 класс)', link: 'trainer-fractions.html', class: '5' },
+                    { name: 'Действия с десятичными дробями', link: 'trainer-decimals.html', class: '5' }
+                ]
             },
             {
-                id: 2,
-                name: 'Действия с обыкновенными дробями (5 класс)',
-                class: '5',
-                type: 'Тренажёр',
-                description: 'Сложение, вычитание, умножение и деление обыкновенных дробей. 12 заданий с разными знаменателями.',
-                icon: 'fa-calculator',
-                link: 'trainer-fractions.html',
-                created: Date.now() - 43200000
-            },
-            {
-                id: 3,
-                name: 'Действия с обыкновенными дробями (6 класс)',
-                class: '6',
-                type: 'Тренажёр',
-                description: 'Сложение, вычитание, умножение и деление обыкновенных дробей. 12 заданий с разными знаменателями.',
-                icon: 'fa-calculator',
-                link: 'trainer-fractions.html',
-                created: Date.now() - 21600000
-            },
-            {
-                id: 4,
-                name: 'Действия с десятичными дробями',
-                class: '5',
-                type: 'Тренажёр',
-                description: 'Сложение, вычитание, умножение и деление десятичных дробей. 12 заданий с разным количеством знаков после запятой.',
-                icon: 'fa-calculator',
-                link: 'trainer-decimals.html',
-                created: Date.now() - 10800000
+                name: 'Онлайн-игры',
+                icon: 'fa-gamepad',
+                items: [
+                    // Пока пусто, но можно добавить позже
+                ]
             }
         ];
 
-        // ===== ЗАГРУЗКА И СОХРАНЕНИЕ =====
-        function loadMaterials() {
-            const saved = localStorage.getItem('polina_materials');
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    const defaultIds = materials.map(m => m.id);
-                    const newMaterials = parsed.filter(m => !defaultIds.includes(m.id));
-                    materials = [...materials, ...newMaterials];
-                } catch (e) {}
-            }
-            localStorage.setItem('polina_materials', JSON.stringify(materials));
-        }
-
-        function saveMaterials() {
-            localStorage.setItem('polina_materials', JSON.stringify(materials));
-        }
-
-        // ===== ФИЛЬТРАЦИЯ =====
-        function applyFilters() {
-            const classFilter = document.getElementById('classFilter').value;
-            const typeFilter = document.getElementById('typeFilter').value;
-
-            let filtered = materials.filter(m => {
-                let matchClass = true;
-                let matchType = true;
-                if (classFilter !== 'all') {
-                    matchClass = String(m.class) === String(classFilter);
-                }
-                if (typeFilter !== 'all') {
-                    matchType = m.type === typeFilter;
-                }
-                return matchClass && matchType;
-            });
-
-            renderMaterials(filtered);
-            document.getElementById('materialCount').textContent = `Найдено: ${filtered.length}`;
-        }
-
-        function resetFilters() {
-            document.getElementById('classFilter').value = 'all';
-            document.getElementById('typeFilter').value = 'all';
-            applyFilters();
-        }
-
-        // ===== ОТОБРАЖЕНИЕ =====
-        function renderMaterials(items) {
-            const container = document.getElementById('materialsGrid');
-
-            if (items.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-materials">
-                        <i class="fas fa-folder-open"></i>
-                        <div>Нет материалов по выбранным фильтрам</div>
-                        <div style="font-size:0.8rem; color:#aaa;">Добавьте новый материал или измените фильтры</div>
-                    </div>
-                `;
-                return;
-            }
-
+        // ===== ОТОБРАЖЕНИЕ КАТАЛОГА =====
+        function renderCatalog() {
+            const container = document.getElementById('catalogContainer');
             let html = '';
-            items.forEach((item) => {
-                const iconMap = {
-                    'Тренажёр': 'fa-brain',
-                    'Игра': 'fa-gamepad',
-                    'Документ': 'fa-file-pdf',
-                    'Видео': 'fa-video'
-                };
-                const icon = item.icon || iconMap[item.type] || 'fa-file';
-                const date = item.created ? new Date(item.created).toLocaleDateString('ru-RU') : 'Нет даты';
+
+            foldersData.forEach((folder, folderIndex) => {
+                const hasItems = folder.items && folder.items.length > 0;
+                const itemCount = hasItems ? folder.items.length : 0;
 
                 html += `
-                    <div class="material-card" data-class="${item.class}" data-type="${item.type}">
-                        <div class="material-icon"><i class="fas ${icon}"></i></div>
-                        <h3>${item.name}</h3>
-                        <div class="meta">
-                            <span class="badge">${item.class || 'Без класса'} класс</span>
-                            <span class="type-badge">${item.type || 'Материал'}</span>
-                            <span class="date"><i class="far fa-calendar-alt"></i> ${date}</span>
+                    <div class="folder-item">
+                        <div class="folder-header" onclick="toggleFolder(this, ${folderIndex})">
+                            <div class="folder-left">
+                                <span class="folder-icon"><i class="fas ${folder.icon}"></i></span>
+                                <span class="folder-name">${folder.name}</span>
+                                ${itemCount > 0 ? `<span class="folder-count">${itemCount}</span>` : ''}
+                            </div>
+                            <span class="folder-arrow"><i class="fas fa-chevron-right"></i></span>
                         </div>
-                        ${item.description ? `<p style="font-size:0.85rem; color:#555; margin-bottom:0.8rem; flex:1;">${item.description}</p>` : ''}
-                        <div class="card-actions">
-                            <a href="${item.link || '#'}" class="btn-small btn-small-primary" target="${item.link && item.link.startsWith('http') ? '_blank' : '_self'}">
-                                <i class="fas fa-arrow-right"></i> Открыть
-                            </a>
-                            ${isAdmin ? `<button class="btn-small btn-danger" onclick="deleteMaterial(${item.id})">
-                                <i class="fas fa-trash-alt"></i> Удалить
-                            </button>` : ''}
+                        <div class="folder-content" id="folderContent-${folderIndex}">
+                            ${hasItems ? folder.items.map(item => `
+                                <a href="${item.link}" class="material-link">
+                                    <i class="fas fa-file-alt"></i>
+                                    ${item.name}
+                                    <span class="link-class">${item.class} класс</span>
+                                </a>
+                            `).join('') : `
+                                <div class="empty-folder">Пока нет материалов</div>
+                            `}
                         </div>
                     </div>
                 `;
@@ -777,16 +631,33 @@
             container.innerHTML = html;
         }
 
-        // ===== УДАЛЕНИЕ МАТЕРИАЛА =====
-        function deleteMaterial(id) {
-            if (!isAdmin) {
-                alert('Только учитель может удалять материалы.');
+        // ===== ПЕРЕКЛЮЧЕНИЕ ПАПКИ =====
+        let openFolderIndex = null;
+
+        function toggleFolder(headerElement, folderIndex) {
+            const content = document.getElementById(`folderContent-${folderIndex}`);
+            const arrow = headerElement.querySelector('.folder-arrow');
+
+            // Если эта папка уже открыта — закрываем её
+            if (openFolderIndex === folderIndex) {
+                content.classList.remove('open');
+                arrow.classList.remove('open');
+                openFolderIndex = null;
                 return;
             }
-            if (!confirm('Удалить этот материал?')) return;
-            materials = materials.filter(m => m.id !== id);
-            saveMaterials();
-            applyFilters();
+
+            // Закрываем предыдущую открытую папку
+            if (openFolderIndex !== null) {
+                const prevContent = document.getElementById(`folderContent-${openFolderIndex}`);
+                const prevArrow = prevContent?.parentElement?.querySelector('.folder-arrow');
+                if (prevContent) prevContent.classList.remove('open');
+                if (prevArrow) prevArrow.classList.remove('open');
+            }
+
+            // Открываем новую
+            content.classList.add('open');
+            arrow.classList.add('open');
+            openFolderIndex = folderIndex;
         }
 
         // ===== АДМИН =====
@@ -827,7 +698,6 @@
                 localStorage.setItem('polina_admin', 'true');
                 closeLoginModal();
                 checkAdminStatus();
-                applyFilters();
             } else {
                 document.getElementById('loginError').classList.add('show');
                 input.value = '';
@@ -840,7 +710,6 @@
                 isAdmin = false;
                 localStorage.removeItem('polina_admin');
                 checkAdminStatus();
-                applyFilters();
             }
         }
 
@@ -849,9 +718,8 @@
         });
 
         window.addEventListener('DOMContentLoaded', function() {
-            loadMaterials();
+            renderCatalog();
             checkAdminStatus();
-            applyFilters();
         });
     </script>
 

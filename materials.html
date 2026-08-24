@@ -168,7 +168,7 @@
             box-shadow: 0 12px 28px rgba(141,11,13,0.35);
         }
 
-        /* ===== КАТАЛОГ-ПАПКИ (ДВЕ КОЛОНКИ) ===== */
+        /* ===== КАТАЛОГ-ПАПКИ (ДВЕ КОЛОНКИ, СТАТИЧНЫЕ) ===== */
         .catalog {
             max-width: 1100px;
             margin: 1.5rem auto;
@@ -197,12 +197,9 @@
             align-items: center;
             justify-content: space-between;
             padding: 1rem 1.5rem;
-            cursor: pointer;
-            transition: 0.2s;
-            user-select: none;
-        }
-        .folder-header:hover {
             background: #faf8f7;
+            border-bottom: 2px solid #FBC5D9;
+            cursor: default;
         }
         .folder-header .folder-left {
             display: flex;
@@ -229,24 +226,9 @@
             border-radius: 40px;
             font-weight: 600;
         }
-        .folder-header .folder-arrow {
-            color: #999;
-            transition: transform 0.3s;
-            font-size: 1.2rem;
-        }
-        .folder-header .folder-arrow.open {
-            transform: rotate(90deg);
-        }
 
         .folder-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease, padding 0.3s ease;
-            padding: 0 1.5rem;
-        }
-        .folder-content.open {
-            max-height: 600px;
-            padding: 0 1.5rem 1rem;
+            padding: 0.8rem 1.5rem 1.2rem;
         }
 
         .folder-content .material-link {
@@ -454,10 +436,11 @@
                 font-size: 1.1rem;
             }
             .folder-content {
-                padding: 0 1rem;
+                padding: 0.5rem 1rem 1rem;
             }
-            .folder-content.open {
-                padding: 0 1rem 0.8rem;
+            .folder-content .material-link {
+                font-size: 0.9rem;
+                padding: 0.5rem 0.8rem;
             }
             .admin-controls {
                 width: 100%;
@@ -577,7 +560,7 @@
             }
         });
 
-        // ===== ДАННЫЕ МАТЕРИАЛОВ (НОВАЯ СТРУКТУРА С ПАПКАМИ) =====
+        // ===== ДАННЫЕ МАТЕРИАЛОВ (ПАПКИ) =====
         const foldersData = [
             {
                 name: 'Тренажёры',
@@ -585,6 +568,7 @@
                 items: [
                     { name: 'Числовой тренажёр «Операции с отрицательными числами»', link: 'trainer.html', class: '6' },
                     { name: 'Действия с обыкновенными дробями (5 класс)', link: 'trainer-fractions.html', class: '5' },
+                    { name: 'Действия с обыкновенными дробями (6 класс)', link: 'trainer-fractions.html', class: '6' },
                     { name: 'Действия с десятичными дробями', link: 'trainer-decimals.html', class: '5' }
                 ]
             },
@@ -592,8 +576,7 @@
                 name: 'Онлайн-игры',
                 icon: 'fa-gamepad',
                 items: [
-                    { name: 'Игра-тренажёр. Задание 6. ОГЭ', link: 'https://view.genially.com/6a7718de67b5feb0dc831a87', class: 'ОГЭ, 9' },
-                    { name: 'Игра-тренажёр. Линейные уравнения', link: 'https://view.genially.com/685ab6f8b2606d81418c3d6a', class: '7' },
+                    // Пока пусто, можно добавить позже
                 ]
             }
         ];
@@ -609,15 +592,14 @@
 
                 html += `
                     <div class="folder-item">
-                        <div class="folder-header" onclick="toggleFolder(this, ${folderIndex})">
+                        <div class="folder-header">
                             <div class="folder-left">
                                 <span class="folder-icon"><i class="fas ${folder.icon}"></i></span>
                                 <span class="folder-name">${folder.name}</span>
                                 ${itemCount > 0 ? `<span class="folder-count">${itemCount}</span>` : ''}
                             </div>
-                            <span class="folder-arrow"><i class="fas fa-chevron-right"></i></span>
                         </div>
-                        <div class="folder-content" id="folderContent-${folderIndex}">
+                        <div class="folder-content">
                             ${hasItems ? folder.items.map(item => `
                                 <a href="${item.link}" class="material-link">
                                     <i class="fas fa-file-alt"></i>
@@ -633,35 +615,6 @@
             });
 
             container.innerHTML = html;
-        }
-
-        // ===== ПЕРЕКЛЮЧЕНИЕ ПАПКИ =====
-        let openFolderIndex = null;
-
-        function toggleFolder(headerElement, folderIndex) {
-            const content = document.getElementById(`folderContent-${folderIndex}`);
-            const arrow = headerElement.querySelector('.folder-arrow');
-
-            // Если эта папка уже открыта — закрываем её
-            if (openFolderIndex === folderIndex) {
-                content.classList.remove('open');
-                arrow.classList.remove('open');
-                openFolderIndex = null;
-                return;
-            }
-
-            // Закрываем предыдущую открытую папку
-            if (openFolderIndex !== null) {
-                const prevContent = document.getElementById(`folderContent-${openFolderIndex}`);
-                const prevArrow = prevContent?.parentElement?.querySelector('.folder-arrow');
-                if (prevContent) prevContent.classList.remove('open');
-                if (prevArrow) prevArrow.classList.remove('open');
-            }
-
-            // Открываем новую
-            content.classList.add('open');
-            arrow.classList.add('open');
-            openFolderIndex = folderIndex;
         }
 
         // ===== АДМИН =====

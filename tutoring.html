@@ -755,7 +755,23 @@
             color: #8D0B0D;
             margin-right: 0.5rem;
         }
-
+        /* ===== КЛИКАБЕЛЬНЫЕ ПЛАШКИ ===== */
+        .pricing-link {
+            text-decoration: none;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+        .pricing-link:hover {
+            transform: translateY(-4px);
+        }
+        .pricing-link:hover .pricing-card {
+            box-shadow: 0 10px 0 #d0c8c4, 0 16px 32px rgba(141,11,13,0.15);
+            border-color: #8D0B0D;
+        }
+        .pricing-link:active .pricing-card {
+            transform: scale(0.98);
+        }
+        
         /* ===== ЧЕМ Я ПОМОГАЮ ===== */
         .help-section {
             margin: 3rem 0 2rem;
@@ -1079,66 +1095,70 @@
 
         </div> <!-- закрытие reviews-section -->
             
-        <!-- ===== СТОИМОСТЬ УРОКОВ ===== -->
+               <!-- ===== СТОИМОСТЬ УРОКОВ ===== -->
         <div class="pricing-section">
             <h2 class="section-title"><i class="fas fa-ruble-sign" style="color:#8D0B0D;"></i> Стоимость уроков</h2>
             <p class="section-subtitle">Выберите удобный формат занятий</p>
 
             <div class="pricing-grid">
 
-                <!-- Индивидуальное занятие -->
-                <div class="pricing-card">
-                    <div class="pricing-header individual">
-                        <div class="pricing-icon"><i class="fas fa-user"></i></div>
-                        <h3>Индивидуальное занятие</h3>
-                        <div class="pricing-price">1 200 ₽ <span>/ урок</span></div>
-                    </div>
-                    <div class="pricing-body">
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check-circle"></i> Индивидуальный подход к каждому ученику</li>
-                            <li><i class="fas fa-check-circle"></i> Разбор всех интересующих тем</li>
-                            <li><i class="fas fa-check-circle"></i> Домашние задания с проверкой</li>
-                            <li><i class="fas fa-check-circle"></i> Помощь с текущими домашними заданиями</li>
-                            <li><i class="fas fa-check-circle"></i> Выстраиваем личную траекторию обучения</li>
-                            <li><i class="fas fa-check-circle"></i> Движемся к цели вместе, шаг за шагом</li>
-                            <li><i class="fas fa-check-circle"></i> Поддержка и мотивация на каждом уроке</li>
-                        </ul>
-                        <div class="pricing-subscribe">
-                            <span class="subscribe-label">Абонементы:</span>
-                            <div class="subscribe-options">
-                                <span class="subscribe-option">4 урока / месяц</span>
-                                <span class="subscribe-option">8 уроков / месяц</span>
+                <!-- Индивидуальное занятие (кликабельная ссылка) -->
+                <a href="contacts.html" class="pricing-link" style="text-decoration: none; display: block;">
+                    <div class="pricing-card">
+                        <div class="pricing-header individual">
+                            <div class="pricing-icon"><i class="fas fa-user"></i></div>
+                            <h3>Индивидуальное занятие</h3>
+                            <div class="pricing-price">1 200 ₽ <span>/ урок</span></div>
+                        </div>
+                        <div class="pricing-body">
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check-circle"></i> Индивидуальный подход к каждому ученику</li>
+                                <li><i class="fas fa-check-circle"></i> Разбор всех интересующих тем</li>
+                                <li><i class="fas fa-check-circle"></i> Домашние задания с проверкой</li>
+                                <li><i class="fas fa-check-circle"></i> Помощь с текущими домашними заданиями</li>
+                                <li><i class="fas fa-check-circle"></i> Выстраиваем личную траекторию обучения</li>
+                                <li><i class="fas fa-check-circle"></i> Движемся к цели вместе, шаг за шагом</li>
+                                <li><i class="fas fa-check-circle"></i> Поддержка и мотивация на каждом уроке</li>
+                            </ul>
+                            <div class="pricing-subscribe">
+                                <span class="subscribe-label">Абонементы:</span>
+                                <div class="subscribe-options">
+                                    <span class="subscribe-option">4 урока / месяц</span>
+                                    <span class="subscribe-option">8 уроков / месяц</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
 
-                <!-- Занятие в паре/группе -->
-                <div class="pricing-card">
-                    <div class="pricing-header group">
-                        <div class="pricing-icon"><i class="fas fa-users"></i></div>
-                        <h3>Занятие в паре / группе</h3>
-                        <div class="pricing-price">1 000 ₽ <span>/ урок</span></div>
-                    </div>
-                    <div class="pricing-body">
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check-circle"></i> Работа в мини-группе (2–4 человека)</li>
-                            <li><i class="fas fa-check-circle"></i> Обсуждение и совместное решение задач</li>
-                            <li><i class="fas fa-check-circle"></i> Взаимопомощь и поддержка в группе</li>
-                            <li><i class="fas fa-check-circle"></i> Домашние задания с общей проверкой</li>
-                            <li><i class="fas fa-check-circle"></i> Интерактивный формат занятий</li>
-                            <li><i class="fas fa-check-circle"></i> Веселее и интереснее вместе!</li>
-                            <li><i class="fas fa-check-circle"></i> Достигаем результатов в команде</li>
-                        </ul>
-                        <div class="pricing-subscribe">
-                            <span class="subscribe-label">Абонементы:</span>
-                            <div class="subscribe-options">
-                                <span class="subscribe-option">4 урока / месяц</span>
-                                <span class="subscribe-option">8 уроков / месяц</span>
+                <!-- Занятие в паре/группе (кликабельная ссылка) -->
+                <a href="contacts.html" class="pricing-link" style="text-decoration: none; display: block;">
+                    <div class="pricing-card">
+                        <div class="pricing-header group">
+                            <div class="pricing-icon"><i class="fas fa-users"></i></div>
+                            <h3>Занятие в паре / группе</h3>
+                            <div class="pricing-price">1 000 ₽ <span>/ урок</span></div>
+                        </div>
+                        <div class="pricing-body">
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check-circle"></i> Работа в мини-группе (2–4 человека)</li>
+                                <li><i class="fas fa-check-circle"></i> Обсуждение и совместное решение задач</li>
+                                <li><i class="fas fa-check-circle"></i> Взаимопомощь и поддержка в группе</li>
+                                <li><i class="fas fa-check-circle"></i> Домашние задания с общей проверкой</li>
+                                <li><i class="fas fa-check-circle"></i> Интерактивный формат занятий</li>
+                                <li><i class="fas fa-check-circle"></i> Веселее и интереснее вместе!</li>
+                                <li><i class="fas fa-check-circle"></i> Достигаем результатов в команде</li>
+                            </ul>
+                            <div class="pricing-subscribe">
+                                <span class="subscribe-label">Абонементы:</span>
+                                <div class="subscribe-options">
+                                    <span class="subscribe-option">4 урока / месяц</span>
+                                    <span class="subscribe-option">8 уроков / месяц</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </a>
 
             </div>
 
@@ -1147,7 +1167,6 @@
                 Занятия проходят <strong>1 или 2 раза в неделю</strong> — выбирайте удобный график!
             </div>
         </div>
-
       
                          
 

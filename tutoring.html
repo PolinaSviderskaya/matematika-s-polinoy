@@ -611,6 +611,231 @@
                 max-height: 200px;
             }
         }
+                /* ===== СТОИМОСТЬ УРОКОВ ===== */
+        .pricing-section {
+            margin: 3rem 0 2rem;
+        }
+        .pricing-section .section-title {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: #8D0B0D;
+            margin-bottom: 0.5rem;
+        }
+        .pricing-section .section-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: #ffffff;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 8px 0 #d0c8c4, 0 12px 28px rgba(0,0,0,0.06);
+            border: 1px solid #e8e0dc;
+            transition: 0.3s;
+        }
+        .pricing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 0 #d0c8c4, 0 16px 32px rgba(0,0,0,0.08);
+        }
+
+        .pricing-header {
+            padding: 1.8rem 2rem 1.5rem;
+            text-align: center;
+            color: #fff;
+        }
+        .pricing-header.individual {
+            background: linear-gradient(135deg, #8D0B0D, #a93226);
+        }
+        .pricing-header.group {
+            background: linear-gradient(135deg, #555, #777);
+        }
+
+        .pricing-header .pricing-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.3rem;
+            opacity: 0.9;
+        }
+        .pricing-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+        .pricing-header .pricing-price {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+        .pricing-header .pricing-price span {
+            font-size: 0.9rem;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        .pricing-body {
+            padding: 1.5rem 2rem 2rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1.2rem 0;
+        }
+        .pricing-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.35rem 0;
+            font-size: 0.92rem;
+            color: #444;
+            border-bottom: 1px solid #f5f0ee;
+        }
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+        .pricing-features li i {
+            color: #8D0B0D;
+            font-size: 0.9rem;
+            width: 1.2rem;
+            text-align: center;
+        }
+
+        .pricing-subscribe {
+            background: #faf8f7;
+            border-radius: 16px;
+            padding: 1rem 1.2rem;
+            text-align: center;
+        }
+        .pricing-subscribe .subscribe-label {
+            font-size: 0.8rem;
+            color: #999;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+        .pricing-subscribe .subscribe-options {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .pricing-subscribe .subscribe-option {
+            background: #ffffff;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #333;
+            border: 2px solid #e8e0dc;
+        }
+
+        .pricing-note {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e8e0dc;
+            color: #555;
+            font-size: 1rem;
+        }
+        .pricing-note i {
+            color: #8D0B0D;
+            margin-right: 0.5rem;
+        }
+
+        /* ===== ЧЕМ Я ПОМОГАЮ ===== */
+        .help-section {
+            margin: 3rem 0 2rem;
+        }
+        .help-section .section-title {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: #8D0B0D;
+            margin-bottom: 0.5rem;
+        }
+        .help-section .section-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .help-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.8rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .help-card {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 2rem 1.8rem;
+            text-align: center;
+            box-shadow: 0 4px 0 #d0c8c4, 0 8px 20px rgba(0,0,0,0.04);
+            border: 1px solid #e8e0dc;
+            transition: 0.3s;
+            position: relative;
+        }
+        .help-card:hover {
+            transform: translateY(-4px);
+        }
+        .help-card .help-icon {
+            font-size: 2.8rem;
+            color: #8D0B0D;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+        .help-card h3 {
+            font-size: 1.1rem;
+            color: #1a2639;
+            margin-bottom: 0.5rem;
+        }
+        .help-card p {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .help-card .help-tag {
+            display: inline-block;
+            background: #FBC5D9;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 768px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .help-grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            .pricing-header .pricing-price {
+                font-size: 1.8rem;
+            }
+        }
     </style>
 </head>
 <body>
